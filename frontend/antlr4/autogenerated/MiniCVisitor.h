@@ -49,7 +49,15 @@ public:
 
     virtual std::any visitAddOp(MiniCParser::AddOpContext *context) = 0;
 
-    virtual std::any visitUnaryExp(MiniCParser::UnaryExpContext *context) = 0;
+    virtual std::any visitMulExp(MiniCParser::MulExpContext *context) = 0;
+
+    virtual std::any visitMulOp(MiniCParser::MulOpContext *context) = 0;
+
+    virtual std::any visitNegativeExpr(MiniCParser::NegativeExprContext *context) = 0;
+
+    virtual std::any visitPrimaryExpr(MiniCParser::PrimaryExprContext *context) = 0;
+
+    virtual std::any visitFunctionCallExpr(MiniCParser::FunctionCallExprContext *context) = 0;
 
     virtual std::any visitPrimaryExp(MiniCParser::PrimaryExpContext *context) = 0;
 

@@ -83,7 +83,28 @@ int rd_flex()
             rd_line_no++;
         }
     }
-
+	// 注释处理
+	if (c == '/') {
+    int next = fgetc(rd_filein);
+    if (next == '/') {
+        // 单行注释
+        while ((c = fgetc(rd_filein)) != '\n' && c != EOF);
+        rd_line_no++;
+        return rd_flex();  // 递归调用继续扫描下一个有效token
+    } else if (next == '*') {
+        // 多行注释
+        int prev = 0;
+        while ((c = fgetc(rd_filein)) != EOF) {
+            if (c == '\n') rd_line_no++;
+            if (prev == '*' && c == '/') break;
+            prev = c;
+        }
+        return rd_flex();
+    } else {
+        // 除号
+        ungetc(next, rd_filein);
+    }
+}
     // 文件结束符
     if (c == EOF) {
         // 返回文件结束符
@@ -93,26 +114,48 @@ int rd_flex()
     // TODO 请自行实现删除源文件中的注释，含单行注释和多行注释等
 
     // 处理数字
-    if (isdigit(c)) {
+    // 处理数字
+	if (isdigit(c)) {
+    	rd_lval.integer_num.lineno = rd_line_no;
 
-        // 识别无符号数，这里只处理正整数或者0
-        // FIXME 0开头的整数这里也识别成了10进制整数，在C语言中0开头的数字串是8进制数字
+		if (c == '0') {
+			c = fgetc(rd_filein);
+			if (c == 'x' || c == 'X') {
+				// 十六进制
+				int val = 0;
+				while (isxdigit(c = fgetc(rd_filein))) {
+					val = val * 16 + (isdigit(c) ? c - '0' : (tolower(c) - 'a' + 10));
+				}
+				rd_lval.integer_num.val = val;
+				tokenValue = "0x" + tokenValue;
+				ungetc(c, rd_filein);
+			} else if (isdigit(c)) {
+				// 八进制
+				int val = 0;
+				do {
+					val = val * 8 + (c - '0');
+					c = fgetc(rd_filein);
+				} while (c >= '0' && c <= '7');
+				rd_lval.integer_num.val = val;
+				tokenValue = "0" + tokenValue;
+				ungetc(c, rd_filein);
+			} else {
+				// just zero
+				rd_lval.integer_num.val = 0;
+				tokenValue = "0";
+				ungetc(c, rd_filein);
+			}
+			} else {
+				// 十进制
+				rd_lval.integer_num.val = c - '0';
+				while (isdigit(c = fgetc(rd_filein))) {
+					rd_lval.integer_num.val = rd_lval.integer_num.val * 10 + c - '0';
+				}
+				tokenValue = std::to_string(rd_lval.integer_num.val);
+				ungetc(c, rd_filein);
+			}
 
-        rd_lval.integer_num.lineno = rd_line_no;
-        rd_lval.integer_num.val = c - '0';
-
-        // 最长匹配，直到非数字结束
-        while (isdigit(c = fgetc(rd_filein))) {
-            rd_lval.integer_num.val = rd_lval.integer_num.val * 10 + c - '0';
-        }
-
-        // 存储数字的token值
-        tokenValue = std::to_string(rd_lval.integer_num.val);
-
-        // 多读的字符回退
-        ungetc(c, rd_filein);
-
-        tokenKind = RDTokenType::T_DIGIT;
+    tokenKind = RDTokenType::T_DIGIT;
     } else if (c == '(') {
         // 识别字符(
         tokenKind = RDTokenType::T_L_PAREN;
@@ -148,6 +191,21 @@ int rd_flex()
         tokenKind = RDTokenType::T_SUB;
 		// 存储字符-
         tokenValue = "-";
+    } else if (c == '/') {
+        // 识别字符/
+        tokenKind = RDTokenType::T_DIV;
+        // 存储字符/
+        tokenValue = "/";
+    } else if (c == '*') {
+        // 识别字符*
+        tokenKind = RDTokenType::T_MUL;
+		// 存储字符*
+		tokenValue = "*";
+	} else if (c == '%') {
+		// 识别字符%
+		tokenKind = RDTokenType::T_MOD;
+		// 存储字符%
+        tokenValue = "%";
     } else if (c == '=') {
         // 识别字符=
         tokenKind = RDTokenType::T_ASSIGN;

@@ -44,14 +44,22 @@ statement:
 // 表达式文法 expr : AddExp 表达式目前只支持加法与减法运算
 expr: addExp;
 
-// 加减表达式
-addExp: unaryExp (addOp unaryExp)*;
-
+// 加减表达式（左结合）
+addExp
+    : mulExp (addOp mulExp)*;
 // 加减运算符
 addOp: T_ADD | T_SUB;
+// 乘除表达式（左结合）
+mulExp
+    : unaryExp (mulOp unaryExp)*;
+// 乘除运算符
+mulOp: T_MUL | T_DIV | T_MOD;
 
 // 一元表达式
-unaryExp: primaryExp | T_ID T_L_PAREN realParamList? T_R_PAREN;
+unaryExp
+    : T_SUB unaryExp             # negativeExpr
+    | primaryExp                 # primaryExpr
+    | T_ID T_L_PAREN realParamList? T_R_PAREN # functionCallExpr;
 
 // 基本表达式：括号表达式、整数、左值表达式
 primaryExp: T_L_PAREN expr T_R_PAREN | T_DIGIT | lVal;
@@ -75,6 +83,10 @@ T_COMMA: ',';
 
 T_ADD: '+';
 T_SUB: '-';
+T_MUL: '*';
+T_DIV: '/';
+T_MOD: '%';
+
 
 // 要注意关键字同样也属于T_ID，因此必须放在T_ID的前面，否则会识别成T_ID
 T_RETURN: 'return';
@@ -82,7 +94,15 @@ T_INT: 'int';
 T_VOID: 'void';
 
 T_ID: [a-zA-Z_][a-zA-Z0-9_]*;
-T_DIGIT: '0' | [1-9][0-9]*;
 
-/* 空白符丢弃 */
-WS: [ \r\n\t]+ -> skip;
+T_DIGIT: '0' [xX]? [0-9a-fA-F]+   // 十六进制（0x或0X）
+    | '0' [0-7]+                 // 八进制
+    | [1-9][0-9]*              // 十进制
+	| '0' ;				 // 0
+
+
+// 空白字符（必须闭合方括号和分号）
+WS  : [ \r\n\t]+ -> skip ;
+
+// 行注释
+LINE_COMMENT : '//' ~[\r\n]* -> skip ;

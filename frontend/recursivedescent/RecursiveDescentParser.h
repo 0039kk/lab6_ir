@@ -25,21 +25,26 @@ enum RDTokenType {
     T_ERR = -1,
     T_EOF = 0,
 
-    T_DIGIT,
-    T_INT,
-	T_ID,
+    T_DIGIT, // 数字
+    T_INT,   // 整型
+    T_ID,    // 标识符
 
-    T_L_PAREN,
-    T_R_PAREN,
-    T_L_BRACE,
-    T_R_BRACE,
-    T_SEMICOLON,
-    T_COMMA,
+    T_L_PAREN,   // 左括号
+    T_R_PAREN,   // 右括号
+    T_L_BRACE,   // 左花括号
+    T_R_BRACE,   // 右花括号
+    T_SEMICOLON, // 分号
+    T_COMMA,     // 逗号
 
     T_RETURN,
-	T_ASSIGN,
-	T_ADD,
+    T_ASSIGN,
+
+    T_ADD,
     T_SUB,
+    T_MUL,
+    T_DIV,
+    T_MOD,
+    T_NEG         // 负号（取负）
 };
 
 /// @brief 词法与语法分析数据交互的Token的值类型

@@ -9,6 +9,7 @@
 // 此文件定义了文法中终结符的类别
 #include "BisonParser.h"
 
+#include "AttrType.h"
 // 对于整数或浮点数，词法识别无符号数，对于负数，识别为求负运算符与无符号数，请注意。
 %}
 
@@ -35,6 +36,9 @@
 
 /* 辅助定义式或者宏，后面使用时带上大括号 */
 
+o           [0-7]
+h           [0-9a-fA-F]
+
 /* 正规式定义 */
 %%
 
@@ -49,6 +53,10 @@
 "="         { return T_ASSIGN; }
 "+"         { return T_ADD; }
 "-"         { return T_SUB; }
+"*"         { return T_MUL; }
+"/"			{ return T_DIV; }
+"%"         { return T_MOD; }
+
 
 
 "0"|[1-9][0-9]*	{
@@ -57,6 +65,22 @@
                 yylval.integer_num.lineno = yylineno;
                 return T_DIGIT;
             }
+
+"0"(x|X){h}+	{
+                // 十六进制整数
+                yylval.integer_num.val = (int)strtol(yytext, (char **)NULL, 16);
+                yylval.integer_num.lineno = yylineno;
+                // printf("%s  %d\n",yytext, yylval.integer_num.val);
+                return T_DIGIT;
+            }
+"0"{o}+	        {
+                // 八进制整数
+                yylval.integer_num.val = (int)strtol(yytext, (char **)NULL, 8);
+                yylval.integer_num.lineno = yylineno;
+                // printf("%s  %d\n",yytext, yylval.integer_num.val);
+                return T_DIGIT;
+            }
+
 
 "int"       {
                 // int类型关键字 关键字的识别要在标识符识别的前边，这是因为关键字也是标识符，不过是保留的

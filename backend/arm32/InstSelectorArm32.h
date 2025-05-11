@@ -76,11 +76,33 @@ protected:
     /// @param inst IR指令
     void translate_sub_int32(Instruction * inst);
 
+    /// @brief 整数乘法指令翻译成ARM32汇编
+    /// @param inst IR指令
+    void translate_mul_int32(Instruction * inst);
+
+    /// @brief 整数除法指令翻译成ARM32汇编
+    /// @param inst IR指令
+    void translate_div_int32(Instruction * inst);
+
+    /// @brief 整数取模指令翻译成ARM32汇编
+    /// @param inst IR指令
+    void translate_mod_int32(Instruction * inst);
+
+    /// @brief 整数取反指令翻译成ARM32汇编
+    /// @param inst IR指令
+    void translate_neg_int32(Instruction * inst);
+
+    
     /// @brief 二元操作指令翻译成ARM32汇编
     /// @param inst IR指令
     /// @param operator_name 操作码
     void translate_two_operator(Instruction * inst, string operator_name);
 
+	/// @brief 一元操作指令翻译成ARM32汇编
+	/// @param inst IR指令
+	/// @param operator_name 操作码（如 "neg"）
+	void translate_one_operator(Instruction * inst, const std::string & operator_name);
+    
     /// @brief 函数调用指令翻译成ARM32汇编
     /// @param inst IR指令
     void translate_call(Instruction * inst);

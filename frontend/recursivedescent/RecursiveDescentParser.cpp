@@ -224,11 +224,43 @@ static ast_node * unaryExp()
 
         // 识别ID尾部符号
         node = idTail(id);
-    }
+    }else if (F(T_SUB)) {
+		// 取负运算：unaryExp -> T_SUB unaryExp
+		advance();  // 跳过 '-'
+		ast_node * operand = unaryExp();  // 递归调用获取负号后的表达式
+		node = ast_node::New(ast_operator_type::AST_OP_NEG, operand, nullptr, nullptr);
+	}
 
     return node;
 }
+/// @brief 乘除运算符, 其文法为mulOp : T_MUL | T_DIV | T_MOD;
+/// @return ast_operator_type AST中节点的运算符
+/// @note 该函数的返回值是AST中节点的运算符
+static ast_operator_type mulOp() {
+    if (match(T_MUL)) return ast_operator_type::AST_OP_MUL;
+    if (match(T_DIV)) return ast_operator_type::AST_OP_DIV;
+    if (match(T_MOD)) return ast_operator_type::AST_OP_MOD;
+    return ast_operator_type::AST_OP_MAX;
+}
+/// @brief 乘除表达式，文法 mulExp : unaryExp (mulOp unaryExp)*
+/// 其中的*表示闭包，闭包的就是循环
+/// @return ast_node*
+static ast_node * mulExp() {
+    ast_node * left_node = unaryExp();
+    if (!left_node) return nullptr;
 
+    for (;;) {
+        ast_operator_type op = mulOp();
+        if (op == ast_operator_type::AST_OP_MAX) break;
+
+        ast_node * right_node = unaryExp();
+        if (!right_node) break;
+
+        left_node = create_contain_node(op, left_node, right_node);
+    }
+
+    return left_node;
+}
 ///
 /// @brief 加减运算符, 其文法为addOp : T_ADD | T_SUB;
 /// @return ast_operator_type AST中节点的运算符
@@ -262,39 +294,23 @@ ast_operator_type addOp()
 ///
 static ast_node * addExp()
 {
-    // 识别第一个unaryExp
-    ast_node * left_node = unaryExp();
-    if (!left_node) {
-        // 非法的一元表达式
-        return nullptr;
-    }
+    ast_node * left_node = mulExp();  // 原来是 unaryExp()
+    if (!left_node) return nullptr;
 
-    // 识别闭包(addOp unaryExp)*，循环
-    // 循环退出条件，1) 不是二元加减运算符， 2) 语法错误
     for (;;) {
-
-        // 获取加减运算符
         ast_operator_type op = addOp();
-        if (ast_operator_type::AST_OP_MAX == op) {
+        if (op == ast_operator_type::AST_OP_MAX) break;
 
-            // 不是加减运算符则正常结束
-            break;
-        }
+        ast_node * right_node = mulExp();  // 原来是 unaryExp()
+        if (!right_node) break;
 
-        // 获取右侧表达式
-        ast_node * right_node = unaryExp();
-        if (!right_node) {
-
-            // 二元加减运算没有合法的右侧表达式
-            break;
-        }
-
-        // 创建二元运算符节点
         left_node = create_contain_node(op, left_node, right_node);
     }
 
     return left_node;
 }
+
+
 
 /// @brief 表达式文法 expr : addExp, 表达式目前只支持加法与减法运算
 /// @return AST的节点

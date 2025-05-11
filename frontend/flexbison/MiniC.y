@@ -13,6 +13,7 @@
 
 #include "IntegerType.h"
 
+#include "AttrType.h"
 // LR分析失败时所调用函数的原型声明
 void yyerror(char * msg);
 
@@ -28,6 +29,10 @@ void yyerror(char * msg);
     struct type_attr type;
     int op_class;
 };
+
+%left T_ADD T_SUB
+%left T_MUL T_DIV T_MOD
+%right UNARY_MINUS
 
 // 文法的开始符号
 %start  CompileUnit
@@ -50,7 +55,7 @@ void yyerror(char * msg);
 
 // 运算符
 %token T_ASSIGN T_SUB T_ADD
-
+%token T_MUL T_DIV T_MOD 
 // 非终结符
 // %type指定文法的非终结符号，<>可指定文法属性
 %type <node> CompileUnit
@@ -62,10 +67,12 @@ void yyerror(char * msg);
 %type <node> Expr
 %type <node> LVal
 %type <node> VarDecl VarDeclExpr VarDef
-%type <node> AddExp UnaryExp PrimaryExp
+%type <node> AddExp UnaryExp PrimaryExp 
+%type <node> MulExp
 %type <node> RealParamList
 %type <type> BasicType
-%type <op_class> AddOp
+%type <op_class> AddOp 
+%type <op_class> MulOp
 %%
 
 // 编译单元可包含若干个函数与全局变量定义。要在语义分析时检查main函数存在
@@ -263,25 +270,18 @@ Expr : AddExp {
 // 由于bison不支持用闭包表达，因此需要拆分成左递归的形式
 // 改造后的左递归文法：
 // addExp : unaryExp | unaryExp addOp unaryExp | addExp addOp unaryExp
-AddExp : UnaryExp {
-		// 一目表达式
 
-		// 直接传递到归约后的节点
-		$$ = $1;
-	}
-	| UnaryExp AddOp UnaryExp {
-		// 两个一目表达式的加减运算
+AddExp : MulExp AddOp AddExp {
+    $$ = create_contain_node((ast_operator_type) $2, $1, $3);
+}
+| MulExp;  // MulExp 可以独立处理加法
 
-		// 创建加减运算节点，其孩子为两个一目表达式节点
-		$$ = create_contain_node(ast_operator_type($2), $1, $3);
-	}
-	| AddExp AddOp UnaryExp {
-		// 左递归形式可通过加减连接多个一元表达式
+MulExp : UnaryExp MulOp UnaryExp {
+    $$ = create_contain_node((ast_operator_type) $2, $1, $3);
+}
+| UnaryExp;  // UnaryExp 可以独立处理乘法
 
-		// 创建加减运算节点，孩子为AddExp($1)和UnaryExp($3)
-		$$ = create_contain_node(ast_operator_type($2), $1, $3);
-	}
-	;
+
 
 // 加减运算符
 AddOp: T_ADD {
@@ -291,7 +291,16 @@ AddOp: T_ADD {
 		$$ = (int)ast_operator_type::AST_OP_SUB;
 	}
 	;
-
+// 乘除法操作符
+MulOp : T_MUL {
+            $$ = (int)ast_operator_type::AST_OP_MUL;
+        }
+      | T_DIV {
+            $$ = (int)ast_operator_type::AST_OP_DIV;
+        }
+      | T_MOD {
+            $$ = (int)ast_operator_type::AST_OP_MOD;
+        };
 // 目前一元表达式可以为基本表达式、函数调用，其中函数调用的实参可有可无
 // 其文法为：unaryExp: primaryExp | T_ID T_L_PAREN realParamList? T_R_PAREN
 // 由于bison不支持？表达，因此变更后的文法为：
@@ -301,6 +310,9 @@ UnaryExp : PrimaryExp {
 
 		// 传递到归约后的UnaryExp上
 		$$ = $1;
+	}
+	| T_SUB UnaryExp %prec UNARY_MINUS { 
+		$$ = create_contain_node(ast_operator_type::AST_OP_NEG, $2);
 	}
 	| T_ID T_L_PAREN T_R_PAREN {
 		// 没有实参的函数调用

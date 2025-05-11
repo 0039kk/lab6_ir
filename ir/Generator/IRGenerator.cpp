@@ -31,6 +31,8 @@
 #include "ExitInstruction.h"
 #include "FuncCallInstruction.h"
 #include "BinaryInstruction.h"
+#include "UnaryInstruction.h"
+
 #include "MoveInstruction.h"
 #include "GotoInstruction.h"
 
@@ -47,6 +49,12 @@ IRGenerator::IRGenerator(ast_node * _root, Module * _module) : root(_root), modu
     /* 表达式运算， 加减 */
     ast2ir_handlers[ast_operator_type::AST_OP_SUB] = &IRGenerator::ir_sub;
     ast2ir_handlers[ast_operator_type::AST_OP_ADD] = &IRGenerator::ir_add;
+    /* 表达式运算， 乘、除、取模 */
+    ast2ir_handlers[ast_operator_type::AST_OP_MUL] = &IRGenerator::ir_mul;
+    ast2ir_handlers[ast_operator_type::AST_OP_DIV] = &IRGenerator::ir_div;
+    ast2ir_handlers[ast_operator_type::AST_OP_MOD] = &IRGenerator::ir_mod;
+    /* 表达式运算， 一元运算 */
+    ast2ir_handlers[ast_operator_type::AST_OP_NEG] = &IRGenerator::ir_neg;
 
     /* 语句 */
     ast2ir_handlers[ast_operator_type::AST_OP_ASSIGN] = &IRGenerator::ir_assign;
@@ -452,6 +460,158 @@ bool IRGenerator::ir_sub(ast_node * node)
 
     node->val = subInst;
 
+    return true;
+}
+/// @brief 整数乘法AST节点翻译成线性中间IR
+/// @param node AST节点
+/// @return 翻译是否成功，true：成功，false：失败
+bool IRGenerator::ir_mul(ast_node * node)
+{
+    ast_node * src1_node = node->sons[0];
+    ast_node * src2_node = node->sons[1];
+    // 乘法节点，左结合，先计算左节点，后计算右节点
+    // 乘法的左边操作数
+    ast_node * left = ir_visit_ast_node(src1_node);
+    if (!left) {
+        // 某个变量没有定值
+        return false;
+    }
+    // 乘法的右边操作数
+    ast_node * right = ir_visit_ast_node(src2_node);
+    if (!right) {
+        // 某个变量没有定值
+        return false;
+    }
+    // 这里只处理整型的数据，如需支持实数，则需要针对类型进行处理
+    BinaryInstruction * mulInst = new BinaryInstruction(module->getCurrentFunction(),
+                                                        IRInstOperator::IRINST_OP_MUL_I,
+                                                        left->val,
+                                                        right->val,
+                                                        IntegerType::getTypeInt());
+    // 创建临时变量保存IR的值，以及线性IR指令
+    node->blockInsts.addInst(left->blockInsts);
+    node->blockInsts.addInst(right->blockInsts);
+    node->blockInsts.addInst(mulInst);
+    node->val = mulInst;
+    return true;
+}
+
+/// @brief 整数除法AST节点翻译成线性中间IR
+/// @param node AST节点
+/// @return 翻译是否成功，true：成功，false：失败
+bool IRGenerator::ir_div(ast_node * node)
+{
+    ast_node * src1_node = node->sons[0];
+    ast_node * src2_node = node->sons[1];
+    // 除法节点，左结合，先计算左节点，后计算右节点
+    // 除法的左边操作数
+    ast_node * left = ir_visit_ast_node(src1_node);
+    if (!left) {
+        // 某个变量没有定值
+        return false;
+    }
+    // 除法的右边操作数
+    ast_node * right = ir_visit_ast_node(src2_node);
+    if (!right) {
+
+        // 某个变量没有定值
+        return false;
+    }
+    // 这里只处理整型的数据，如需支持实数，则需要针对类型进行处理
+    BinaryInstruction * divInst = new BinaryInstruction(module->getCurrentFunction(),
+                                                        IRInstOperator::IRINST_OP_DIV_I,
+                                                        left->val,
+                                                        right->val,
+                                                        IntegerType::getTypeInt());
+    // 创建临时变量保存IR的值，以及线性IR指令
+    node->blockInsts.addInst(left->blockInsts);
+    node->blockInsts.addInst(right->blockInsts);
+    node->blockInsts.addInst(divInst);
+    node->val = divInst;
+    return true;
+}
+
+/// @brief 整数取模AST节点翻译成线性中间IR
+/// @param node AST节点
+/// @return 翻译是否成功，true：成功，false：失败
+bool IRGenerator::ir_mod(ast_node * node) {
+    if (!node || node->sons.size() != 2) return false;
+
+    ast_node * src1_node = node->sons[0];
+    ast_node * src2_node = node->sons[1];
+
+    // 取模的左边操作数
+    ast_node * left = ir_visit_ast_node(src1_node);
+    if (!left || !left->val) return false;
+
+    // 取模的右边操作数
+    ast_node * right = ir_visit_ast_node(src2_node);
+    if (!right || !right->val) return false;
+
+    // 构造除法 t1 = left / right
+    auto * divInst = new BinaryInstruction(
+        module->getCurrentFunction(),
+        IRInstOperator::IRINST_OP_DIV_I,
+        left->val,
+        right->val,
+        IntegerType::getTypeInt()
+    );
+
+    // 构造乘法 t2 = t1 * right
+    auto * mulInst = new BinaryInstruction(
+        module->getCurrentFunction(),
+        IRInstOperator::IRINST_OP_MUL_I,
+        divInst,  // 使用除法结果
+        right->val,
+        IntegerType::getTypeInt()
+    );
+
+    // 构造减法 t3 = left - t2
+    auto * modInst = new BinaryInstruction(
+        module->getCurrentFunction(),
+        IRInstOperator::IRINST_OP_SUB_I,
+        left->val,
+        mulInst,
+        IntegerType::getTypeInt()
+    );
+
+    // 收集指令
+    node->blockInsts.addInst(left->blockInsts);
+    node->blockInsts.addInst(right->blockInsts);
+    node->blockInsts.addInst(divInst);
+    node->blockInsts.addInst(mulInst);
+    node->blockInsts.addInst(modInst);
+
+    // 设置值
+    node->val = modInst;
+
+    return true;
+}
+
+
+/// @brief 整数取负AST节点翻译成线性中间IR
+/// @param node AST节点
+/// @return 翻译是否成功，true：成功，false：失败
+bool IRGenerator::ir_neg(ast_node * node)
+{
+    ast_node * src1_node = node->sons[0];
+    // 取负节点，自右往左运算
+    ast_node * src1 = ir_visit_ast_node(src1_node);
+    if (!src1) {
+        return false;
+    }
+    
+    // 修改为使用 UnaryInstruction
+    UnaryInstruction * negInst = new UnaryInstruction(
+        module->getCurrentFunction(),
+        IRInstOperator::IRINST_OP_NEG_I,
+        src1->val,
+        IntegerType::getTypeInt()
+    );
+    
+    node->blockInsts.addInst(src1->blockInsts);
+    node->blockInsts.addInst(negInst);
+    node->val = negInst;
     return true;
 }
 

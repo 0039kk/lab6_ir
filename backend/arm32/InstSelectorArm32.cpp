@@ -49,7 +49,12 @@ InstSelectorArm32::InstSelectorArm32(vector<Instruction *> & _irCode,
 
     translator_handlers[IRInstOperator::IRINST_OP_ADD_I] = &InstSelectorArm32::translate_add_int32;
     translator_handlers[IRInstOperator::IRINST_OP_SUB_I] = &InstSelectorArm32::translate_sub_int32;
+    translator_handlers[IRInstOperator::IRINST_OP_MUL_I] = &InstSelectorArm32::translate_mul_int32;
+    translator_handlers[IRInstOperator::IRINST_OP_DIV_I] = &InstSelectorArm32::translate_div_int32;
+    translator_handlers[IRInstOperator::IRINST_OP_MOD_I] = &InstSelectorArm32::translate_mod_int32;
+    translator_handlers[IRInstOperator::IRINST_OP_NEG_I] = &InstSelectorArm32::translate_neg_int32;
 
+    
     translator_handlers[IRInstOperator::IRINST_OP_FUNC_CALL] = &InstSelectorArm32::translate_call;
     translator_handlers[IRInstOperator::IRINST_OP_ARG] = &InstSelectorArm32::translate_arg;
 }
@@ -219,6 +224,55 @@ void InstSelectorArm32::translate_assign(Instruction * inst)
     }
 }
 
+/// @brief 一元操作指令翻译成ARM32汇编
+/// @param inst IR指令
+/// @param operator_name 操作码（如 "neg"）
+void InstSelectorArm32::translate_one_operator(Instruction * inst, const std::string & operator_name)
+{
+    Value * result = inst;
+    Value * arg = inst->getOperand(0); // 一元操作只有一个操作数
+
+    // 检查操作数有效性
+    if (!arg) {
+        minic_log(LOG_ERROR, "Unary operator '%s' has no operand", operator_name.c_str());
+        return;
+    }
+
+    // 分配或获取寄存器
+    int32_t arg_reg_no = arg->getRegId();
+    int32_t result_reg_no = inst->getRegId();
+    int32_t load_arg_reg_no, load_result_reg_no;
+
+    // 处理源操作数
+    if (arg_reg_no == -1) {
+        load_arg_reg_no = simpleRegisterAllocator.Allocate(arg);
+        iloc.load_var(load_arg_reg_no, arg);
+    } else {
+        load_arg_reg_no = arg_reg_no;
+    }
+
+    // 处理目标操作数
+    if (result_reg_no == -1) {
+        load_result_reg_no = simpleRegisterAllocator.Allocate(result);
+    } else {
+        load_result_reg_no = result_reg_no;
+    }
+
+    // 生成汇编指令（一元操作格式：op dst, src）
+    iloc.inst(operator_name,
+              PlatformArm32::regName[load_result_reg_no],
+              PlatformArm32::regName[load_arg_reg_no]);
+
+    // 存储结果（若目标不是寄存器）
+    if (result_reg_no == -1) {
+        iloc.store_var(load_result_reg_no, result, ARM32_TMP_REG_NO);
+    }
+
+    // 释放寄存器
+    simpleRegisterAllocator.free(arg);
+    simpleRegisterAllocator.free(result);
+}
+
 /// @brief 二元操作指令翻译成ARM32汇编
 /// @param inst IR指令
 /// @param operator_name 操作码
@@ -302,6 +356,35 @@ void InstSelectorArm32::translate_sub_int32(Instruction * inst)
 {
     translate_two_operator(inst, "sub");
 }
+
+/// @brief 整数乘法指令翻译成ARM32汇编
+/// @param inst IR指令
+void InstSelectorArm32::translate_mul_int32(Instruction * inst)
+{
+    translate_two_operator(inst, "mul");
+}
+
+/// @brief 整数除法指令翻译成ARM32汇编
+/// @param inst IR指令
+void InstSelectorArm32::translate_div_int32(Instruction * inst)
+{
+	translate_two_operator(inst, "sdiv");
+}
+
+/// @brief 整数取模指令翻译成ARM32汇编
+/// @param inst IR指令
+void InstSelectorArm32::translate_mod_int32(Instruction * inst)
+{
+	translate_two_operator(inst, "s");
+}
+
+/// @brief 整数取反指令翻译成ARM32汇编
+/// @param inst IR指令
+void InstSelectorArm32::translate_neg_int32(Instruction * inst)
+{
+    translate_one_operator(inst, "neg");
+}
+
 
 /// @brief 函数调用指令翻译成ARM32汇编
 /// @param inst IR指令

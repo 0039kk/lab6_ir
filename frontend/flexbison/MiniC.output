@@ -1,0 +1,789 @@
+Grammar
+
+    0 $accept: CompileUnit $end
+
+    1 CompileUnit: FuncDef
+    2            | VarDecl
+    3            | CompileUnit FuncDef
+    4            | CompileUnit VarDecl
+
+    5 FuncDef: BasicType T_ID T_L_PAREN T_R_PAREN Block
+
+    6 Block: T_L_BRACE T_R_BRACE
+    7      | T_L_BRACE BlockItemList T_R_BRACE
+
+    8 BlockItemList: BlockItem
+    9              | BlockItemList BlockItem
+
+   10 BlockItem: Statement
+   11          | VarDecl
+
+   12 VarDecl: VarDeclExpr T_SEMICOLON
+
+   13 VarDeclExpr: BasicType VarDef
+   14            | VarDeclExpr T_COMMA VarDef
+
+   15 VarDef: T_ID
+
+   16 BasicType: T_INT
+
+   17 Statement: T_RETURN Expr T_SEMICOLON
+   18          | LVal T_ASSIGN Expr T_SEMICOLON
+   19          | Block
+   20          | Expr T_SEMICOLON
+   21          | T_SEMICOLON
+
+   22 Expr: AddExp
+
+   23 AddExp: MulExp AddOp AddExp
+   24       | MulExp
+
+   25 MulExp: UnaryExp MulOp UnaryExp
+   26       | UnaryExp
+
+   27 AddOp: T_ADD
+   28      | T_SUB
+
+   29 MulOp: T_MUL
+   30      | T_DIV
+   31      | T_MOD
+
+   32 UnaryExp: PrimaryExp
+   33         | T_SUB UnaryExp
+   34         | T_ID T_L_PAREN T_R_PAREN
+   35         | T_ID T_L_PAREN RealParamList T_R_PAREN
+
+   36 PrimaryExp: T_L_PAREN Expr T_R_PAREN
+   37           | T_DIGIT
+   38           | LVal
+
+   39 RealParamList: Expr
+   40              | RealParamList T_COMMA Expr
+
+   41 LVal: T_ID
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    UNARY_MINUS (258)
+    T_DIGIT <integer_num> (259) 37
+    T_ID <var_id> (260) 5 15 34 35 41
+    T_INT <type> (261) 16
+    T_RETURN (262) 17
+    T_SEMICOLON (263) 12 17 18 20 21
+    T_L_PAREN (264) 5 34 35 36
+    T_R_PAREN (265) 5 34 35 36
+    T_L_BRACE (266) 6 7
+    T_R_BRACE (267) 6 7
+    T_COMMA (268) 14 40
+    T_ASSIGN (269) 18
+    T_SUB (270) 28 33
+    T_ADD (271) 27
+    T_MUL (272) 29
+    T_DIV (273) 30
+    T_MOD (274) 31
+
+
+Nonterminals, with rules where they appear
+
+    $accept (20)
+        on left: 0
+    CompileUnit <node> (21)
+        on left: 1 2 3 4
+        on right: 0 3 4
+    FuncDef <node> (22)
+        on left: 5
+        on right: 1 3
+    Block <node> (23)
+        on left: 6 7
+        on right: 5 19
+    BlockItemList <node> (24)
+        on left: 8 9
+        on right: 7 9
+    BlockItem <node> (25)
+        on left: 10 11
+        on right: 8 9
+    VarDecl <node> (26)
+        on left: 12
+        on right: 2 4 11
+    VarDeclExpr <node> (27)
+        on left: 13 14
+        on right: 12 14
+    VarDef <node> (28)
+        on left: 15
+        on right: 13 14
+    BasicType <type> (29)
+        on left: 16
+        on right: 5 13
+    Statement <node> (30)
+        on left: 17 18 19 20 21
+        on right: 10
+    Expr <node> (31)
+        on left: 22
+        on right: 17 18 20 36 39 40
+    AddExp <node> (32)
+        on left: 23 24
+        on right: 22 23
+    MulExp <node> (33)
+        on left: 25 26
+        on right: 23 24
+    AddOp <op_class> (34)
+        on left: 27 28
+        on right: 23
+    MulOp <op_class> (35)
+        on left: 29 30 31
+        on right: 25
+    UnaryExp <node> (36)
+        on left: 32 33 34 35
+        on right: 25 26 33
+    PrimaryExp <node> (37)
+        on left: 36 37 38
+        on right: 32
+    RealParamList <node> (38)
+        on left: 39 40
+        on right: 35 40
+    LVal <node> (39)
+        on left: 41
+        on right: 18 38
+
+
+State 0
+
+    0 $accept: • CompileUnit $end
+
+    T_INT  shift, and go to state 1
+
+    CompileUnit  go to state 2
+    FuncDef      go to state 3
+    VarDecl      go to state 4
+    VarDeclExpr  go to state 5
+    BasicType    go to state 6
+
+
+State 1
+
+   16 BasicType: T_INT •
+
+    $default  reduce using rule 16 (BasicType)
+
+
+State 2
+
+    0 $accept: CompileUnit • $end
+    3 CompileUnit: CompileUnit • FuncDef
+    4            | CompileUnit • VarDecl
+
+    $end   shift, and go to state 7
+    T_INT  shift, and go to state 1
+
+    FuncDef      go to state 8
+    VarDecl      go to state 9
+    VarDeclExpr  go to state 5
+    BasicType    go to state 6
+
+
+State 3
+
+    1 CompileUnit: FuncDef •
+
+    $default  reduce using rule 1 (CompileUnit)
+
+
+State 4
+
+    2 CompileUnit: VarDecl •
+
+    $default  reduce using rule 2 (CompileUnit)
+
+
+State 5
+
+   12 VarDecl: VarDeclExpr • T_SEMICOLON
+   14 VarDeclExpr: VarDeclExpr • T_COMMA VarDef
+
+    T_SEMICOLON  shift, and go to state 10
+    T_COMMA      shift, and go to state 11
+
+
+State 6
+
+    5 FuncDef: BasicType • T_ID T_L_PAREN T_R_PAREN Block
+   13 VarDeclExpr: BasicType • VarDef
+
+    T_ID  shift, and go to state 12
+
+    VarDef  go to state 13
+
+
+State 7
+
+    0 $accept: CompileUnit $end •
+
+    $default  accept
+
+
+State 8
+
+    3 CompileUnit: CompileUnit FuncDef •
+
+    $default  reduce using rule 3 (CompileUnit)
+
+
+State 9
+
+    4 CompileUnit: CompileUnit VarDecl •
+
+    $default  reduce using rule 4 (CompileUnit)
+
+
+State 10
+
+   12 VarDecl: VarDeclExpr T_SEMICOLON •
+
+    $default  reduce using rule 12 (VarDecl)
+
+
+State 11
+
+   14 VarDeclExpr: VarDeclExpr T_COMMA • VarDef
+
+    T_ID  shift, and go to state 14
+
+    VarDef  go to state 15
+
+
+State 12
+
+    5 FuncDef: BasicType T_ID • T_L_PAREN T_R_PAREN Block
+   15 VarDef: T_ID •
+
+    T_L_PAREN  shift, and go to state 16
+
+    $default  reduce using rule 15 (VarDef)
+
+
+State 13
+
+   13 VarDeclExpr: BasicType VarDef •
+
+    $default  reduce using rule 13 (VarDeclExpr)
+
+
+State 14
+
+   15 VarDef: T_ID •
+
+    $default  reduce using rule 15 (VarDef)
+
+
+State 15
+
+   14 VarDeclExpr: VarDeclExpr T_COMMA VarDef •
+
+    $default  reduce using rule 14 (VarDeclExpr)
+
+
+State 16
+
+    5 FuncDef: BasicType T_ID T_L_PAREN • T_R_PAREN Block
+
+    T_R_PAREN  shift, and go to state 17
+
+
+State 17
+
+    5 FuncDef: BasicType T_ID T_L_PAREN T_R_PAREN • Block
+
+    T_L_BRACE  shift, and go to state 18
+
+    Block  go to state 19
+
+
+State 18
+
+    6 Block: T_L_BRACE • T_R_BRACE
+    7      | T_L_BRACE • BlockItemList T_R_BRACE
+
+    T_DIGIT      shift, and go to state 20
+    T_ID         shift, and go to state 21
+    T_INT        shift, and go to state 1
+    T_RETURN     shift, and go to state 22
+    T_SEMICOLON  shift, and go to state 23
+    T_L_PAREN    shift, and go to state 24
+    T_L_BRACE    shift, and go to state 18
+    T_R_BRACE    shift, and go to state 25
+    T_SUB        shift, and go to state 26
+
+    Block          go to state 27
+    BlockItemList  go to state 28
+    BlockItem      go to state 29
+    VarDecl        go to state 30
+    VarDeclExpr    go to state 5
+    BasicType      go to state 31
+    Statement      go to state 32
+    Expr           go to state 33
+    AddExp         go to state 34
+    MulExp         go to state 35
+    UnaryExp       go to state 36
+    PrimaryExp     go to state 37
+    LVal           go to state 38
+
+
+State 19
+
+    5 FuncDef: BasicType T_ID T_L_PAREN T_R_PAREN Block •
+
+    $default  reduce using rule 5 (FuncDef)
+
+
+State 20
+
+   37 PrimaryExp: T_DIGIT •
+
+    $default  reduce using rule 37 (PrimaryExp)
+
+
+State 21
+
+   34 UnaryExp: T_ID • T_L_PAREN T_R_PAREN
+   35         | T_ID • T_L_PAREN RealParamList T_R_PAREN
+   41 LVal: T_ID •
+
+    T_L_PAREN  shift, and go to state 39
+
+    $default  reduce using rule 41 (LVal)
+
+
+State 22
+
+   17 Statement: T_RETURN • Expr T_SEMICOLON
+
+    T_DIGIT    shift, and go to state 20
+    T_ID       shift, and go to state 21
+    T_L_PAREN  shift, and go to state 24
+    T_SUB      shift, and go to state 26
+
+    Expr        go to state 40
+    AddExp      go to state 34
+    MulExp      go to state 35
+    UnaryExp    go to state 36
+    PrimaryExp  go to state 37
+    LVal        go to state 41
+
+
+State 23
+
+   21 Statement: T_SEMICOLON •
+
+    $default  reduce using rule 21 (Statement)
+
+
+State 24
+
+   36 PrimaryExp: T_L_PAREN • Expr T_R_PAREN
+
+    T_DIGIT    shift, and go to state 20
+    T_ID       shift, and go to state 21
+    T_L_PAREN  shift, and go to state 24
+    T_SUB      shift, and go to state 26
+
+    Expr        go to state 42
+    AddExp      go to state 34
+    MulExp      go to state 35
+    UnaryExp    go to state 36
+    PrimaryExp  go to state 37
+    LVal        go to state 41
+
+
+State 25
+
+    6 Block: T_L_BRACE T_R_BRACE •
+
+    $default  reduce using rule 6 (Block)
+
+
+State 26
+
+   33 UnaryExp: T_SUB • UnaryExp
+
+    T_DIGIT    shift, and go to state 20
+    T_ID       shift, and go to state 21
+    T_L_PAREN  shift, and go to state 24
+    T_SUB      shift, and go to state 26
+
+    UnaryExp    go to state 43
+    PrimaryExp  go to state 37
+    LVal        go to state 41
+
+
+State 27
+
+   19 Statement: Block •
+
+    $default  reduce using rule 19 (Statement)
+
+
+State 28
+
+    7 Block: T_L_BRACE BlockItemList • T_R_BRACE
+    9 BlockItemList: BlockItemList • BlockItem
+
+    T_DIGIT      shift, and go to state 20
+    T_ID         shift, and go to state 21
+    T_INT        shift, and go to state 1
+    T_RETURN     shift, and go to state 22
+    T_SEMICOLON  shift, and go to state 23
+    T_L_PAREN    shift, and go to state 24
+    T_L_BRACE    shift, and go to state 18
+    T_R_BRACE    shift, and go to state 44
+    T_SUB        shift, and go to state 26
+
+    Block        go to state 27
+    BlockItem    go to state 45
+    VarDecl      go to state 30
+    VarDeclExpr  go to state 5
+    BasicType    go to state 31
+    Statement    go to state 32
+    Expr         go to state 33
+    AddExp       go to state 34
+    MulExp       go to state 35
+    UnaryExp     go to state 36
+    PrimaryExp   go to state 37
+    LVal         go to state 38
+
+
+State 29
+
+    8 BlockItemList: BlockItem •
+
+    $default  reduce using rule 8 (BlockItemList)
+
+
+State 30
+
+   11 BlockItem: VarDecl •
+
+    $default  reduce using rule 11 (BlockItem)
+
+
+State 31
+
+   13 VarDeclExpr: BasicType • VarDef
+
+    T_ID  shift, and go to state 14
+
+    VarDef  go to state 13
+
+
+State 32
+
+   10 BlockItem: Statement •
+
+    $default  reduce using rule 10 (BlockItem)
+
+
+State 33
+
+   20 Statement: Expr • T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 46
+
+
+State 34
+
+   22 Expr: AddExp •
+
+    $default  reduce using rule 22 (Expr)
+
+
+State 35
+
+   23 AddExp: MulExp • AddOp AddExp
+   24       | MulExp •
+
+    T_SUB  shift, and go to state 47
+    T_ADD  shift, and go to state 48
+
+    $default  reduce using rule 24 (AddExp)
+
+    AddOp  go to state 49
+
+
+State 36
+
+   25 MulExp: UnaryExp • MulOp UnaryExp
+   26       | UnaryExp •
+
+    T_MUL  shift, and go to state 50
+    T_DIV  shift, and go to state 51
+    T_MOD  shift, and go to state 52
+
+    $default  reduce using rule 26 (MulExp)
+
+    MulOp  go to state 53
+
+
+State 37
+
+   32 UnaryExp: PrimaryExp •
+
+    $default  reduce using rule 32 (UnaryExp)
+
+
+State 38
+
+   18 Statement: LVal • T_ASSIGN Expr T_SEMICOLON
+   38 PrimaryExp: LVal •
+
+    T_ASSIGN  shift, and go to state 54
+
+    $default  reduce using rule 38 (PrimaryExp)
+
+
+State 39
+
+   34 UnaryExp: T_ID T_L_PAREN • T_R_PAREN
+   35         | T_ID T_L_PAREN • RealParamList T_R_PAREN
+
+    T_DIGIT    shift, and go to state 20
+    T_ID       shift, and go to state 21
+    T_L_PAREN  shift, and go to state 24
+    T_R_PAREN  shift, and go to state 55
+    T_SUB      shift, and go to state 26
+
+    Expr           go to state 56
+    AddExp         go to state 34
+    MulExp         go to state 35
+    UnaryExp       go to state 36
+    PrimaryExp     go to state 37
+    RealParamList  go to state 57
+    LVal           go to state 41
+
+
+State 40
+
+   17 Statement: T_RETURN Expr • T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 58
+
+
+State 41
+
+   38 PrimaryExp: LVal •
+
+    $default  reduce using rule 38 (PrimaryExp)
+
+
+State 42
+
+   36 PrimaryExp: T_L_PAREN Expr • T_R_PAREN
+
+    T_R_PAREN  shift, and go to state 59
+
+
+State 43
+
+   33 UnaryExp: T_SUB UnaryExp •
+
+    $default  reduce using rule 33 (UnaryExp)
+
+
+State 44
+
+    7 Block: T_L_BRACE BlockItemList T_R_BRACE •
+
+    $default  reduce using rule 7 (Block)
+
+
+State 45
+
+    9 BlockItemList: BlockItemList BlockItem •
+
+    $default  reduce using rule 9 (BlockItemList)
+
+
+State 46
+
+   20 Statement: Expr T_SEMICOLON •
+
+    $default  reduce using rule 20 (Statement)
+
+
+State 47
+
+   28 AddOp: T_SUB •
+
+    $default  reduce using rule 28 (AddOp)
+
+
+State 48
+
+   27 AddOp: T_ADD •
+
+    $default  reduce using rule 27 (AddOp)
+
+
+State 49
+
+   23 AddExp: MulExp AddOp • AddExp
+
+    T_DIGIT    shift, and go to state 20
+    T_ID       shift, and go to state 21
+    T_L_PAREN  shift, and go to state 24
+    T_SUB      shift, and go to state 26
+
+    AddExp      go to state 60
+    MulExp      go to state 35
+    UnaryExp    go to state 36
+    PrimaryExp  go to state 37
+    LVal        go to state 41
+
+
+State 50
+
+   29 MulOp: T_MUL •
+
+    $default  reduce using rule 29 (MulOp)
+
+
+State 51
+
+   30 MulOp: T_DIV •
+
+    $default  reduce using rule 30 (MulOp)
+
+
+State 52
+
+   31 MulOp: T_MOD •
+
+    $default  reduce using rule 31 (MulOp)
+
+
+State 53
+
+   25 MulExp: UnaryExp MulOp • UnaryExp
+
+    T_DIGIT    shift, and go to state 20
+    T_ID       shift, and go to state 21
+    T_L_PAREN  shift, and go to state 24
+    T_SUB      shift, and go to state 26
+
+    UnaryExp    go to state 61
+    PrimaryExp  go to state 37
+    LVal        go to state 41
+
+
+State 54
+
+   18 Statement: LVal T_ASSIGN • Expr T_SEMICOLON
+
+    T_DIGIT    shift, and go to state 20
+    T_ID       shift, and go to state 21
+    T_L_PAREN  shift, and go to state 24
+    T_SUB      shift, and go to state 26
+
+    Expr        go to state 62
+    AddExp      go to state 34
+    MulExp      go to state 35
+    UnaryExp    go to state 36
+    PrimaryExp  go to state 37
+    LVal        go to state 41
+
+
+State 55
+
+   34 UnaryExp: T_ID T_L_PAREN T_R_PAREN •
+
+    $default  reduce using rule 34 (UnaryExp)
+
+
+State 56
+
+   39 RealParamList: Expr •
+
+    $default  reduce using rule 39 (RealParamList)
+
+
+State 57
+
+   35 UnaryExp: T_ID T_L_PAREN RealParamList • T_R_PAREN
+   40 RealParamList: RealParamList • T_COMMA Expr
+
+    T_R_PAREN  shift, and go to state 63
+    T_COMMA    shift, and go to state 64
+
+
+State 58
+
+   17 Statement: T_RETURN Expr T_SEMICOLON •
+
+    $default  reduce using rule 17 (Statement)
+
+
+State 59
+
+   36 PrimaryExp: T_L_PAREN Expr T_R_PAREN •
+
+    $default  reduce using rule 36 (PrimaryExp)
+
+
+State 60
+
+   23 AddExp: MulExp AddOp AddExp •
+
+    $default  reduce using rule 23 (AddExp)
+
+
+State 61
+
+   25 MulExp: UnaryExp MulOp UnaryExp •
+
+    $default  reduce using rule 25 (MulExp)
+
+
+State 62
+
+   18 Statement: LVal T_ASSIGN Expr • T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 65
+
+
+State 63
+
+   35 UnaryExp: T_ID T_L_PAREN RealParamList T_R_PAREN •
+
+    $default  reduce using rule 35 (UnaryExp)
+
+
+State 64
+
+   40 RealParamList: RealParamList T_COMMA • Expr
+
+    T_DIGIT    shift, and go to state 20
+    T_ID       shift, and go to state 21
+    T_L_PAREN  shift, and go to state 24
+    T_SUB      shift, and go to state 26
+
+    Expr        go to state 66
+    AddExp      go to state 34
+    MulExp      go to state 35
+    UnaryExp    go to state 36
+    PrimaryExp  go to state 37
+    LVal        go to state 41
+
+
+State 65
+
+   18 Statement: LVal T_ASSIGN Expr T_SEMICOLON •
+
+    $default  reduce using rule 18 (Statement)
+
+
+State 66
+
+   40 RealParamList: RealParamList T_COMMA Expr •
+
+    $default  reduce using rule 40 (RealParamList)
