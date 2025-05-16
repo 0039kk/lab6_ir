@@ -8,7 +8,7 @@
 
 // 此文件定义了文法中终结符的类别
 #include "BisonParser.h"
-
+#include "MiniCBison.h"
 #include "AttrType.h"
 // 对于整数或浮点数，词法识别无符号数，对于负数，识别为求负运算符与无符号数，请注意。
 %}
@@ -57,6 +57,25 @@ h           [0-9a-fA-F]
 "/"			{ return T_DIV; }
 "%"         { return T_MOD; }
 
+
+"<"         { return T_LT; }
+"<="        { return T_LE; }
+">"         { return T_GT; }
+">="        { return T_GE; }
+"=="        { return T_EQ; }
+"!="        { return T_NE; }
+
+"&&"        { return T_LAND; }
+"||"        { return T_LOR; }
+"!"        { return T_LNOT; }
+
+
+
+"if"        { return T_IF; }
+"else"      { return T_ELSE; }
+"while"     { return T_WHILE; }
+"break"     { return T_BREAK; }
+"continue"  { return T_CONTINUE; }
 
 
 "0"|[1-9][0-9]*	{
@@ -112,10 +131,13 @@ h           [0-9a-fA-F]
                 // 空白行忽略
                 ;
             }
+"//".*      
+
 
 .           {
                 printf("Line %d: Invalid char %s\n", yylineno, yytext);
                 // 词法识别错误
                 return 257;
             }
+
 %%

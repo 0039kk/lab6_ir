@@ -18,24 +18,26 @@
 #include "VoidType.h"
 
 #include "GotoInstruction.h"
-
+#include "Value.h" 
 ///
 /// @brief 无条件跳转指令的构造函数
 /// @param target 跳转目标
 ///
-GotoInstruction::GotoInstruction(Function * _func, Instruction * _target)
-    : Instruction(_func, IRInstOperator::IRINST_OP_GOTO, VoidType::getType())
-{
-    // 真假目标一样，则无条件跳转
-    target = static_cast<LabelInstruction *>(_target);
+GotoInstruction::GotoInstruction(Function * _func, LabelInstruction * _target_label) // 参数应为 LabelInstruction*
+    : Instruction(_func, IRInstOperator::IRINST_OP_GOTO, VoidType::getType()) {
+    this->target = _target_label; // 赋值给成员变量 this->target
 }
 
 /// @brief 转换成IR指令文本
-void GotoInstruction::toString(std::string & str)
-{
-    str = "br label " + target->getIRName();
+std::string GotoInstruction::toString() const {
+    std::string result_str;
+    if (this->target) { // this->target 是 LabelInstruction*
+        result_str = "br label " + this->target->getIRName(); // <--- 使用 getIRName()
+    } else {
+        result_str = "; <Error: GotoInstruction has null target>";
+    }
+    return result_str;
 }
-
 ///
 /// @brief 获取目标Label指令
 /// @return LabelInstruction* label指令

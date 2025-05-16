@@ -51,7 +51,7 @@ enum class IRInstOperator : std::int8_t {
 
     ///@brief 整数取负指令，一元运算
     IRINST_OP_NEG_I,
-    
+
     /// @brief 赋值指令，一元运算
     IRINST_OP_ASSIGN,
 
@@ -60,6 +60,10 @@ enum class IRInstOperator : std::int8_t {
 
     /// @brief 实参ARG指令，单目运算
     IRINST_OP_ARG,
+
+    // --- 新增的操作码 ---
+    IRINST_OP_CMP,          // 用于关系比较 (CmpInstruction)
+    IRINST_OP_BRANCH_COND,  // 用于条件跳转 (BranchConditionalInstruction)
 
     /* 后续可追加其他的IR指令 */
 
@@ -83,14 +87,15 @@ public:
 
     /// @brief 获取指令操作码
     /// @return 指令操作码
-    IRInstOperator getOp();
+    [[nodiscard]] IRInstOperator getOp() const;
 
     ///
     /// @brief 转换成IR指令文本形式
     /// @param str IR指令文本
     ///
-    virtual void toString(std::string & str);
-
+    [[nodiscard]] virtual std::string toString() const = 0; 
+	[[nodiscard]] virtual bool isTerminator() const { return false; }
+    
     /// @brief 是否是Dead指令
     bool isDead();
 
@@ -109,7 +114,7 @@ public:
     /// @return true
     /// @return false
     ///
-    bool hasResultValue();
+    [[nodiscard]] bool hasResultValue() const;
 
     ///
     /// @brief 获得分配的寄存器编号或ID
@@ -177,6 +182,8 @@ public:
     {
         this->loadRegNo = regId;
     }
+
+    
 
 protected:
     ///

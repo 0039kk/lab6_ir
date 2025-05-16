@@ -29,5 +29,6 @@ public:
     ArgInstruction(Function * _func, Value * src);
 
     /// @brief 转换成字符串
-    void toString(std::string & str) override;
+    [[nodiscard]] std::string toString() const override;
+    
 };

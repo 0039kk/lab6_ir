@@ -160,6 +160,10 @@ set(IR_SRCS
 	ir/Instructions/ArgInstruction.h
 	ir/Instructions/BinaryInstruction.cpp
 	ir/Instructions/BinaryInstruction.h
+	ir/Instructions/BranchConditionalInstruction.cpp
+	ir/Instructions/BranchConditionalInstruction.h
+	ir/Instructions/CmpInstruction.cpp
+	ir/Instructions/CmpInstruction.h
 	ir/Instructions/EntryInstruction.cpp
 	ir/Instructions/EntryInstruction.h
 	ir/Instructions/ExitInstruction.cpp
@@ -181,11 +185,14 @@ set(IR_SRCS
 	ir/Types/IntegerType.h
 	ir/Types/IntegerType.cpp
 	ir/Values/ConstInt.h
+	ir/Values/ConstInt.cpp
 	ir/Values/FormalParam.h
 	ir/Values/GlobalVariable.h
 	ir/Values/LocalVariable.h
 	ir/Values/MemVariable.h
 	ir/Values/RegVariable.h
+	ir/Values/TempVariable.h
+	ir/Values/TempVariable.cpp
 	ir/IRCode.h
 	ir/IRCode.cpp
 	ir/Constant.h

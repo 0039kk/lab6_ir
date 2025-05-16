@@ -78,7 +78,7 @@ public:
 
     /// @brief 获取类型
     /// @return 变量名
-    virtual Type * getType();
+    [[nodiscard]] virtual Type * getType() const;
 
     ///
     /// @brief 增加一条边，增加Value被使用次数
@@ -96,7 +96,7 @@ public:
     /// @brief 取得变量所在的作用域层级
     /// @return int32_t 层级
     ///
-    virtual int32_t getScopeLevel();
+    [[nodiscard]] virtual int32_t getScopeLevel() const;
 
     ///
     /// @brief 获得分配的寄存器编号或ID

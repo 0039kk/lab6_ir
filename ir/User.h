@@ -21,7 +21,7 @@
 
 #include "Value.h"
 #include "Use.h"
-
+class Use; // 前向声明
 ///
 /// @brief 本身代表一个Value，这个Value可通过其中的操作数计算得到
 ///
@@ -37,13 +37,15 @@ class User : public Value {
     std::vector<Use *> operands;
 
 public:
+	
+
     ///
     /// @brief 构造函数
     /// @param _type  类型
     /// @param _name  名称
     ///
     User(Type * _type);
-
+	~User(); // <--- 添加析构函数声明
     ///
     /// @brief Get the Operands object
     /// @return std::vector<Use *>&
@@ -54,20 +56,20 @@ public:
     /// @brief 取得操作数
     /// @return std::vector<Value *>
     ///
-    std::vector<Value *> getOperandsValue();
+    std::vector<Value *> getOperandsValue() const;
 
     ///
     /// @brief 获取操作数的个数
     /// @return int32_t 个数
     ///
-    int32_t getOperandsNum();
+    [[nodiscard]] int32_t getOperandsNum() const; 
 
     ///
     /// @brief 获取指定的操作数
     /// @param pos 位置
     /// @return Value* 操作数
     ///
-    Value * getOperand(int32_t pos);
+    [[nodiscard]] Value* getOperand(int32_t pos) const;
 
     ///
     /// @brief 更新指定Pos的Value

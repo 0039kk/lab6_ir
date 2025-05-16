@@ -44,7 +44,8 @@ public:
     /// @brief 转换成IR指令文本
     /// @param str IR指令
     ///
-    void toString(std::string & str) override;
+    [[nodiscard]] std::string toString() const override;
+
 
     ///
     /// @brief 获取被调用函数的名字

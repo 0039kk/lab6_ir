@@ -257,7 +257,7 @@ static int compile(std::string inputFile, std::string outputFile)
     // 内部函数调用返回值保存变量
     int subResult;
 
-    Module * module = nullptr;
+    Module * module_ptr = nullptr;
 
     // 这里采用do {} while(0)架构的目的是如果处理出错可通过break退出循环，出口唯一
     // 在编译器编译优化时会自动去除，因为while恒假的缘故
@@ -317,10 +317,9 @@ static int compile(std::string inputFile, std::string outputFile)
         // 都需要遍历AST转换成线性IR指令
 
         // 符号表，保存所有的变量以及函数等信息
-        Module * module = new Module(inputFile);
-
+        module_ptr = new Module(inputFile); 
         // 遍历抽象语法树产生线性IR，相关信息保存到符号表中
-        IRGenerator ast2IR(astRoot, module);
+        IRGenerator ast2IR(astRoot, module_ptr);
         subResult = ast2IR.run();
         if (!subResult) {
 
@@ -336,10 +335,10 @@ static int compile(std::string inputFile, std::string outputFile)
         if (gShowLineIR) {
 
             // 对IR的名字重命名
-            module->renameIR();
+            module_ptr->renameIR();
 
             // 输出IR
-            module->outputIR(outputFile);
+            module_ptr->outputIR(outputFile);
 
             // 设置返回结果：正常
             result = 0;
@@ -350,7 +349,7 @@ static int compile(std::string inputFile, std::string outputFile)
         // 要使得汇编能输出IR指令作为注释，必须对IR的名字进行命名，否则为空值
         if (gAsmAlsoShowIR) {
             // 对IR的名字重命名
-            module->renameIR();
+            module_ptr->renameIR();
         }
 
         // 这里可追加中间代码优化，体系结果无关的优化等
@@ -364,7 +363,7 @@ static int compile(std::string inputFile, std::string outputFile)
 
             if (gCPUTarget == "ARM32") {
                 // 输出面向ARM32的汇编指令
-                generator = new CodeGeneratorArm32(module);
+                generator = new CodeGeneratorArm32(module_ptr);
                 generator->setShowLinearIR(gAsmAlsoShowIR);
                 generator->run(outputFile);
             } else {
@@ -377,14 +376,17 @@ static int compile(std::string inputFile, std::string outputFile)
         }
 
         // 清理符号表
-        module->Delete();
+        module_ptr->Delete();
 
         // 成功执行
         result = 0;
 
     } while (false);
 
-    delete module;
+    if (module_ptr != nullptr) { // 只有当 module_ptr 被 new 过才 delete
+        delete module_ptr; // <--- 正确删除通过 new 创建的 Module 对象
+        module_ptr = nullptr;
+    }
 
     return result;
 }

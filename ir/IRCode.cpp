@@ -43,11 +43,12 @@ void InterCode::addInst(Instruction * inst)
 
 /// @brief 获取指令序列
 /// @return 指令序列
-std::vector<Instruction *> & InterCode::getInsts()
-{
+const std::vector<Instruction*>& InterCode::getInsts() const { // <--- 返回类型和函数本身都要有 const
     return code;
 }
-
+std::vector<Instruction*>& InterCode::getInsts() {
+    return code; // 使用正确的成员变量名 code
+}
 /// @brief 删除所有指令
 void InterCode::Delete()
 {
@@ -62,4 +63,18 @@ void InterCode::Delete()
     }
 
     code.clear();
+}
+void InterCode::clear() {
+    // 如果需要释放指令内存，这里要小心
+    // for (Instruction* inst : code) { delete inst; } // 只有在InterCode拥有指令所有权时
+    code.clear();
+}
+bool InterCode::empty() const {
+    return code.empty();
+}
+Instruction* InterCode::getLastInst() const {
+    return code.empty() ? nullptr : code.back();
+}
+const std::vector<Instruction*>& InterCode::getInstructions() const {
+    return code;
 }

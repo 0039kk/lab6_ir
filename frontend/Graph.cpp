@@ -94,7 +94,53 @@ string getNodeName(ast_node * astnode)
             nodeName = "real-params";
             break;
             // TODO 这里追加其它类型的结点，返回对应结点的字符串
-
+		 // --- 新增的 AST 节点类型处理 ---
+		 case ast_operator_type::AST_OP_IF:
+		 nodeName = "if";
+		 break;
+		case ast_operator_type::AST_OP_WHILE:
+			nodeName = "while";
+			break;
+		case ast_operator_type::AST_OP_BREAK:
+			nodeName = "break";
+			break;
+		case ast_operator_type::AST_OP_CONTINUE:
+			nodeName = "continue";
+			break;
+		case ast_operator_type::AST_OP_LT:
+			nodeName = "<";
+			break;
+		case ast_operator_type::AST_OP_LE:
+			nodeName = "<=";
+			break;
+		case ast_operator_type::AST_OP_GT:
+			nodeName = ">";
+			break;
+		case ast_operator_type::AST_OP_GE:
+			nodeName = ">=";
+			break;
+		case ast_operator_type::AST_OP_EQ:
+			nodeName = "==";
+			break;
+		case ast_operator_type::AST_OP_NE:
+			nodeName = "!=";
+			break;
+		case ast_operator_type::AST_OP_LAND:
+			nodeName = "&&";
+			break;
+		case ast_operator_type::AST_OP_LOR:
+			nodeName = "||";
+			break;
+		case ast_operator_type::AST_OP_LNOT:
+			nodeName = "!";
+			break;
+		// case ast_operator_type::AST_OP_EMPTY_STMT: // 如果你添加了空语句节点
+		//     nodeName = "empty_stmt";
+		//     break;
+		// --- 结束新增 ---
+		case ast_operator_type::AST_OP_MAX: // 明确处理
+            nodeName = "AST_OP_MAX (invalid)";
+            break;
         default:
             nodeName = "unknown";
             break;

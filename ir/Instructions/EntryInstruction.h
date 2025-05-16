@@ -32,5 +32,5 @@ public:
     ///
     /// @brief 转换成IR指令字符串
     ///
-    void toString(std::string & str) override;
+    [[nodiscard]] std::string toString() const override;
 };

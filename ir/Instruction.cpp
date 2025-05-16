@@ -28,17 +28,16 @@ Instruction::Instruction(Function * _func, IRInstOperator _op, Type * _type) : U
 
 /// @brief 获取指令操作码
 /// @return 指令操作码
-IRInstOperator Instruction::getOp()
+IRInstOperator Instruction::getOp() const
 {
     return op;
 }
 
 /// @brief 转换成字符串
 /// @param str 转换后的字符串
-void Instruction::toString(std::string & str)
-{
-    // 未知指令
-    str = "Unkown IR Instruction";
+std::string Instruction::toString() const {
+    // 返回一个通用的表示，或者一个空字符串，或者抛出未实现异常
+    return "Instruction_opcode_" + std::to_string(static_cast<int>(op)); 
 }
 
 /// @brief 是否是Dead指令
@@ -68,7 +67,7 @@ Function * Instruction::getFunction()
 /// @return true
 /// @return false
 ///
-bool Instruction::hasResultValue()
+bool Instruction::hasResultValue() const
 {
     return !type->isVoidType();
 }

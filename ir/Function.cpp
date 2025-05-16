@@ -44,7 +44,7 @@ Function::~Function()
 
 /// @brief 获取函数返回类型
 /// @return 返回类型
-Type * Function::getReturnType()
+Type * Function::getReturnType() const
 {
     return returnType;
 }
@@ -72,79 +72,95 @@ bool Function::isBuiltin()
 
 /// @brief 函数指令信息输出
 /// @param str 函数指令
-void Function::toString(std::string & str)
-{
+// ir/Function.cpp
+#include "Function.h"
+#include "Type.h"        // For Type::toString()
+#include "Value.h"       // For Value::getIRName(), Value::getType(), etc.
+#include "Instruction.h" // For Instruction::getOp(), Instruction::toString()
+#include "FormalParam.h" // For FormalParam
+#include "LocalVariable.h"// For LocalVariable
+#include <set>           // For std::set to handle unique temporary declarations
+
+// ... (其他 Function 成员函数保持不变) ...
+
+// 修改 toString 的定义
+std::string Function::toString() const { // <--- 添加 const，修改返回类型，移除参数
+    std::string func_ir_str; // 用于构建结果
+
     if (builtIn) {
-        // 内置函数则什么都不输出
-        return;
+        // 对于内置函数，通常只输出一个声明（如果需要的话），而不是完整的定义
+        // 或者根据你的 IR 规范，可能什么都不输出，或者输出 "declare ..."
+        // 例如: func_ir_str = "declare " + getReturnType()->toString() + " @" + getName() + "(";
+        // (参数列表也需要正确格式化)
+        // func_ir_str += ");\n";
+        return func_ir_str; // 暂时返回空字符串，你需要确定内置函数的正确 IR 表示
     }
 
-    // 输出函数头
-    str = "define " + getReturnType()->toString() + " " + getIRName() + "(";
+    // 输出函数头 "define <return_type> @<func_name>(<param_list>)"
+    // 确保 getReturnType(), getName(), param->getType(), param->getIRName() 都是 const 方法
+    func_ir_str = "define " + getReturnType()->toString() + " @" + getName() + "(";
 
-    bool firstParam = false;
-    for (auto & param: params) {
-
+    bool firstParam = true;
+    for (const auto & param : params) { // 使用 const auto&
         if (!firstParam) {
-            firstParam = true;
+            func_ir_str += ", ";
+        }
+        if (param && param->getType()) { // 添加空指针检查
+            func_ir_str += param->getType()->toString() + " " + param->getIRName();
         } else {
-            str += ", ";
+            func_ir_str += "<invalid_param>";
         }
+        firstParam = false;
+    }
+    func_ir_str += "){\n"; // 添加函数体开始的 '{'
 
-        std::string param_str = param->getType()->toString() + param->getIRName();
-
-        str += param_str;
+    // --- 局部变量声明 ---
+    // 确保 var->getType()->toString(), var->getIRName(), var->getName(), var->getScopeLevel() 是 const
+    if (!varsVector.empty()) {
+        for (const auto & var : varsVector) { // 使用 const auto&
+            if (var && var->getType()) { // 添加空指针检查
+                func_ir_str += "\tdeclare " + var->getType()->toString() + " " + var->getIRName();
+                std::string realName = var->getName();
+                if (!realName.empty()) {
+                    func_ir_str += " ; " + std::to_string(var->getScopeLevel()) + ":" + realName;
+                }
+                func_ir_str += "\n";
+            }
+        }
+        
     }
 
-    str += ")\n";
+    if (!this->tempVars.empty()) { // 检查 tempVars 是否为空
+        for (const auto& temp_val_ptr : this->tempVars) { // 遍历 tempVars 向量
+            if (temp_val_ptr && temp_val_ptr->getType() && !temp_val_ptr->getIRName().empty()) { // 确保 Value 有效、有类型、有IR名
+                // 调试打印 (可选):
+                // std::cout << "toString declaring temp: " << temp_val_ptr->getIRName()
+                //           << " of type: " << temp_val_ptr->getType()->toString() << std::endl;
 
-    str += "{\n";
-
-    // 输出局部变量的名字与IR名字
-    for (auto & var: this->varsVector) {
-
-        // 局部变量和临时变量需要输出declare语句
-        str += "\tdeclare " + var->getType()->toString() + " " + var->getIRName();
-
-        std::string extraStr;
-        std::string realName = var->getName();
-        if (!realName.empty()) {
-            str += " ; " + std::to_string(var->getScopeLevel()) + ":" + realName;
+                func_ir_str += "\tdeclare " + temp_val_ptr->getType()->toString() + " " + temp_val_ptr->getIRName() + "\n";
+            }
         }
-
-        str += "\n";
+        func_ir_str += "\n"; // 在所有临时变量声明之后加一个换行
     }
 
-    // 输出临时变量的declare形式
-    // 遍历所有的线性IR指令，文本输出
-    for (auto & inst: code.getInsts()) {
-
-        if (inst->hasResultValue()) {
-
-            // 局部变量和临时变量需要输出declare语句
-            str += "\tdeclare " + inst->getType()->toString() + " " + inst->getIRName() + "\n";
-        }
-    }
-
-    // 遍历所有的线性IR指令，文本输出
-    for (auto & inst: code.getInsts()) {
-
-        std::string instStr;
-        inst->toString(instStr);
-
-        if (!instStr.empty()) {
-
-            // Label指令不加Tab键
-            if (inst->getOp() == IRInstOperator::IRINST_OP_LABEL) {
-                str += instStr + "\n";
-            } else {
-                str += "\t" + instStr + "\n";
+    // --- 指令列表 ---
+    // 确保 inst->toString() 和 inst->getOp() 是 const
+    for (const auto & inst : code.getInsts()) { // 使用 const auto&
+        if (inst) { // 添加空指针检查
+            std::string current_inst_str = inst->toString();
+            if (!current_inst_str.empty()) {
+                if (inst->getOp() == IRInstOperator::IRINST_OP_LABEL) {
+                    func_ir_str += current_inst_str + "\n";
+                } else {
+                    func_ir_str += "\t" + current_inst_str + "\n";
+                }
             }
         }
     }
 
     // 输出函数尾部
-    str += "}\n";
+    func_ir_str += "}\n\n"; // 添加函数体结束的 '}' 和一个空行
+    return func_ir_str;    // 返回构建好的字符串
 }
 
 /// @brief 设置函数出口指令
@@ -279,57 +295,93 @@ void Function::Delete()
 ///
 /// @brief 函数内的Value重命名
 ///
+// Function.cpp
 void Function::renameIR()
 {
-    // 内置函数忽略
     if (isBuiltin()) {
         return;
     }
 
-    int32_t nameIndex = 0;
+    int32_t nameIndex = 0; // 本函数内统一的命名计数器
 
-    // 形式参数重命名
-    for (auto & param: this->params) {
+    // 1. 重命名形式参数
+    for (auto & param : this->params) {
         param->setIRName(IR_TEMP_VARNAME_PREFIX + std::to_string(nameIndex++));
     }
 
-    // 局部变量重命名
-    for (auto & var: this->varsVector) {
-
+    // 2. 重命名局部变量 (varsVector)
+    for (auto & var : this->varsVector) {
         var->setIRName(IR_LOCAL_VARNAME_PREFIX + std::to_string(nameIndex++));
     }
 
-    // 遍历所有的指令进行命名
-    for (auto inst: this->getInterCode().getInsts()) {
+    // 3. 重命名临时变量 (tempVars) - 这是关键新增部分
+    for (auto & temp_val : this->tempVars) {
+        temp_val->setIRName(IR_TEMP_VARNAME_PREFIX + std::to_string(nameIndex++));
+    }
+
+    // 4. 重命名标签 (如果需要，你的是在创建时命名，通常可以)
+    for (auto inst : this->getInterCode().getInsts()) {
         if (inst->getOp() == IRInstOperator::IRINST_OP_LABEL) {
-            inst->setIRName(IR_LABEL_PREFIX + std::to_string(nameIndex++));
-        } else if (inst->hasResultValue()) {
-            inst->setIRName(IR_TEMP_VARNAME_PREFIX + std::to_string(nameIndex++));
+            // 你的注释说标签名在 newLabel() 中创建时即最终确定，这很好。
         }
+        // 注意：不再需要在这里通过遍历指令去命名指令结果为临时变量。
+        // 因为所有临时变量（包括指令结果）都应该通过 Module::newTemporary 创建，
+        // 加入到 tempVars，并在上面的第3步被统一命名。
+        // 原来的 else if (inst->hasResultValue()) ... inst->setIRName(...) 部分可以考虑移除或修改，
+        // 确保它不会与第3步的命名冲突，或者只处理那些不由 newTemporary 管理的特殊结果值（如果有的话）。
+        // 最安全的是，如果一个指令的结果是一个 Value*，那个 Value* 应该就是 tempVars 中的一员，
+        // 其名字已在第3步被设置。
     }
 }
 
 ///
-/// @brief 获取统计的ARG指令的个数
-/// @return int32_t 个数
-///
-int32_t Function::getRealArgcount()
-{
-    return this->realArgCount;
-}
+	/// @brief 获取统计的ARG指令的个数
+	/// @return int32_t 个数
+	///
+	int32_t Function::getRealArgcount()
+	{
+		return this->realArgCount;
+	}
 
-///
-/// @brief 用于统计ARG指令个数的自增函数，个数加1
-///
-void Function::realArgCountInc()
-{
-    this->realArgCount++;
-}
+	///
+	/// @brief 用于统计ARG指令个数的自增函数，个数加1
+	///
+	void Function::realArgCountInc()
+	{
+		this->realArgCount++;
+	}
 
-///
-/// @brief 用于统计ARG指令个数的清零
-///
-void Function::realArgCountReset()
+	///
+	/// @brief 用于统计ARG指令个数的清零
+	///
+	void Function::realArgCountReset()
+	{
+		this->realArgCount = 0;
+    }
+    
+	void Function::addTempVar(Value* val)
 {
-    this->realArgCount = 0;
+    // 检查传入的指针是否有效，避免向 vector 中添加空指针
+    if (val != nullptr) {
+        // 可选：防止重复添加同一个临时变量
+        // 如果你确定在调用 addTempVar 之前不会有重复添加的情况，可以省略这个检查以提高一点点性能。
+        // 但为了健壮性，加上检查通常是好的。
+        bool already_exists = false;
+        for (const auto& existing_temp_var : tempVars) {
+            if (existing_temp_var == val) {
+                already_exists = true;
+                break;
+            }
+        }
+
+        if (!already_exists) {
+            tempVars.push_back(val);
+        }
+        // 如果不需要去重，可以直接写：
+        // tempVars.push_back(val);
+    }
+    // else {
+        // 可选：如果 val 为 nullptr，可以记录一个警告或错误
+        // minic_log(LOG_WARNING, "Attempted to add a null Value as a temporary variable to function %s", getName().c_str());
+    // }
 }

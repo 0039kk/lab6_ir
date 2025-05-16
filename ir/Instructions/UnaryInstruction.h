@@ -7,5 +7,5 @@ public:
                     IRInstOperator op, 
                     Value *srcVal, 
                     Type *type);
-    void toString(std::string &str) override;
+    std::string toString() const override;
 };

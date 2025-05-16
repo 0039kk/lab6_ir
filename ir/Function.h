@@ -17,7 +17,7 @@
 
 #include <string>
 #include <vector>
-
+#include "Value.h"   
 #include "GlobalValue.h"
 #include "FunctionType.h"
 #include "FormalParam.h"
@@ -45,7 +45,7 @@ public:
 
     /// @brief 获取函数返回类型
     /// @return 返回类型
-    Type * getReturnType();
+    [[nodiscard]] Type* getReturnType() const;
 
     /// @brief 获取函数的形参列表
     /// @return 形参列表
@@ -61,7 +61,7 @@ public:
 
     /// @brief 函数指令信息输出
     /// @param str 函数指令
-    void toString(std::string & str);
+    [[nodiscard]] std::string toString() const; 
 
     /// @brief 设置函数出口指令
     /// @param inst 出口Label指令
@@ -170,6 +170,12 @@ public:
     ///
     void realArgCountReset();
 
+    void addVar(Value * val);
+
+    void addTempVar(Value* val); // <--- 函数名是 addTempVar
+    const std::vector<Value*>& getTempVars() const;
+	
+
 private:
     ///
     /// @brief 函数的返回值类型，有点冗余，可删除，直接从type中取得即可
@@ -250,4 +256,7 @@ private:
     /// @brief 累计的实参个数，用于ARG指令的统计
     ///
     int32_t realArgCount = 0;
+    
+    
+	std::vector<Value*> tempVars;
 };

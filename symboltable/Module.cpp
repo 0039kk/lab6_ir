@@ -19,6 +19,8 @@
 #include "Common.h"
 #include "VoidType.h"
 
+#include "TempVariable.h"
+
 Module::Module(std::string _name) : name(_name)
 {
     // 创建作用域栈
@@ -143,20 +145,6 @@ void Module::insertConstIntDirectly(ConstInt * val)
 /// @brief 新建一个整型数值的Value，并加入到符号表，用于后续释放空间
 /// @param intVal 整数值
 /// @return 常量Value
-ConstInt * Module::newConstInt(int32_t intVal)
-{
-    // 查找整数字符串
-    ConstInt * val = findConstInt(intVal);
-    if (!val) {
-
-        // 不存在，则创建整数常量Value
-        val = new ConstInt(intVal);
-
-        insertConstIntDirectly(val);
-    }
-
-    return val;
-}
 
 /// @brief 根据整数值获取当前符号
 /// \param name 变量名
@@ -324,10 +312,56 @@ void Module::outputIR(const std::string & filePath)
     // 遍历所有的线性IR指令，文本输出
     for (auto func: funcVector) {
 
-        std::string instStr;
-        func->toString(instStr);
-        fprintf(fp, "%s", instStr.c_str());
+        std::string func_ir = func->toString(); // <--- 新调用
+        fprintf(fp, "%s", func_ir.c_str());   
     }
 
     fclose(fp);
+}
+// Module.cpp
+// Module.cpp
+Value* Module::newTemporary(Type* type, const std::string& prefix) { // prefix 可以用于生成占位符，但不是必须的
+    // 我们将传递一个空字符串作为初始的 IRName。
+    // 最终的、唯一的 IRName 将由 Function::renameIR() 设置。
+    std::string initial_ir_name; // 或者: initial_ir_name = "%temp_placeholder_" + prefix;
+    
+    auto temp_val = new TempVariable(type, initial_ir_name); // 调用双参数构造函数
+
+    Function* currentFunc = getCurrentFunction();
+    if (currentFunc) {
+        currentFunc->addTempVar(temp_val);
+    }
+    return temp_val;
+}
+
+ConstInt* Module::newConstInt(int32_t val, Type* type) {
+    if (!type) {
+        // 默认创建 i32 类型的常量
+        type = IntegerType::get(32); // 确保 IntegerType::get(32) 可用
+    }
+    // 注意这里返回类型是 ConstInt*，所以需要 static_cast
+    return static_cast<ConstInt*>(getOrCreateIntegerConstant(type, val));
+}
+
+Constant* Module::getOrCreateIntegerConstant(Type* type, int32_t value) {
+    if (!type || !type->isIntegerType()) {
+         minic_log(LOG_ERROR,"请求创建非整数类型的整数常量。");
+        return nullptr; 
+    }
+    // 对于i1，值通常是0或1
+    if (static_cast<IntegerType*>(type)->getBitWidth() == 1 && (value != 0 && value != 1)) {
+        minic_log(LOG_WARNING,"为i1类型创建了非0/1的常量值: %d", value);
+        // 可以选择将其规范化为0或1，或者允许
+    }
+
+    std::pair<Type*, int32_t> cache_key = {type, value};
+    auto it = integer_constant_cache_.find(cache_key);
+    if (it != integer_constant_cache_.end()) {
+        return it->second;
+    }
+    
+    ConstInt* new_const = new ConstInt(type, value); // 使用修改后的 ConstInt 构造函数
+    integer_constant_cache_[cache_key] = new_const;
+    // 你可能还需要将 new_const 添加到总的 values 列表或其他管理结构中
+    return new_const;
 }

@@ -38,5 +38,6 @@ public:
     MoveInstruction(Function * _func, Value * result, Value * srcVal1);
 
     /// @brief 转换成字符串
-    void toString(std::string & str) override;
+    [[nodiscard]] std::string toString() const override;
+
 };

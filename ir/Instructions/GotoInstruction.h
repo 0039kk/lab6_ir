@@ -32,10 +32,11 @@ public:
     /// @brief 无条件跳转指令的构造函数
     /// @param target 跳转目标
     ///
-    GotoInstruction(Function * _func, Instruction * _target);
+    explicit GotoInstruction(Function * _func, LabelInstruction * _target_label); 
 
     /// @brief 转换成字符串
-    void toString(std::string & str) override;
+    [[nodiscard]] std::string toString() const override;
+	[[nodiscard]] bool isTerminator() const override { return true; }
 
     ///
     /// @brief 获取目标Label指令

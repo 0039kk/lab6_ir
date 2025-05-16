@@ -21,54 +21,35 @@
 #include "IRConstant.h"
 #include "IntegerType.h"
 
+class Module;
 ///
 /// @brief 整型常量类
 ///
 class ConstInt : public Constant {
 
-public:
-    ///
-    /// @brief 指定值的常量
-    /// \param val
-    explicit ConstInt(int32_t val) : Constant(IntegerType::getTypeInt())
-    {
-        name = std::to_string(val);
-        intVal = val;
-    }
+	public:
+    // 修改构造函数以接受 Type* 和 int32_t 值
+    ConstInt(Type* type, int32_t val);
 
-    /// @brief 获取名字
-    /// @return 变量名
-    [[nodiscard]] std::string getIRName() const override
-    {
-        return name;
-    }
+    // getIRName() 应该与 Value 基类中的 getName() 匹配并 override
+    // 如果 Value 中是 getName(), 这里也应该是 getName()
 
-    ///
-    /// @brief 获取值
-    /// @return int32_t
-    ///
-    int32_t getVal()
-    {
+    [[nodiscard]] std::string getName() const override; // 或者 getIRName() 如果基类是这个
+
+    [[nodiscard]] int32_t getVal() const { // 标记为 const
         return intVal;
     }
 
-    ///
-    /// @brief 对该Value进行Load用的寄存器编号
-    /// @return int32_t 寄存器编号
-    ///
-    int32_t getLoadRegId() override
-    {
+    // setLoadRegId 和 getLoadRegId 看起来是从 User/Value 继承的，保持不变
+    int32_t getLoadRegId() override {
         return this->loadRegNo;
     }
-
-    ///
-    /// @brief 对该Value进行Load用的寄存器编号
-    /// @return int32_t 寄存器编号
-    ///
-    void setLoadRegId(int32_t regId) override
-    {
+    void setLoadRegId(int32_t regId) override {
         this->loadRegNo = regId;
     }
+
+    // 静态方法用于获取/创建特定类型的整数常量，并由 Module 管理缓存 (推荐)
+    static ConstInt* get(Type* type, int32_t value, Module& module);
 
 private:
     ///

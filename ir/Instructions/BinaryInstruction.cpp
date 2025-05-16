@@ -34,38 +34,44 @@ BinaryInstruction::BinaryInstruction(Function * _func,
 
 /// @brief 转换成字符串
 /// @param str 转换后的字符串
-void BinaryInstruction::toString(std::string & str)
-{
+// 在 BinaryInstruction.cpp 中
+#include "BinaryInstruction.h" // 确保包含头文件
+#include "Value.h"             // 为了 Value::getIRName() 或 Value::getName()
 
-    Value *src1 = getOperand(0), *src2 = getOperand(1);
+std::string BinaryInstruction::toString() const {
+    std::string result_str;
+    std::string op_str;
 
-    switch (op) {
-        case IRInstOperator::IRINST_OP_ADD_I:
+    // 假设 getOperand(0) 和 getOperand(1) 返回 Value*
+    // 并且它们是 const 方法
+    Value *src1 = getOperand(0);
+    Value *src2 = getOperand(1);
 
-            // 加法指令，二元运算
-            str = getIRName() + " = add " + src1->getIRName() + "," + src2->getIRName();
-            break;
-        case IRInstOperator::IRINST_OP_SUB_I:
+    // 假设 'op' 是 BinaryInstruction 的成员变量 (IRInstOperator 类型)
+    // 或者通过 getOpcode() 获取
+    // IRInstOperator current_op = getOpcode();
 
-            // 减法指令，二元运算
-            str = getIRName() + " = sub " + src1->getIRName() + "," + src2->getIRName();
-            break;
-        case IRInstOperator::IRINST_OP_MUL_I:
-            // 乘法指令，二元运算
-            str = getIRName() + " = mul " + src1->getIRName() + "," + src2->getIRName();
-            break;
-        case IRInstOperator::IRINST_OP_DIV_I:
-            // 除法指令，二元运算
-            str = getIRName() + " = div " + src1->getIRName() + "," + src2->getIRName();
-            break;
-        case IRInstOperator::IRINST_OP_MOD_I:
-            // 取余指令，二元运算
-            str = getIRName() + " = mod " + src1->getIRName() + "," + src2->getIRName();
-            break;
+    // 假设 getIRName() 返回指令结果的IR名称 (例如 %t0)
+    // 并且它是 Instruction 的 const 方法
 
-        default:
-            // 未知指令
-            Instruction::toString(str);
-            break;
+	if (!src1 || !src2) {
+        return "; <Error: BinaryInstruction has null operands>";
     }
+
+    switch (op) { // 或者 switch(current_op)
+        case IRInstOperator::IRINST_OP_ADD_I: op_str = "add"; break;
+        case IRInstOperator::IRINST_OP_SUB_I: op_str = "sub"; break;
+        case IRInstOperator::IRINST_OP_MUL_I: op_str = "mul"; break;
+        case IRInstOperator::IRINST_OP_DIV_I: op_str = "div"; break;
+        case IRInstOperator::IRINST_OP_MOD_I: op_str = "mod"; break;
+        default:
+            // 如果 Instruction::toString() 是纯虚的或不适用，提供一个默认错误消息
+            return "; <Error: Unknown binary operator in BinaryInstruction::toString()>";
+    }
+
+    // DragonIR 格式: 变量 = 算术运算符 变量, 变量
+    result_str = this->getIRName() + " = " + op_str + " " +
+                 src1->getIRName() + ", " + src2->getIRName();
+
+    return result_str;
 }

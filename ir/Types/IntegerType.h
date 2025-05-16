@@ -42,7 +42,7 @@ public:
     ///
     [[nodiscard]] std::string toString() const override
     {
-        return "i" + std::to_string(bitWidth);
+        return "i" + std::to_string(bit_width_);
     }
 
     ///
@@ -51,7 +51,7 @@ public:
     ///
     [[nodiscard]] int32_t getBitWidth() const
     {
-        return this->bitWidth;
+        return this->bit_width_;
     }
 
     ///
@@ -61,7 +61,7 @@ public:
     ///
     [[nodiscard]] bool isInt1Byte() const override
     {
-        return bitWidth == 1;
+        return bit_width_ == 1;
     }
 
     ///
@@ -71,7 +71,7 @@ public:
     ///
     [[nodiscard]] bool isInt32Type() const override
     {
-        return bitWidth == 32;
+        return Type::isIntegerType() && (bit_width_ == 32);
     }
 
     ///
@@ -83,12 +83,15 @@ public:
         return 4;
     }
 
+	[[nodiscard]] static IntegerType* get(int bitWidth);
 private:
+	int32_t bit_width_;
+
+	// 将构造函数设为私有，强制通过静态 get() 方法获取实例
+	explicit IntegerType(int bitWidth);
     ///
     /// @brief 构造函数
     ///
-    explicit IntegerType(int32_t _bitWidth) : Type(Type::IntegerTyID), bitWidth(_bitWidth)
-    {}
 
     ///
     /// @brief 唯一的VOID类型实例
@@ -103,5 +106,5 @@ private:
     ///
     /// @brief 位宽
     ///
-    int32_t bitWidth;
+    //int32_t bitWidth;
 };

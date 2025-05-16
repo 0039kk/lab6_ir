@@ -44,8 +44,14 @@ public:
 
     /// @brief 获取指令序列
     /// @return 指令序列
-    std::vector<Instruction *> & getInsts();
+    [[nodiscard]] std::vector<Instruction*>& getInsts(); 
+	[[nodiscard]] const std::vector<Instruction*>& getInsts() const;
 
     /// @brief 删除所有指令
     void Delete();
+
+    void clear();
+    [[nodiscard]] bool empty() const;
+    [[nodiscard]] Instruction* getLastInst() const;
+    [[nodiscard]] const std::vector<Instruction*>& getInstructions() const; 
 };

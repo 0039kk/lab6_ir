@@ -32,7 +32,6 @@ public:
     ///
     explicit GlobalVariable(Type * _type, std::string _name) : GlobalValue(_type, _name)
     {
-        // 设置对齐大小
         setAlignment(4);
     }
 
@@ -60,7 +59,7 @@ public:
     /// @brief 取得变量所在的作用域层级
     /// @return int32_t 层级
     ///
-    int32_t getScopeLevel() override
+    int32_t getScopeLevel() const override
     {
         return 0;
     }
@@ -87,10 +86,9 @@ public:
     /// @brief Declare指令IR显示
     /// @param str
     ///
-    void toDeclareString(std::string & str)
-    {
-        str = "declare " + getType()->toString() + " " + getIRName();
-    }
+    void toDeclareString(std::string & str) const { // <--- 建议也改为 const，并返回 std::string
+		str = "declare " + getType()->toString() + " " + getIRName(); // <--- 使用 getIRName()
+	}
 
 private:
     ///

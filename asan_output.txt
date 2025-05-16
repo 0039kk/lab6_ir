@@ -1,0 +1,1086 @@
+
+=================================================================
+==324721==ERROR: LeakSanitizer: detected memory leaks
+
+Indirect leak of 360 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b8ea52 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:93
+    #2 0x555c22bb2491 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:192
+    #3 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #4 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #5 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #6 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #7 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #8 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #9 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 360 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b8ea52 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:93
+    #2 0x555c22b8e03e in Module::Module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:34
+    #3 0x555c22b0391a in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #4 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #5 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 360 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b8ea52 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:93
+    #2 0x555c22b8de19 in Module::Module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:33
+    #3 0x555c22b0391a in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #4 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #5 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 352 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b03908 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #2 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #3 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 232 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb6fef in IRGenerator::ir_relational_op(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:959
+    #2 0x555c22bb6290 in IRGenerator::ir_visit_conditional_node(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:869
+    #3 0x555c22bb7654 in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1021
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #6 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #7 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #8 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #11 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #12 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #13 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 224 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb7056 in IRGenerator::ir_relational_op(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:960
+    #2 0x555c22bb6290 in IRGenerator::ir_visit_conditional_node(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:869
+    #3 0x555c22bb7654 in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1021
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #6 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #7 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #8 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #11 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #12 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #13 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 224 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bae2f5 in __gnu_cxx::new_allocator<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > > >::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22bad171 in std::allocator_traits<std::allocator<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > > > >::allocate(std::allocator<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > > >&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bac2a7 in std::_Vector_base<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >, std::allocator<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > > > >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22baaf5c in void std::vector<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >, std::allocator<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > > > >::_M_realloc_insert<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >&>(__gnu_cxx::__normal_iterator<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >*, std::vector<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >, std::allocator<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > > > > >, std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22baa414 in std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >& std::vector<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >, std::allocator<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > > > >::emplace_back<std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >&>(std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >&) /usr/include/c++/11/bits/vector.tcc:121
+    #6 0x555c22ba956c in ScopeStack::enterScope() /home/code/LAB1/exp04-minic-expr/symboltable/ScopeStack.cpp:25
+    #7 0x555c22b8e484 in Module::enterScope() /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:40
+    #8 0x555c22bb3817 in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:373
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb76aa in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1029
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #13 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #14 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #15 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #16 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #17 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #18 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #19 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #20 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 208 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb517c in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:722
+    #2 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #3 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #4 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #5 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #6 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #7 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #8 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #9 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #10 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #11 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 208 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb7796 in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1046
+    #2 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #3 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #4 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #5 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #6 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #7 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #8 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #9 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #10 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #11 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 208 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb517c in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:722
+    #2 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #3 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb76aa in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1029
+    #6 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #7 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #8 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #13 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #14 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #15 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 200 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb5da2 in IRGenerator::newLabel() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:814
+    #2 0x555c22bb7628 in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1015
+    #3 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #4 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #5 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #6 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #7 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #8 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #9 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #10 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #11 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #12 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 200 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb2a70 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:263
+    #2 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #3 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #6 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #7 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #8 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 200 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb4e9b in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:703
+    #2 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #3 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #4 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #5 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #6 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #7 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #8 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #9 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #10 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #11 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 200 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb4b48 in IRGenerator::ir_assign(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:659
+    #2 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #3 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #4 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #5 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #6 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #7 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #8 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #9 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #10 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #11 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 200 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb2781 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:215
+    #2 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #3 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #6 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #7 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #8 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 200 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb259c in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:211
+    #2 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #3 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #6 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #7 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #8 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 200 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb5da2 in IRGenerator::newLabel() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:814
+    #2 0x555c22bb7638 in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1016
+    #3 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #4 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #5 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #6 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #7 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #8 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #9 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #10 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #11 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #12 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 200 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bb4e9b in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:703
+    #2 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #3 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb76aa in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1029
+    #6 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #7 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #8 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #13 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #14 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #15 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 176 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b85ff1 in __gnu_cxx::new_allocator<Instruction*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22b85c14 in std::allocator_traits<std::allocator<Instruction*> >::allocate(std::allocator<Instruction*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22b85201 in std::_Vector_base<Instruction*, std::allocator<Instruction*> >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22b84262 in void std::vector<Instruction*, std::allocator<Instruction*> >::_M_realloc_insert<Instruction* const&>(__gnu_cxx::__normal_iterator<Instruction**, std::vector<Instruction*, std::allocator<Instruction*> > >, Instruction* const&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22bcb702 in std::vector<Instruction*, std::allocator<Instruction*> >::push_back(Instruction* const&) /usr/include/c++/11/bits/stl_vector.h:1198
+    #6 0x555c22bcad5f in InterCode::addInst(Instruction*) /home/code/LAB1/exp04-minic-expr/ir/IRCode.cpp:41
+    #7 0x555c22bb2a66 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:260
+    #8 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #9 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #12 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #13 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #14 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 160 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bd27a9 in Function::newLocalVarValue(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int) /home/code/LAB1/exp04-minic-expr/ir/Function.cpp:275
+    #2 0x555c22b8fd0d in Module::newVarValue(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:200
+    #3 0x555c22bb2930 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:234
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #6 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #7 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #8 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #9 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #10 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 160 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b8dd1e in Module::Module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:33
+    #2 0x555c22b0391a in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #3 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #4 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 152 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b9023c in Module::newGlobalVariable(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:233
+    #2 0x555c22b8fd8c in Module::newVarValue(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:203
+    #3 0x555c22bb5a97 in IRGenerator::ir_variable_declare(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:805
+    #4 0x555c22bb584f in IRGenerator::ir_declare_statment(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:787
+    #5 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #6 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #7 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #8 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #9 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #10 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #11 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 136 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b91a77 in Module::getOrCreateIntegerConstant(Type*, int) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:357
+    #2 0x555c22b916ab in Module::newConstInt(int, Type*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:337
+    #3 0x555c22bb5692 in IRGenerator::ir_leaf_node_uint(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:770
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb4de4 in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:685
+    #6 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #7 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #8 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #9 0x555c22bb76aa in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1029
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #12 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #13 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #14 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #15 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #16 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #17 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #18 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #19 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 136 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b91a77 in Module::getOrCreateIntegerConstant(Type*, int) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:357
+    #2 0x555c22b916ab in Module::newConstInt(int, Type*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:337
+    #3 0x555c22bb5692 in IRGenerator::ir_leaf_node_uint(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:770
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb6d44 in IRGenerator::ir_relational_op(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:937
+    #6 0x555c22bb6290 in IRGenerator::ir_visit_conditional_node(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:869
+    #7 0x555c22bb7654 in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1021
+    #8 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #9 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #10 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #13 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #14 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #15 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #16 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #17 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 136 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b91a77 in Module::getOrCreateIntegerConstant(Type*, int) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:357
+    #2 0x555c22b916ab in Module::newConstInt(int, Type*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:337
+    #3 0x555c22bb5692 in IRGenerator::ir_leaf_node_uint(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:770
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb4af1 in IRGenerator::ir_assign(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:651
+    #6 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #7 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #8 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #13 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #14 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #15 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 104 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b914c6 in Module::newTemporary(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:323
+    #2 0x555c22bb6ed3 in IRGenerator::ir_relational_op(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:946
+    #3 0x555c22bb6290 in IRGenerator::ir_visit_conditional_node(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:869
+    #4 0x555c22bb7654 in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1021
+    #5 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #6 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #7 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #8 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #9 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #12 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #13 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #14 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 104 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b7a319 in __gnu_cxx::new_allocator<std::__detail::_Hash_node_base*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22b7a251 in std::allocator_traits<std::allocator<std::__detail::_Hash_node_base*> >::allocate(std::allocator<std::__detail::_Hash_node_base*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22baf693 in std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, true> > >::_M_allocate_buckets(unsigned long) /usr/include/c++/11/bits/hashtable_policy.h:1927
+    #4 0x555c22baed73 in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_allocate_buckets(unsigned long) /usr/include/c++/11/bits/hashtable.h:440
+    #5 0x555c22baf03c in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_rehash_aux(unsigned long, std::integral_constant<bool, true>) /usr/include/c++/11/bits/hashtable.h:2382
+    #6 0x555c22bae657 in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_rehash(unsigned long, unsigned long const&) /usr/include/c++/11/bits/hashtable.h:2361
+    #7 0x555c22bad675 in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_insert_unique_node(unsigned long, unsigned long, std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, true>*, unsigned long) /usr/include/c++/11/bits/hashtable.h:2021
+    #8 0x555c22bac6c3 in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_emplace<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*> >(std::integral_constant<bool, true>, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*>&&) /usr/include/c++/11/bits/hashtable.h:1975
+    #9 0x555c22bab60b in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::emplace<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*> >(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*>&&) /usr/include/c++/11/bits/hashtable.h:915
+    #10 0x555c22baa69d in std::enable_if<std::is_constructible<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*>&&>::value, std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, false, true>, bool> >::type std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >::insert<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*> >(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*>&&) /usr/include/c++/11/bits/unordered_map.h:564
+    #11 0x555c22ba9889 in ScopeStack::insertValue(Value*) /home/code/LAB1/exp04-minic-expr/symboltable/ScopeStack.cpp:42
+    #12 0x555c22b8fdfe in Module::newVarValue(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:207
+    #13 0x555c22bb5a97 in IRGenerator::ir_variable_declare(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:805
+    #14 0x555c22bb584f in IRGenerator::ir_declare_statment(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:787
+    #15 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #16 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #17 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #18 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #19 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #20 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #21 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 104 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b7a319 in __gnu_cxx::new_allocator<std::__detail::_Hash_node_base*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22b7a251 in std::allocator_traits<std::allocator<std::__detail::_Hash_node_base*> >::allocate(std::allocator<std::__detail::_Hash_node_base*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22ba8b95 in std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, true> > >::_M_allocate_buckets(unsigned long) /usr/include/c++/11/bits/hashtable_policy.h:1927
+    #4 0x555c22ba8367 in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_allocate_buckets(unsigned long) /usr/include/c++/11/bits/hashtable.h:440
+    #5 0x555c22ba6b6c in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_rehash_aux(unsigned long, std::integral_constant<bool, true>) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc6b6c)
+    #6 0x555c22ba46b9 in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_rehash(unsigned long, unsigned long const&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc46b9)
+    #7 0x555c22ba1463 in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_insert_unique_node(unsigned long, unsigned long, std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, true>*, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc1463)
+    #8 0x555c22b9c951 in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_emplace<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, GlobalVariable*&>(std::integral_constant<bool, true>, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, GlobalVariable*&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xbc951)
+    #9 0x555c22b98a5e in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::emplace<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, GlobalVariable*&>(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, GlobalVariable*&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb8a5e)
+    #10 0x555c22b95e1d in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, false, true>, bool> std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, GlobalVariable*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*> > >::emplace<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, GlobalVariable*&>(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, GlobalVariable*&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb5e1d)
+    #11 0x555c22b8f43f in Module::insertGlobalValueDirectly(GlobalVariable*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:133
+    #12 0x555c22b90294 in Module::newGlobalVariable(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:235
+    #13 0x555c22b8fd8c in Module::newVarValue(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:203
+    #14 0x555c22bb5a97 in IRGenerator::ir_variable_declare(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:805
+    #15 0x555c22bb584f in IRGenerator::ir_declare_statment(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:787
+    #16 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #17 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #18 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #19 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #20 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #21 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #22 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 104 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b7a319 in __gnu_cxx::new_allocator<std::__detail::_Hash_node_base*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22b7a251 in std::allocator_traits<std::allocator<std::__detail::_Hash_node_base*> >::allocate(std::allocator<std::__detail::_Hash_node_base*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22ba8955 in std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> > >::_M_allocate_buckets(unsigned long) /usr/include/c++/11/bits/hashtable_policy.h:1927
+    #4 0x555c22ba81db in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_allocate_buckets(unsigned long) /usr/include/c++/11/bits/hashtable.h:440
+    #5 0x555c22ba66f8 in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_rehash_aux(unsigned long, std::integral_constant<bool, true>) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc66f8)
+    #6 0x555c22ba3e01 in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_rehash(unsigned long, unsigned long const&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc3e01)
+    #7 0x555c22ba0c8b in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_insert_unique_node(unsigned long, unsigned long, std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true>*, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc0c8b)
+    #8 0x555c22b9be7f in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_emplace<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >(std::integral_constant<bool, true>, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xbbe7f)
+    #9 0x555c22b983c1 in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, false, true>, bool> std::__detail::_Insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true>, false>::insert<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, void>(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb83c1)
+    #10 0x555c22b95c8b in std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Function*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> > >::insert(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb5c8b)
+    #11 0x555c22b8f12d in Module::insertFunctionDirectly(Function*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:124
+    #12 0x555c22b8eaf4 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:98
+    #13 0x555c22b8de19 in Module::Module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:33
+    #14 0x555c22b0391a in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #15 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #16 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 56 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bafa39 in __gnu_cxx::new_allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, true> >::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22baefb1 in std::allocator_traits<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, true> > >::allocate(std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, true> >&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bae42b in std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, true>* std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, true> > >::_M_allocate_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*> >(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*>&&) /usr/include/c++/11/bits/hashtable_policy.h:1873
+    #4 0x555c22bad265 in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_Scoped_node::_Scoped_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*> >(std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, true> > >*, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*>&&) /usr/include/c++/11/bits/hashtable.h:304
+    #5 0x555c22bac4a0 in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_emplace<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*> >(std::integral_constant<bool, true>, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*>&&) /usr/include/c++/11/bits/hashtable.h:1966
+    #6 0x555c22bab60b in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::emplace<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*> >(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*>&&) /usr/include/c++/11/bits/hashtable.h:915
+    #7 0x555c22baa69d in std::enable_if<std::is_constructible<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*>&&>::value, std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*>, false, true>, bool> >::type std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Value*> > >::insert<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*> >(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Value*>&&) /usr/include/c++/11/bits/unordered_map.h:564
+    #8 0x555c22ba9889 in ScopeStack::insertValue(Value*) /home/code/LAB1/exp04-minic-expr/symboltable/ScopeStack.cpp:42
+    #9 0x555c22b8fdfe in Module::newVarValue(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:207
+    #10 0x555c22bb5a97 in IRGenerator::ir_variable_declare(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:805
+    #11 0x555c22bb584f in IRGenerator::ir_declare_statment(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:787
+    #12 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #13 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #14 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #15 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #16 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #17 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #18 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 56 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22ba828b in __gnu_cxx::new_allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, true> >::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22ba6aca in std::allocator_traits<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, true> > >::allocate(std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, true> >&, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc6aca)
+    #3 0x555c22ba4479 in std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, true>* std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, true> > >::_M_allocate_node<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, GlobalVariable*&>(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, GlobalVariable*&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc4479)
+    #4 0x555c22ba104f in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_Scoped_node::_Scoped_node<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, GlobalVariable*&>(std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, true> > >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, GlobalVariable*&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc104f)
+    #5 0x555c22b9c72e in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_emplace<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, GlobalVariable*&>(std::integral_constant<bool, true>, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, GlobalVariable*&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xbc72e)
+    #6 0x555c22b98a5e in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::emplace<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, GlobalVariable*&>(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, GlobalVariable*&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb8a5e)
+    #7 0x555c22b95e1d in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*>, false, true>, bool> std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, GlobalVariable*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, GlobalVariable*> > >::emplace<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, GlobalVariable*&>(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, GlobalVariable*&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb5e1d)
+    #8 0x555c22b8f43f in Module::insertGlobalValueDirectly(GlobalVariable*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:133
+    #9 0x555c22b90294 in Module::newGlobalVariable(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:235
+    #10 0x555c22b8fd8c in Module::newVarValue(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:203
+    #11 0x555c22bb5a97 in IRGenerator::ir_variable_declare(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:805
+    #12 0x555c22bb584f in IRGenerator::ir_declare_statment(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:787
+    #13 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #14 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #15 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #16 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #17 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #18 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #19 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 56 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22ba8067 in __gnu_cxx::new_allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> >::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22ba666e in std::allocator_traits<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> > >::allocate(std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> >&, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc666e)
+    #3 0x555c22ba3bd5 in std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true>* std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> > >::_M_allocate_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc3bd5)
+    #4 0x555c22ba087b in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_Scoped_node::_Scoped_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >(std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> > >*, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc087b)
+    #5 0x555c22b9bc5c in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_emplace<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >(std::integral_constant<bool, true>, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xbbc5c)
+    #6 0x555c22b983c1 in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, false, true>, bool> std::__detail::_Insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true>, false>::insert<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, void>(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb83c1)
+    #7 0x555c22b95c8b in std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Function*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> > >::insert(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb5c8b)
+    #8 0x555c22b8f12d in Module::insertFunctionDirectly(Function*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:124
+    #9 0x555c22b8eaf4 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:98
+    #10 0x555c22b8e03e in Module::Module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:34
+    #11 0x555c22b0391a in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #12 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #13 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 56 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22ba8067 in __gnu_cxx::new_allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> >::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22ba666e in std::allocator_traits<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> > >::allocate(std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> >&, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc666e)
+    #3 0x555c22ba3bd5 in std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true>* std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> > >::_M_allocate_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc3bd5)
+    #4 0x555c22ba087b in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_Scoped_node::_Scoped_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >(std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> > >*, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc087b)
+    #5 0x555c22b9bc5c in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_emplace<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >(std::integral_constant<bool, true>, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xbbc5c)
+    #6 0x555c22b983c1 in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, false, true>, bool> std::__detail::_Insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true>, false>::insert<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, void>(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb83c1)
+    #7 0x555c22b95c8b in std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Function*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> > >::insert(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb5c8b)
+    #8 0x555c22b8f12d in Module::insertFunctionDirectly(Function*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:124
+    #9 0x555c22b8eaf4 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:98
+    #10 0x555c22b8de19 in Module::Module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:33
+    #11 0x555c22b0391a in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #12 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #13 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 56 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22ba77f7 in __gnu_cxx::new_allocator<std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> > >::allocate(unsigned long, void const*) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc77f7)
+    #2 0x555c22ba5705 in std::allocator_traits<std::allocator<std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> > > >::allocate(std::allocator<std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> > >&, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc5705)
+    #3 0x555c22ba24e6 in std::_Rb_tree<std::pair<Type*, int>, std::pair<std::pair<Type*, int> const, ConstInt*>, std::_Select1st<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::_M_get_node() (/home/code/LAB1/exp04-minic-expr/build/minic+0xc24e6)
+    #4 0x555c22b9db5c in std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> >* std::_Rb_tree<std::pair<Type*, int>, std::pair<std::pair<Type*, int> const, ConstInt*>, std::_Select1st<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::_M_create_node<std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>, std::tuple<> >(std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>&&, std::tuple<>&&) /usr/include/c++/11/bits/stl_tree.h:611
+    #5 0x555c22b99d5f in std::_Rb_tree_iterator<std::pair<std::pair<Type*, int> const, ConstInt*> > std::_Rb_tree<std::pair<Type*, int>, std::pair<std::pair<Type*, int> const, ConstInt*>, std::_Select1st<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::_M_emplace_hint_unique<std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>, std::tuple<> >(std::_Rb_tree_const_iterator<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>&&, std::tuple<>&&) /usr/include/c++/11/bits/stl_tree.h:2431
+    #6 0x555c22b96607 in std::map<std::pair<Type*, int>, ConstInt*, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::operator[](std::pair<Type*, int> const&) /usr/include/c++/11/bits/stl_map.h:501
+    #7 0x555c22b91abf in Module::getOrCreateIntegerConstant(Type*, int) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:358
+    #8 0x555c22b916ab in Module::newConstInt(int, Type*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:337
+    #9 0x555c22bb5692 in IRGenerator::ir_leaf_node_uint(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:770
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb4de4 in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:685
+    #12 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #13 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #14 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #15 0x555c22bb76aa in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1029
+    #16 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #17 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #18 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #19 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #20 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #21 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #22 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #23 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #24 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #25 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 56 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22ba77f7 in __gnu_cxx::new_allocator<std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> > >::allocate(unsigned long, void const*) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc77f7)
+    #2 0x555c22ba5705 in std::allocator_traits<std::allocator<std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> > > >::allocate(std::allocator<std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> > >&, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc5705)
+    #3 0x555c22ba24e6 in std::_Rb_tree<std::pair<Type*, int>, std::pair<std::pair<Type*, int> const, ConstInt*>, std::_Select1st<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::_M_get_node() (/home/code/LAB1/exp04-minic-expr/build/minic+0xc24e6)
+    #4 0x555c22b9db5c in std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> >* std::_Rb_tree<std::pair<Type*, int>, std::pair<std::pair<Type*, int> const, ConstInt*>, std::_Select1st<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::_M_create_node<std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>, std::tuple<> >(std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>&&, std::tuple<>&&) /usr/include/c++/11/bits/stl_tree.h:611
+    #5 0x555c22b99d5f in std::_Rb_tree_iterator<std::pair<std::pair<Type*, int> const, ConstInt*> > std::_Rb_tree<std::pair<Type*, int>, std::pair<std::pair<Type*, int> const, ConstInt*>, std::_Select1st<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::_M_emplace_hint_unique<std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>, std::tuple<> >(std::_Rb_tree_const_iterator<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>&&, std::tuple<>&&) /usr/include/c++/11/bits/stl_tree.h:2431
+    #6 0x555c22b96607 in std::map<std::pair<Type*, int>, ConstInt*, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::operator[](std::pair<Type*, int> const&) /usr/include/c++/11/bits/stl_map.h:501
+    #7 0x555c22b91abf in Module::getOrCreateIntegerConstant(Type*, int) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:358
+    #8 0x555c22b916ab in Module::newConstInt(int, Type*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:337
+    #9 0x555c22bb5692 in IRGenerator::ir_leaf_node_uint(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:770
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb6d44 in IRGenerator::ir_relational_op(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:937
+    #12 0x555c22bb6290 in IRGenerator::ir_visit_conditional_node(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:869
+    #13 0x555c22bb7654 in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1021
+    #14 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #15 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #16 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #17 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #18 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #19 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #20 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #21 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #22 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #23 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 56 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22ba77f7 in __gnu_cxx::new_allocator<std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> > >::allocate(unsigned long, void const*) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc77f7)
+    #2 0x555c22ba5705 in std::allocator_traits<std::allocator<std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> > > >::allocate(std::allocator<std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> > >&, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc5705)
+    #3 0x555c22ba24e6 in std::_Rb_tree<std::pair<Type*, int>, std::pair<std::pair<Type*, int> const, ConstInt*>, std::_Select1st<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::_M_get_node() (/home/code/LAB1/exp04-minic-expr/build/minic+0xc24e6)
+    #4 0x555c22b9db5c in std::_Rb_tree_node<std::pair<std::pair<Type*, int> const, ConstInt*> >* std::_Rb_tree<std::pair<Type*, int>, std::pair<std::pair<Type*, int> const, ConstInt*>, std::_Select1st<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::_M_create_node<std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>, std::tuple<> >(std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>&&, std::tuple<>&&) /usr/include/c++/11/bits/stl_tree.h:611
+    #5 0x555c22b99d5f in std::_Rb_tree_iterator<std::pair<std::pair<Type*, int> const, ConstInt*> > std::_Rb_tree<std::pair<Type*, int>, std::pair<std::pair<Type*, int> const, ConstInt*>, std::_Select1st<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::_M_emplace_hint_unique<std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>, std::tuple<> >(std::_Rb_tree_const_iterator<std::pair<std::pair<Type*, int> const, ConstInt*> >, std::piecewise_construct_t const&, std::tuple<std::pair<Type*, int> const&>&&, std::tuple<>&&) /usr/include/c++/11/bits/stl_tree.h:2431
+    #6 0x555c22b96607 in std::map<std::pair<Type*, int>, ConstInt*, std::less<std::pair<Type*, int> >, std::allocator<std::pair<std::pair<Type*, int> const, ConstInt*> > >::operator[](std::pair<Type*, int> const&) /usr/include/c++/11/bits/stl_map.h:501
+    #7 0x555c22b91abf in Module::getOrCreateIntegerConstant(Type*, int) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:358
+    #8 0x555c22b916ab in Module::newConstInt(int, Type*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:337
+    #9 0x555c22bb5692 in IRGenerator::ir_leaf_node_uint(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:770
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb4af1 in IRGenerator::ir_assign(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:651
+    #12 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #13 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #14 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #15 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #16 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #17 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #18 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #19 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #20 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #21 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 56 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22ba8067 in __gnu_cxx::new_allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> >::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22ba666e in std::allocator_traits<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> > >::allocate(std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> >&, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc666e)
+    #3 0x555c22ba3bd5 in std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true>* std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> > >::_M_allocate_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc3bd5)
+    #4 0x555c22ba087b in std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_Scoped_node::_Scoped_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >(std::__detail::_Hashtable_alloc<std::allocator<std::__detail::_Hash_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, true> > >*, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc087b)
+    #5 0x555c22b9bc5c in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, false, true>, bool> std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_emplace<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >(std::integral_constant<bool, true>, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xbbc5c)
+    #6 0x555c22b983c1 in std::pair<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, false, true>, bool> std::__detail::_Insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true>, false>::insert<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>, void>(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb83c1)
+    #7 0x555c22b95c8b in std::unordered_map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Function*, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*> > >::insert(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, Function*>&&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb5c8b)
+    #8 0x555c22b8f12d in Module::insertFunctionDirectly(Function*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:124
+    #9 0x555c22b8eaf4 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:98
+    #10 0x555c22bb2491 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:192
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #13 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #14 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #15 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #16 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #17 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 48 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b8e9d2 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:90
+    #2 0x555c22bb2491 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:192
+    #3 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #4 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #5 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #6 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #7 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #8 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #9 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 48 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b8e9d2 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:90
+    #2 0x555c22b8e03e in Module::Module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:34
+    #3 0x555c22b0391a in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #4 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #5 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 48 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b8e9d2 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:90
+    #2 0x555c22b8de19 in Module::Module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:33
+    #3 0x555c22b0391a in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #4 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #5 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 32 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bde817 in __gnu_cxx::new_allocator<Use*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22bde17f in std::allocator_traits<std::allocator<Use*> >::allocate(std::allocator<Use*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bdd939 in std::_Vector_base<Use*, std::allocator<Use*> >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22bdc3a2 in void std::vector<Use*, std::allocator<Use*> >::_M_realloc_insert<Use* const&>(__gnu_cxx::__normal_iterator<Use**, std::vector<Use*, std::allocator<Use*> > >, Use* const&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22bdb84c in std::vector<Use*, std::allocator<Use*> >::push_back(Use* const&) /usr/include/c++/11/bits/stl_vector.h:1198
+    #6 0x555c22bdef43 in Value::addUse(Use*) /home/code/LAB1/exp04-minic-expr/ir/Value.cpp:81
+    #7 0x555c22bda8f9 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:55
+    #8 0x555c22bc1d62 in ExitInstruction::ExitInstruction(Function*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/ExitInstruction.cpp:27
+    #9 0x555c22bb2a90 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:263
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #12 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #13 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #14 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #15 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #16 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 32 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22ba43b9 in __gnu_cxx::new_allocator<Function*>::allocate(unsigned long, void const*) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc43b9)
+    #2 0x555c22ba0f9e in std::allocator_traits<std::allocator<Function*> >::allocate(std::allocator<Function*>&, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc0f9e)
+    #3 0x555c22b9c40d in std::_Vector_base<Function*, std::allocator<Function*> >::_M_allocate(unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xbc40d)
+    #4 0x555c22b985c8 in void std::vector<Function*, std::allocator<Function*> >::_M_realloc_insert<Function*&>(__gnu_cxx::__normal_iterator<Function**, std::vector<Function*, std::allocator<Function*> > >, Function*&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb85c8)
+    #5 0x555c22b95dc2 in Function*& std::vector<Function*, std::allocator<Function*> >::emplace_back<Function*&>(Function*&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb5dc2)
+    #6 0x555c22b8f196 in Module::insertFunctionDirectly(Function*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:125
+    #7 0x555c22b8eaf4 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:98
+    #8 0x555c22bb2491 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:192
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #13 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #14 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #15 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 24 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bc659d in IntegerType::get(int) /home/code/LAB1/exp04-minic-expr/ir/Types/IntegerType.cpp:47
+    #2 0x555c22bb6ebd in IRGenerator::ir_relational_op(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:946
+    #3 0x555c22bb6290 in IRGenerator::ir_visit_conditional_node(ast_node*, LabelInstruction*, LabelInstruction*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:869
+    #4 0x555c22bb7654 in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1021
+    #5 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #6 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #7 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #8 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #9 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #12 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #13 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #14 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 24 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bc659d in IntegerType::get(int) /home/code/LAB1/exp04-minic-expr/ir/Types/IntegerType.cpp:47
+    #2 0x555c22b91691 in Module::newConstInt(int, Type*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:334
+    #3 0x555c22bb5692 in IRGenerator::ir_leaf_node_uint(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:770
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb4af1 in IRGenerator::ir_assign(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:651
+    #6 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #7 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #8 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #13 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #14 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #15 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 24 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22b8dc07 in Module::Module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:27
+    #2 0x555c22b0391a in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #3 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #4 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bda867 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:49
+    #2 0x555c22bc4e9e in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:32
+    #3 0x555c22bb4ef5 in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:703
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #6 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #7 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #8 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #11 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #12 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #13 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bda867 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:49
+    #2 0x555c22bc4e8b in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:31
+    #3 0x555c22bb4ef5 in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:703
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #6 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #7 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #8 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #11 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #12 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #13 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bda867 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:49
+    #2 0x555c22bc4e9e in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:32
+    #3 0x555c22bb4bb6 in IRGenerator::ir_assign(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:659
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #6 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #7 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #8 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #11 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #12 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #13 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bde817 in __gnu_cxx::new_allocator<Use*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22bde17f in std::allocator_traits<std::allocator<Use*> >::allocate(std::allocator<Use*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bdd939 in std::_Vector_base<Use*, std::allocator<Use*> >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22bdc3a2 in void std::vector<Use*, std::allocator<Use*> >::_M_realloc_insert<Use* const&>(__gnu_cxx::__normal_iterator<Use**, std::vector<Use*, std::allocator<Use*> > >, Use* const&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22bdb84c in std::vector<Use*, std::allocator<Use*> >::push_back(Use* const&) /usr/include/c++/11/bits/stl_vector.h:1198
+    #6 0x555c22bda8c2 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:52
+    #7 0x555c22bc4e9e in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:32
+    #8 0x555c22bb4ef5 in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:703
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb76aa in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1029
+    #13 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #14 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #15 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #16 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #17 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #18 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #19 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #20 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #21 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #22 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bda867 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:49
+    #2 0x555c22bc4e9e in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:32
+    #3 0x555c22bb4ef5 in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:703
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #6 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #7 0x555c22bb76aa in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1029
+    #8 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #9 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #10 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #13 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #14 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #15 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #16 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #17 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bda867 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:49
+    #2 0x555c22bc4e8b in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:31
+    #3 0x555c22bb4ef5 in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:703
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #6 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #7 0x555c22bb76aa in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1029
+    #8 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #9 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #10 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #13 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #14 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #15 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #16 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #17 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bda867 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:49
+    #2 0x555c22bc4e8b in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:31
+    #3 0x555c22bb4bb6 in IRGenerator::ir_assign(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:659
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #6 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #7 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #8 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #11 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #12 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #13 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22ba5c99 in __gnu_cxx::new_allocator<Type*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22ba3291 in std::allocator_traits<std::allocator<Type*> >::allocate(std::allocator<Type*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22b9f505 in std::_Vector_base<Type*, std::allocator<Type*> >::_M_allocate(unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xbf505)
+    #4 0x555c22b9a95a in std::_Vector_base<Type*, std::allocator<Type*> >::_M_create_storage(unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xba95a)
+    #5 0x555c22b97a2e in std::_Vector_base<Type*, std::allocator<Type*> >::_Vector_base(unsigned long, std::allocator<Type*> const&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb7a2e)
+    #6 0x555c22b95819 in std::vector<Type*, std::allocator<Type*> >::vector(std::vector<Type*, std::allocator<Type*> > const&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb5819)
+    #7 0x555c22b8e9c1 in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:90
+    #8 0x555c22b8de19 in Module::Module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:33
+    #9 0x555c22b0391a in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #10 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #11 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bda867 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:49
+    #2 0x555c22bc1d62 in ExitInstruction::ExitInstruction(Function*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/ExitInstruction.cpp:27
+    #3 0x555c22bb2a90 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:263
+    #4 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #5 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #6 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #7 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #8 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #9 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #10 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bde817 in __gnu_cxx::new_allocator<Use*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22bde17f in std::allocator_traits<std::allocator<Use*> >::allocate(std::allocator<Use*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bdd939 in std::_Vector_base<Use*, std::allocator<Use*> >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22bdc3a2 in void std::vector<Use*, std::allocator<Use*> >::_M_realloc_insert<Use* const&>(__gnu_cxx::__normal_iterator<Use**, std::vector<Use*, std::allocator<Use*> > >, Use* const&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22bdb84c in std::vector<Use*, std::allocator<Use*> >::push_back(Use* const&) /usr/include/c++/11/bits/stl_vector.h:1198
+    #6 0x555c22bda8c2 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:52
+    #7 0x555c22bc4e9e in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:32
+    #8 0x555c22bb4bb6 in IRGenerator::ir_assign(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:659
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #11 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #12 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #13 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #14 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #15 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #16 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #17 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #18 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bde817 in __gnu_cxx::new_allocator<Use*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22bde17f in std::allocator_traits<std::allocator<Use*> >::allocate(std::allocator<Use*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bdd939 in std::_Vector_base<Use*, std::allocator<Use*> >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22bdc3a2 in void std::vector<Use*, std::allocator<Use*> >::_M_realloc_insert<Use* const&>(__gnu_cxx::__normal_iterator<Use**, std::vector<Use*, std::allocator<Use*> > >, Use* const&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22bdb84c in std::vector<Use*, std::allocator<Use*> >::push_back(Use* const&) /usr/include/c++/11/bits/stl_vector.h:1198
+    #6 0x555c22bda8c2 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:52
+    #7 0x555c22bc4e9e in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:32
+    #8 0x555c22bb4ef5 in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:703
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #11 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #12 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #13 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #14 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #15 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #16 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #17 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #18 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 8 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bde817 in __gnu_cxx::new_allocator<Use*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22bde17f in std::allocator_traits<std::allocator<Use*> >::allocate(std::allocator<Use*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bdd939 in std::_Vector_base<Use*, std::allocator<Use*> >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22bdc3a2 in void std::vector<Use*, std::allocator<Use*> >::_M_realloc_insert<Use* const&>(__gnu_cxx::__normal_iterator<Use**, std::vector<Use*, std::allocator<Use*> > >, Use* const&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22bdb84c in std::vector<Use*, std::allocator<Use*> >::push_back(Use* const&) /usr/include/c++/11/bits/stl_vector.h:1198
+    #6 0x555c22bdef43 in Value::addUse(Use*) /home/code/LAB1/exp04-minic-expr/ir/Value.cpp:81
+    #7 0x555c22bda8f9 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:55
+    #8 0x555c22bc4e9e in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:32
+    #9 0x555c22bb4ef5 in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:703
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #12 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #13 0x555c22bb76aa in IRGenerator::ir_if_statement(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:1029
+    #14 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #15 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #16 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #17 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #18 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #19 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #20 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #21 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #22 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #23 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 8 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bde817 in __gnu_cxx::new_allocator<Use*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22bde17f in std::allocator_traits<std::allocator<Use*> >::allocate(std::allocator<Use*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bdd939 in std::_Vector_base<Use*, std::allocator<Use*> >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22bdc3a2 in void std::vector<Use*, std::allocator<Use*> >::_M_realloc_insert<Use* const&>(__gnu_cxx::__normal_iterator<Use**, std::vector<Use*, std::allocator<Use*> > >, Use* const&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22bdb84c in std::vector<Use*, std::allocator<Use*> >::push_back(Use* const&) /usr/include/c++/11/bits/stl_vector.h:1198
+    #6 0x555c22bdef43 in Value::addUse(Use*) /home/code/LAB1/exp04-minic-expr/ir/Value.cpp:81
+    #7 0x555c22bda8f9 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:55
+    #8 0x555c22bc4e8b in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:31
+    #9 0x555c22bb4bb6 in IRGenerator::ir_assign(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:659
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #12 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #13 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #14 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #15 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #16 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #17 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #18 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #19 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 8 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22ba4c71 in __gnu_cxx::new_allocator<GlobalVariable*>::allocate(unsigned long, void const*) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc4c71)
+    #2 0x555c22ba1776 in std::allocator_traits<std::allocator<GlobalVariable*> >::allocate(std::allocator<GlobalVariable*>&, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc1776)
+    #3 0x555c22b9cef1 in std::_Vector_base<GlobalVariable*, std::allocator<GlobalVariable*> >::_M_allocate(unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xbcef1)
+    #4 0x555c22b98c68 in void std::vector<GlobalVariable*, std::allocator<GlobalVariable*> >::_M_realloc_insert<GlobalVariable* const&>(__gnu_cxx::__normal_iterator<GlobalVariable**, std::vector<GlobalVariable*, std::allocator<GlobalVariable*> > >, GlobalVariable* const&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb8c68)
+    #5 0x555c22b95f12 in std::vector<GlobalVariable*, std::allocator<GlobalVariable*> >::push_back(GlobalVariable* const&) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb5f12)
+    #6 0x555c22b8f47e in Module::insertGlobalValueDirectly(GlobalVariable*) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:134
+    #7 0x555c22b90294 in Module::newGlobalVariable(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:235
+    #8 0x555c22b8fd8c in Module::newVarValue(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:203
+    #9 0x555c22bb5a97 in IRGenerator::ir_variable_declare(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:805
+    #10 0x555c22bb584f in IRGenerator::ir_declare_statment(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:787
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #13 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #14 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #15 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #16 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #17 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 8 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bde817 in __gnu_cxx::new_allocator<Use*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22bde17f in std::allocator_traits<std::allocator<Use*> >::allocate(std::allocator<Use*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bdd939 in std::_Vector_base<Use*, std::allocator<Use*> >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22bdc3a2 in void std::vector<Use*, std::allocator<Use*> >::_M_realloc_insert<Use* const&>(__gnu_cxx::__normal_iterator<Use**, std::vector<Use*, std::allocator<Use*> > >, Use* const&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22bdb84c in std::vector<Use*, std::allocator<Use*> >::push_back(Use* const&) /usr/include/c++/11/bits/stl_vector.h:1198
+    #6 0x555c22bda8c2 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:52
+    #7 0x555c22bc1d62 in ExitInstruction::ExitInstruction(Function*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/ExitInstruction.cpp:27
+    #8 0x555c22bb2a90 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:263
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #13 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #14 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #15 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 8 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bde817 in __gnu_cxx::new_allocator<Use*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22bde17f in std::allocator_traits<std::allocator<Use*> >::allocate(std::allocator<Use*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bdd939 in std::_Vector_base<Use*, std::allocator<Use*> >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22bdc3a2 in void std::vector<Use*, std::allocator<Use*> >::_M_realloc_insert<Use* const&>(__gnu_cxx::__normal_iterator<Use**, std::vector<Use*, std::allocator<Use*> > >, Use* const&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22bdb84c in std::vector<Use*, std::allocator<Use*> >::push_back(Use* const&) /usr/include/c++/11/bits/stl_vector.h:1198
+    #6 0x555c22bdef43 in Value::addUse(Use*) /home/code/LAB1/exp04-minic-expr/ir/Value.cpp:81
+    #7 0x555c22bda8f9 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:55
+    #8 0x555c22bc4e9e in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:32
+    #9 0x555c22bb4ef5 in IRGenerator::ir_return(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:703
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #12 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #13 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #14 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #15 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #16 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #17 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #18 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #19 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 8 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bde817 in __gnu_cxx::new_allocator<Use*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22bde17f in std::allocator_traits<std::allocator<Use*> >::allocate(std::allocator<Use*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bdd939 in std::_Vector_base<Use*, std::allocator<Use*> >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22bdc3a2 in void std::vector<Use*, std::allocator<Use*> >::_M_realloc_insert<Use* const&>(__gnu_cxx::__normal_iterator<Use**, std::vector<Use*, std::allocator<Use*> > >, Use* const&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22bdb84c in std::vector<Use*, std::allocator<Use*> >::push_back(Use* const&) /usr/include/c++/11/bits/stl_vector.h:1198
+    #6 0x555c22bdef43 in Value::addUse(Use*) /home/code/LAB1/exp04-minic-expr/ir/Value.cpp:81
+    #7 0x555c22bda8f9 in User::addOperand(Value*) /home/code/LAB1/exp04-minic-expr/ir/User.cpp:55
+    #8 0x555c22bc4e9e in MoveInstruction::MoveInstruction(Function*, Value*, Value*) /home/code/LAB1/exp04-minic-expr/ir/Instructions/MoveInstruction.cpp:32
+    #9 0x555c22bb4bb6 in IRGenerator::ir_assign(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:659
+    #10 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #11 0x555c22bb38be in IRGenerator::ir_block(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:380
+    #12 0x555c22bb29f0 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:244
+    #13 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #14 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #15 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #16 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #17 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #18 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #19 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 8 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22bd966b in __gnu_cxx::new_allocator<LocalVariable*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22bd91de in std::allocator_traits<std::allocator<LocalVariable*> >::allocate(std::allocator<LocalVariable*>&, unsigned long) /usr/include/c++/11/bits/alloc_traits.h:464
+    #3 0x555c22bd861f in std::_Vector_base<LocalVariable*, std::allocator<LocalVariable*> >::_M_allocate(unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xf861f)
+    #4 0x555c22bd689e in void std::vector<LocalVariable*, std::allocator<LocalVariable*> >::_M_realloc_insert<LocalVariable* const&>(__gnu_cxx::__normal_iterator<LocalVariable**, std::vector<LocalVariable*, std::allocator<LocalVariable*> > >, LocalVariable* const&) /usr/include/c++/11/bits/vector.tcc:440
+    #5 0x555c22bd56c6 in std::vector<LocalVariable*, std::allocator<LocalVariable*> >::push_back(LocalVariable* const&) /usr/include/c++/11/bits/stl_vector.h:1198
+    #6 0x555c22bd2830 in Function::newLocalVarValue(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int) /home/code/LAB1/exp04-minic-expr/ir/Function.cpp:278
+    #7 0x555c22b8fd0d in Module::newVarValue(Type*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:200
+    #8 0x555c22bb2930 in IRGenerator::ir_function_define(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:234
+    #9 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #10 0x555c22bb2042 in IRGenerator::ir_compile_unit(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:157
+    #11 0x555c22bb1d6c in IRGenerator::ir_visit_ast_node(ast_node*) /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:126
+    #12 0x555c22bb1a57 in IRGenerator::run() /home/code/LAB1/exp04-minic-expr/ir/Generator/IRGenerator.cpp:103
+    #13 0x555c22b039a2 in compile /home/code/LAB1/exp04-minic-expr/main.cpp:324
+    #14 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #15 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+Indirect leak of 8 byte(s) in 1 object(s) allocated from:
+    #0 0x7fc5f55111e7 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:99
+    #1 0x555c22ba3213 in __gnu_cxx::new_allocator<FormalParam*>::allocate(unsigned long, void const*) /usr/include/c++/11/ext/new_allocator.h:127
+    #2 0x555c22b9f438 in std::allocator_traits<std::allocator<FormalParam*> >::allocate(std::allocator<FormalParam*>&, unsigned long) (/home/code/LAB1/exp04-minic-expr/build/minic+0xbf438)
+    #3 0x555c22b9a6b1 in std::_Vector_base<FormalParam*, std::allocator<FormalParam*> >::_M_allocate(unsigned long) /usr/include/c++/11/bits/stl_vector.h:346
+    #4 0x555c22ba0052 in FormalParam** std::vector<FormalParam*, std::allocator<FormalParam*> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > > >(unsigned long, __gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > >, __gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > >) (/home/code/LAB1/exp04-minic-expr/build/minic+0xc0052)
+    #5 0x555c22b9b5d5 in void std::vector<FormalParam*, std::allocator<FormalParam*> >::_M_assign_aux<__gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > > >(__gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > >, __gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > >, std::forward_iterator_tag) (/home/code/LAB1/exp04-minic-expr/build/minic+0xbb5d5)
+    #6 0x555c22b9800c in void std::vector<FormalParam*, std::allocator<FormalParam*> >::_M_assign_dispatch<__gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > > >(__gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > >, __gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > >, std::__false_type) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb800c)
+    #7 0x555c22b95a5b in void std::vector<FormalParam*, std::allocator<FormalParam*> >::assign<__gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > >, void>(__gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > >, __gnu_cxx::__normal_iterator<FormalParam**, std::vector<FormalParam*, std::allocator<FormalParam*> > >) (/home/code/LAB1/exp04-minic-expr/build/minic+0xb5a5b)
+    #8 0x555c22b8eadb in Module::newFunction(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Type*, std::vector<FormalParam*, std::allocator<FormalParam*> >, bool) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:96
+    #9 0x555c22b8de19 in Module::Module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) /home/code/LAB1/exp04-minic-expr/symboltable/Module.cpp:33
+    #10 0x555c22b0391a in compile /home/code/LAB1/exp04-minic-expr/main.cpp:320
+    #11 0x555c22b0423a in main /home/code/LAB1/exp04-minic-expr/main.cpp:425
+    #12 0x7fc5f4d38d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: 6776 byte(s) leaked in 64 allocation(s).

@@ -15,37 +15,47 @@
 /// </table>
 ///
 
+// IntegerType.cpp
 #include "IntegerType.h"
+#include <map>
+#include <string> // std::to_string 需要
 
-///
-/// @brief 唯一的VOID类型实例
-///
-IntegerType * IntegerType::oneInstanceBool;
-IntegerType * IntegerType::oneInstanceInt;
+// 静态成员定义
+IntegerType * IntegerType::oneInstanceBool = nullptr; // 初始化为 nullptr
+IntegerType * IntegerType::oneInstanceInt = nullptr;  // 初始化为 nullptr
 
-///
-/// @brief 获取类型bool
-/// @return VoidType*
-///
-IntegerType * IntegerType::getTypeBool()
-{
-    // 只维持一份
+// 静态缓存定义
+static std::map<int, IntegerType*> integer_type_cache_for_get;
+
+// 构造函数实现
+IntegerType::IntegerType(int bitWidthValue) // 使用与 .h 中声明一致的参数名
+    : Type(Type::TypeID::IntegerTyID), bit_width_(bitWidthValue) { // 正确初始化 bit_width_
+    // 不需要其他操作
+}
+
+// get(int bitWidth) 实现 (保持不变，它是正确的)
+IntegerType* IntegerType::get(int bitWidth) {
+    auto it = integer_type_cache_for_get.find(bitWidth);
+    if (it != integer_type_cache_for_get.end()) {
+        return it->second;
+    }
+    IntegerType* new_type = new IntegerType(bitWidth);
+    integer_type_cache_for_get[bitWidth] = new_type;
+    return new_type;
+}
+
+// getTypeBool() 实现 (保持不变，它是正确的)
+IntegerType * IntegerType::getTypeBool() {
     if (!oneInstanceBool) {
-        oneInstanceBool = new IntegerType(1);
+        oneInstanceBool = new IntegerType(1); // 内部调用构造函数，设置 bit_width_ = 1
     }
     return oneInstanceBool;
 }
 
-///
-/// @brief 获取类型int
-/// @return VoidType*
-///
-IntegerType * IntegerType::getTypeInt()
-{
-    // 只维持一份
+// getTypeInt() 实现 (保持不变，它是正确的)
+IntegerType * IntegerType::getTypeInt() {
     if (!oneInstanceInt) {
-        oneInstanceInt = new IntegerType(32);
+        oneInstanceInt = new IntegerType(32); // 内部调用构造函数，设置 bit_width_ = 32
     }
-
     return oneInstanceInt;
 }

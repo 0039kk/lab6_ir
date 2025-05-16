@@ -86,7 +86,7 @@ enum class ast_operator_type : int {
     /// @brief 二元运算符+
     AST_OP_ADD,
 
-    /// @brief 二元运算符*
+    /// @brief 二元运算符-
     AST_OP_SUB, //
 
     /// @brief 二元运算符*
@@ -102,7 +102,50 @@ enum class ast_operator_type : int {
     AST_OP_NEG,
 
     // TODO 抽象语法树其它内部节点运算符追加
+    // --- 新增的 AST 节点类型 ---
+    /// @brief IF语句 (孩子: 条件表达式, then语句块, else语句块(可选,可能为nullptr))
+    AST_OP_IF,
 
+    /// @brief WHILE语句 (孩子: 条件表达式, 循环体语句块)
+    AST_OP_WHILE,
+
+    /// @brief BREAK语句 (叶子节点或无子节点的内部节点)
+    AST_OP_BREAK,
+
+    /// @brief CONTINUE语句 (叶子节点或无子节点的内部节点)
+    AST_OP_CONTINUE,
+
+    /// @brief 关系运算符 < (孩子: 左表达式, 右表达式)
+    AST_OP_LT,
+
+    /// @brief 关系运算符 <= (孩子: 左表达式, 右表达式)
+    AST_OP_LE,
+
+    /// @brief 关系运算符 > (孩子: 左表达式, 右表达式)
+    AST_OP_GT,
+
+    /// @brief 关系运算符 >= (孩子: 左表达式, 右表达式)
+    AST_OP_GE,
+
+    /// @brief 相等运算符 == (孩子: 左表达式, 右表达式)
+    AST_OP_EQ,
+
+    /// @brief 不等运算符 != (孩子: 左表达式, 右表达式)
+    AST_OP_NE,
+
+    /// @brief 逻辑与运算符 && (孩子: 左表达式, 右表达式)
+    AST_OP_LAND,
+
+    /// @brief 逻辑或运算符 || (孩子: 左表达式, 右表达式)
+    AST_OP_LOR,
+
+    /// @brief 逻辑非运算符 ! (孩子: 表达式)
+    AST_OP_LNOT,
+
+    /// @brief 空语句 (可选，如果选择用特定节点表示)
+    // AST_OP_EMPTY_STMT,
+    // --- 结束新增 ---
+    // 
     /// @brief 最大标识符，表示非法运算符
     AST_OP_MAX,
 };

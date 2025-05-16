@@ -17,78 +17,94 @@
 #include "Function.h"
 #include "Common.h"
 #include "Type.h"
+#include "VoidType.h"
 
 /// @brief 含有参数的函数调用
 /// @param srcVal 函数的实参Value
 /// @param result 保存返回值的Value
-FuncCallInstruction::FuncCallInstruction(Function * _func,
-                                         Function * calledFunc,
-                                         std::vector<Value *> & _srcVal,
-                                         Type * _type)
-    : Instruction(_func, IRInstOperator::IRINST_OP_FUNC_CALL, _type), calledFunction(calledFunc)
-{
-    name = calledFunc->getName();
-
-    // 实参拷贝
-    for (auto & val: _srcVal) {
-        addOperand(val);
-    }
+FuncCallInstruction::FuncCallInstruction(Function* current_func_scope,Function* target_func,std::vector<Value*>& args,Type* result_type_if_any)
+	: Instruction(current_func_scope,
+	IRInstOperator::IRINST_OP_FUNC_CALL,
+	result_type_if_any ? result_type_if_any : VoidType::getType()), // <--- 修改这里
+	calledFunction(target_func) {
+	for (Value* arg_val : args) {
+	if (arg_val) {
+	addOperand(arg_val);
+	} else {
+	minic_log(LOG_WARNING, "Null argument value passed to FuncCallInstruction for function @%s", target_func ? target_func->getName().c_str() : "<unknown_func>");
+	}
+	}
 }
 
 /// @brief 转换成字符串显示
 /// @param str 转换后的字符串
-void FuncCallInstruction::toString(std::string & str)
-{
-    int32_t argCount = func->getRealArgcount();
-    int32_t operandsNum = getOperandsNum();
+// FuncCallInstruction.h
+// 确保声明是：
+// class FuncCallInstruction : public Instruction {
+// private:
+//     Function* called_function_ = nullptr; // 被调用的函数
+//     // 参数通过 User 基类的 operands 存储
+// public:
+//     // 构造函数示例，接收当前函数作用域、目标函数、参数列表、调用结果的类型
+//     FuncCallInstruction(Function* current_func_scope, Function* target_func,
+//                         const std::vector<Value*>& args, Type* result_type_if_any);
+//
+//     [[nodiscard]] std::string toString() const override;
+//     [[nodiscard]] Function* getCalledFunction() const { return called_function_; } // Getter
+// };
+// toString() 实现
+std::string FuncCallInstruction::toString() const {
+    std::string result_str_build;
 
-    if (operandsNum != argCount) {
-        // 两者不一致 也可能没有ARG指令，正常
-        if (argCount != 0) {
-            minic_log(LOG_ERROR, "ARG指令的个数与调用函数个数不一致");
-        }
+    if (!calledFunction) {
+        minic_log(LOG_ERROR, "FuncCallInstruction::toString(): calledFunction is null.");
+        return "; <Error: FuncCallInstruction has no target function specified>";
     }
 
-    // TODO 这里应该根据函数名查找函数定义或者声明获取函数的类型
-    // 这里假定所有函数返回类型要么是i32，要么是void
-    // 函数参数的类型是i32
+    // 1. 构建函数调用头部 (call <return_type> @func_name 或 <result_var> = call <return_type> @func_name)
+    // this->getType() 是这条 call 指令的结果类型 (例如 i32, void)
+    // this->getIRName() 是存储结果的临时变量名 (例如 %t0), 如果调用有返回值
+    Type* instruction_result_type = this->getType(); // 类型由构造函数设置
 
-    if (type->isVoidType()) {
-
-        // 函数没有返回值设置
-        str = "call void " + calledFunction->getIRName() + "(";
+    if (instruction_result_type && !instruction_result_type->isVoidType()) {
+        // 有返回值
+        // calledFunction->getReturnType() 应该是和 instruction_result_type 一致的
+        result_str_build = this->getIRName() + " = call " + calledFunction->getReturnType()->toString() +
+                           " @" + calledFunction->getName(); // DragonIR 函数名以 @ 开头
     } else {
-
-        // 函数有返回值要设置到结果变量中
-        str = getIRName() + " = call i32 " + calledFunction->getIRName() + "(";
+        // 无返回值
+        result_str_build = "call void @" + calledFunction->getName(); // DragonIR 函数名以 @ 开头
     }
 
-    if (argCount == 0) {
+    // 2. 构建参数列表
+    result_str_build += "(";
+    int32_t num_actual_params = getOperandsNum(); // 参数从 User 基类的操作数列表获取
 
-        // 如果没有arg指令，则输出函数的实参
-        for (int32_t k = 0; k < operandsNum; ++k) {
+    for (int32_t k = 0; k < num_actual_params; ++k) {
+        Value* operand = getOperand(k); // 确保 getOperand, getType, getIRName 都是 const
+        if (operand && operand->getType()) {
+            result_str_build += operand->getType()->toString() + " " + operand->getIRName();
+        } else {
+            minic_log(LOG_ERROR, "FuncCallInstruction::toString(): Operand or its type is null for call to @%s, param index %d.",
+                      calledFunction->getName().c_str(), k);
+            result_str_build += "<error_param>";
+        }
 
-            auto operand = getOperand(k);
-
-            str += operand->getType()->toString() + " " + operand->getIRName();
-
-            if (k != (operandsNum - 1)) {
-                str += ", ";
-            }
+        if (k < (num_actual_params - 1)) {
+            result_str_build += ", ";
         }
     }
+    result_str_build += ")";
 
-    str += ")";
+    // --------------------------------------------------------------------
+    // 之前讨论的 func->realArgCountReset() 和 func->getRealArgcount()
+    // 不应出现在这里。参数计数和重置应由 IRGenerator 管理。
+    // --------------------------------------------------------------------
 
-    // 要清零
-    func->realArgCountReset();
+    return result_str_build;
 }
 
 ///
 /// @brief 获取被调用函数的名字
 /// @return std::string 被调用函数名字
 ///
-std::string FuncCallInstruction::getCalledName() const
-{
-    return calledFunction->getName();
-}

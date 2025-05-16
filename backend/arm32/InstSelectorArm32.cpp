@@ -105,8 +105,7 @@ void InstSelectorArm32::translate(Instruction * inst)
 ///
 void InstSelectorArm32::outputIRInstruction(Instruction * inst)
 {
-    std::string irStr;
-    inst->toString(irStr);
+    std::string irStr = inst->toString();
     if (!irStr.empty()) {
         iloc.comment(irStr);
     }

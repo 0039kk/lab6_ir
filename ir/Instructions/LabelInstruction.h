@@ -25,18 +25,10 @@ class Function;
 ///
 /// @brief Label指令
 ///
+// ir/Instructions/LabelInstruction.h
 class LabelInstruction : public Instruction {
-
-public:
-    ///
-    /// @brief 构造函数
-    /// @param _func 所属函数
-    ///
-    explicit LabelInstruction(Function * _func);
-
-    ///
-    /// @brief 转换成字符串
-    /// @param str 返回指令字符串
-    ///
-    void toString(std::string & str) override;
-};
+	public:
+		explicit LabelInstruction(Function * _func, const std::string& unique_ir_name);
+		[[nodiscard]] std::string toString() const override;
+		// getName() 和 getIRName() 将使用 Value 基类的默认实现
+	};

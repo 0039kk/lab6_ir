@@ -31,5 +31,6 @@ public:
     ExitInstruction(Function * _func, Value * result = nullptr);
 
     /// @brief 转换成字符串
-    void toString(std::string & str) override;
+    [[nodiscard]] std::string toString() const override;
+	[[nodiscard]] bool isTerminator() const override { return true; }
 };

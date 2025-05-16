@@ -23,6 +23,8 @@
 #include "Type.h"
 #include "GlobalVariable.h"
 #include "Function.h"
+#include <map>
+#include <utility>
 
 class ScopeStack;
 
@@ -108,8 +110,8 @@ public:
     /// @brief 新建一个整型数值的Value，并加入到符号表，用于后续释放空间
     /// \param intVal 整数值
     /// \return 临时Value
-    ConstInt * newConstInt(int32_t intVal);
-
+    
+	Constant* getOrCreateIntegerConstant(Type* type, int32_t value); 
     /// @brief 新建变量型Value，会根据currentFunc的值进行判断创建全局或者局部变量
     /// ! 该函数只有在AST遍历生成线性IR中使用，其它地方不能使用
     /// @param name 变量ID
@@ -133,6 +135,9 @@ public:
     /// @brief 对IR指令中没有名字的全部命名
     ///
     void renameIR();
+	ConstInt* newConstInt(int32_t val, Type* type = nullptr); 
+	Value* newTemporary(Type* type, const std::string& prefix = "t"); // 创建临时变量
+    
 
 protected:
     /// @brief 根据整数值获取当前符号
@@ -196,4 +201,9 @@ private:
 
     /// @brief 常量表
     std::unordered_map<int32_t, ConstInt *> constIntMap;
+
+    int temp_var_counter_ = 0; // 用于生成唯一的临时变量名
+
+    std::map<std::pair<Type*, int32_t>, ConstInt*> integer_constant_cache_;
 };
+

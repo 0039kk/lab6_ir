@@ -67,9 +67,9 @@ void Value::setIRName(std::string _name)
 
 /// @brief 获取类型
 /// @return 变量名
-Type * Value::getType()
+Type * Value::getType() const
 {
-    return type;
+    return this->type;
 }
 
 ///
@@ -97,7 +97,7 @@ void Value::removeUse(Use * use)
 /// @brief 取得变量所在的作用域层级
 /// @return int32_t 层级
 ///
-int32_t Value::getScopeLevel()
+int32_t Value::getScopeLevel() const
 {
     return -1;
 }

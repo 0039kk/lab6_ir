@@ -18,7 +18,7 @@
 #include "VoidType.h"
 
 #include "MoveInstruction.h"
-
+#include "Value.h"
 ///
 /// @brief 构造函数
 /// @param _func 所属的函数
@@ -34,10 +34,21 @@ MoveInstruction::MoveInstruction(Function * _func, Value * _result, Value * _src
 
 /// @brief 转换成字符串显示
 /// @param str 转换后的字符串
-void MoveInstruction::toString(std::string & str)
-{
+std::string MoveInstruction::toString() const { // 返回 std::string，无参数
+    std::string result_str; // 用于构建结果字符串
 
-    Value *dstVal = getOperand(0), *srcVal = getOperand(1);
+    // 假设 getOperand(0) 返回目标 Value*
+    // 假设 getOperand(1) 返回源 Value*
+    // 并且这些 Value* 存储在 Instruction/User 的操作数列表中
+    Value *dstVal = getOperand(0);
+    Value *srcVal = getOperand(1);
 
-    str = dstVal->getIRName() + " = " + srcVal->getIRName();
+    if (dstVal && srcVal) {
+        // 假设 Value::getName() 返回该值的IR字符串表示 (例如 "%l0", "%t1", "@gvar")
+        // 并且它是 const 方法
+        result_str = dstVal->getIRName() + " = " + srcVal->getIRName();
+    } else {
+        result_str = "; <Error: MoveInstruction has invalid operands>"; // 更明确的错误信息
+    }
+    return result_str; // 返回构建好的字符串
 }

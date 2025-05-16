@@ -44,7 +44,7 @@ public:
     /// @brief 取得变量所在的作用域层级
     /// @return int32_t 层级
     ///
-    int32_t getScopeLevel() override
+    int32_t getScopeLevel() const override
     {
         return scope_level;
     }

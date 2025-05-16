@@ -27,20 +27,26 @@ ArgInstruction::ArgInstruction(Function * _func, Value * src)
 }
 
 /// @brief 转换成字符串
-void ArgInstruction::toString(std::string & str)
-{
-    int32_t regId;
-    int64_t offset;
-    Value * src = getOperand(0);
+std::string ArgInstruction::toString() const { // <--- 签名修改
+    std::string result_str_build;
+    Value *src = getOperand(0); // 确保 getOperand 是 const
 
-    str = "arg " + src->getIRName();
-
-    if (src->getRegId() != -1) {
-        str += " ; " + std::to_string(src->getRegId());
-    } else if (src->getMemoryAddr(&regId, &offset)) {
-        str += " ; " + std::to_string(regId) + "[" + std::to_string(offset) + "]";
+    if (!src) {
+        result_str_build = "; <Error: ArgInstruction has null operand>";
+        return result_str_build;
     }
 
-    // ARG指令个数增加1
-    func->realArgCountInc();
+    // DragonIR 中没有 'arg' 指令。输出为注释。
+    result_str_build = "; arg " + src->getIRName(); // 确保 getIRName 是 const
+
+    int32_t regId_val;
+    int64_t offset_val;
+    // 确保 getRegId 和 getMemoryAddr 是 const
+    if (src->getRegId() != -1) {
+        result_str_build += " ; (reg: " + std::to_string(src->getRegId()) + ")";
+    } else if (src->getMemoryAddr(&regId_val, &offset_val)) {
+        result_str_build += " ; (mem: " + std::to_string(regId_val) + "[" + std::to_string(offset_val) + "])";
+    }
+    // 移除 func->realArgCountInc();
+    return result_str_build;
 }
