@@ -54,6 +54,8 @@ public:
         return this->bit_width_;
     }
 
+    
+
     ///
     /// @brief 是否是布尔类型，也就是1位整数类型
     /// @return true
@@ -78,10 +80,8 @@ public:
     /// @brief 获得类型所占内存空间大小
     /// @return int32_t
     ///
-    [[nodiscard]] int32_t getSize() const override
-    {
-        return 4;
-    }
+    [[nodiscard]] int32_t getSize() const override;
+    
 
 	[[nodiscard]] static IntegerType* get(int bitWidth);
 private:

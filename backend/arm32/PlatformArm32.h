@@ -66,6 +66,13 @@ public:
     /// @brief 寄存器的名字，r0-r15
     static const std::string regName[maxRegNum];
 
+	// 新增: 安全获取寄存器名称的函数
+    static std::string getRegNameSafe(int reg_id);
+
+    
     /// @brief 对寄存器R0分配Value，记录位置
     static RegVariable * intRegVal[PlatformArm32::maxRegNum];
+
+	static bool isValidCmpImmediate(int32_t imm_val);
+
 };

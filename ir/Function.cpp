@@ -19,13 +19,14 @@
 
 #include "IRConstant.h"
 #include "Function.h"
-
+#include "PlatformArm32.h"
+#include "Common.h"
 /// @brief 指定函数名字、函数类型的构造函数
 /// @param _name 函数名称
 /// @param _type 函数类型
 /// @param _builtin 是否是内置函数
 Function::Function(std::string _name, FunctionType * _type, bool _builtin)
-    : GlobalValue(_type, _name), builtIn(_builtin)
+    : GlobalValue(_type, _name), builtIn(_builtin),currentNegativeStackOffsetSize_(0)
 {
     returnType = _type->getReturnType();
 
@@ -72,16 +73,6 @@ bool Function::isBuiltin()
 
 /// @brief 函数指令信息输出
 /// @param str 函数指令
-// ir/Function.cpp
-#include "Function.h"
-#include "Type.h"        // For Type::toString()
-#include "Value.h"       // For Value::getIRName(), Value::getType(), etc.
-#include "Instruction.h" // For Instruction::getOp(), Instruction::toString()
-#include "FormalParam.h" // For FormalParam
-#include "LocalVariable.h"// For LocalVariable
-#include <set>           // For std::set to handle unique temporary declarations
-
-// ... (其他 Function 成员函数保持不变) ...
 
 // 修改 toString 的定义
 std::string Function::toString() const { // <--- 添加 const，修改返回类型，移除参数
@@ -254,16 +245,92 @@ void Function::setExistFuncCall(bool exist)
 /// @param name 变量ID
 /// @param type 变量类型
 /// @param scope_level 局部变量的作用域层级
-LocalVariable * Function::newLocalVarValue(Type * type, std::string name, int32_t scope_level)
+LocalVariable *Function::newLocalVarValue(Type *type, std::string name, int32_t scope_level)
 {
-    // 创建变量并加入符号表
-    LocalVariable * varValue = new LocalVariable(type, name, scope_level);
+    if (!type) {
+        minic_log(LOG_ERROR, "Function '%s': newLocalVarValue called with null Type for var name '%s'.", 
+                  this->getName().c_str(), name.c_str());
+        return nullptr;
+    }
 
-    // varsVector表中可能存在变量重名的信息
-    varsVector.push_back(varValue);
+    // 1. 创建 LocalVariable 对象
+    //    你需要根据你的 LocalVariable.h 决定如何创建。
+    //    假设 LocalVariable 构造函数是 public 或者 Function 是 friend:
+    LocalVariable *localVar = new LocalVariable(type, name, scope_level);
+    
+    if (!localVar) { // 理论上 new 不会返回 nullptr 除非 std::nothrow，但以防万一
+        minic_log(LOG_ERROR, "Function '%s': Failed to allocate LocalVariable for name '%s'.",
+                  this->getName().c_str(), name.c_str());
+        return nullptr;
+    }
 
-    return varValue;
+    // 确保 IRName 被设置 (如果 name 为空，LocalVariable 构造函数或 Value 基类应处理)
+    if (name.empty() && localVar->getIRName().find("UNNAMED_VALUE") != std::string::npos) {
+        // 如果需要，可以给一个更特定的临时局部变量名，但这通常由 Value 基类处理
+    } else if (!name.empty() && (localVar->getIRName().empty() || localVar->getIRName().find("UNNAMED_VALUE") != std::string::npos) ) {
+        localVar->setIRName(name + "_lv"); // 例如 %a_lv
+    }
+
+
+    // 2. 计算大小和对齐
+    int32_t var_size = type->getSize();
+    if (var_size <= 0) {
+         minic_log(LOG_WARNING, "Function '%s': LocalVariable '%s' (type: %s) has size %d. Defaulting to 4 bytes for offset calculation.",
+                   this->getName().c_str(), name.c_str(), type->toString().c_str(), var_size);
+         var_size = 4; // 至少分配一个字，避免0或负大小
+    }
+    int32_t aligned_size = (var_size + 3) & ~3; // 4字节对齐
+
+    // 3. 更新 currentNegativeStackOffsetSize_ (存储已分配的局部变量总大小的绝对值)
+    this->currentNegativeStackOffsetSize_ += aligned_size;
+
+    // 4. 计算新局部变量的栈偏移 (相对于 FP 的负偏移)
+    int32_t new_offset_for_var = -this->currentNegativeStackOffsetSize_;
+
+    // 5. 为 LocalVariable 设置内存地址
+    localVar->setMemoryAddr(ARM32_FP_REG_NO, new_offset_for_var);
+    
+    // 6. 将新创建的局部变量添加到函数的变量列表中
+    varsVector.push_back(localVar);
+
+    // --- 日志 ---
+    int32_t check_base; 
+    int64_t check_off;
+    bool has_addr = localVar->getMemoryAddr(&check_base, &check_off); // 调用 getMemoryAddr 验证
+
+    minic_log(LOG_DEBUG, "Function '%s'::newLocalVarValue: Created LocalVar '%s' (IR: '%s', Ptr: %p). "
+                         "Type: %s, Size: %d (Aligned: %d). "
+                         "CumulativeNegOffsetSize: %d. Assigned Offset: %d. "
+                         "Verification -> HasAddr: %s, BaseRead: %d, OffsetRead: %lld",
+              this->getName().c_str(),
+              name.c_str(), localVar->getIRName().c_str(), static_cast<void*>(localVar),
+              type->toString().c_str(), var_size, aligned_size,
+              this->currentNegativeStackOffsetSize_, new_offset_for_var,
+              has_addr ? "true" : "false", check_base, static_cast<long long>(check_off));
+    // --- 结束日志 ---
+    
+    // 更新函数的总栈帧深度 (maxDepth 通常用于 CodeGeneratorArm32::allocStack)
+    // 注意：这里的 maxDepth 与 CodeGeneratorArm32::stackAlloc 中的 setMaxDep(sp_esp)
+    //       的 sp_esp 含义可能不同。
+    //       这里的 currentNegativeStackOffsetSize_ 只包含局部变量。
+    //       而 CodeGeneratorArm32::stackAlloc 中的 sp_esp 最终会包含局部变量+临时变量+调用参数空间。
+    //       通常，Function::maxDepth 由 CodeGeneratorArm32::stackAlloc 在最后设置。
+    //       所以，这里可能不需要直接更新 this->maxDepth，除非你有特定逻辑。
+    //       如果 newLocalVarValue 是早期分配，而 stackAlloc 是后期，那么 stackAlloc
+    //       会使用 getCurrentFuncFrameSizeNegative() 作为起点。
+
+    return localVar;
 }
+
+
+// --- 实现新增的 getCurrentFuncFrameSizeNegative ---
+[[nodiscard]] int32_t Function::getCurrentFuncFrameSizeNegative() const {
+    minic_log(LOG_DEBUG, "Function '%s': getCurrentFuncFrameSizeNegative() returning %d (abs size of local vars stack)",
+              this->getName().c_str(), this->currentNegativeStackOffsetSize_);
+    return this->currentNegativeStackOffsetSize_;
+}
+// --- 结束实现 ---
+
 
 /// @brief 新建一个内存型的Value，并加入到符号表，用于后续释放空间
 /// \param type 变量类型
@@ -384,4 +451,11 @@ void Function::renameIR()
         // 可选：如果 val 为 nullptr，可以记录一个警告或错误
         // minic_log(LOG_WARNING, "Attempted to add a null Value as a temporary variable to function %s", getName().c_str());
     // }
+}
+
+std::string Function::newTempName() {
+    // 假设 IR_TEMP_VARNAME_PREFIX 是在某处定义的宏或常量，例如 "%t"
+    // 如果没有定义，你需要定义它，例如：
+    // const std::string IR_TEMP_VARNAME_PREFIX = "%t"; (或者在 Common.h)
+    return IR_TEMP_VARNAME_PREFIX + std::to_string(tempNameCounter_++);
 }

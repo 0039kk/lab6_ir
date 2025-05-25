@@ -48,6 +48,10 @@ protected:
     ///
     std::vector<Use *> uses;
 
+
+     // --- B1: 新增成员变量来存储由分配器分配的寄存器ID ---
+	 int32_t allocatedRegisterId_ = -1; 
+	 // --- 结束 B1 新增 ---
 public:
     /// @brief 构造函数
     /// @param _type
@@ -98,13 +102,26 @@ public:
     ///
     [[nodiscard]] virtual int32_t getScopeLevel() const;
 
+
+	
+    
     ///
     /// @brief 获得分配的寄存器编号或ID
     /// @return int32_t 寄存器编号
     ///
-    virtual int32_t getRegId();
-
+    // --- B1: 修改这些函数以使用 allocatedRegisterId_ ---
+    // getRegId() 现在也反映由分配器分配的寄存器ID
+    // 子类 (如 LocalVariable) 如果有不同的 regId 概念可以覆盖它
+    virtual int32_t getRegId() { return allocatedRegisterId_; } 
+    // setRegId() 也操作 allocatedRegisterId_
+    virtual void setRegId(int32_t regId) { allocatedRegisterId_ = regId; }
     ///
+    ///
+    // SimpleRegisterAllocator 主要使用 getLoadRegId / setLoadRegId
+    // 让它们也操作 allocatedRegisterId_
+    virtual int32_t getLoadRegId() { return allocatedRegisterId_; }
+    virtual void setLoadRegId(int32_t regId) { allocatedRegisterId_ = regId; }
+    // --- 结束 B1 修改 ---
     /// @brief @brief 如是内存变量型Value，则获取基址寄存器和偏移
     /// @param regId 寄存器编号
     /// @param offset 相对偏移
@@ -117,11 +134,12 @@ public:
     /// @brief 对该Value进行Load用的寄存器编号
     /// @return int32_t 寄存器编号
     ///
-    virtual int32_t getLoadRegId();
+
 
     ///
     /// @brief 对该Value进行Load用的寄存器编号
     /// @return int32_t 寄存器编号
     ///
-    virtual void setLoadRegId(int32_t regId);
+
+    [[nodiscard]] virtual bool isConstant() const { return false; }
 };

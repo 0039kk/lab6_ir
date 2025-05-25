@@ -16,7 +16,7 @@
 #pragma once
 
 #include "User.h"
-
+#include "Common.h"
 class Function;
 
 /// @brief IR指令操作码
@@ -83,7 +83,7 @@ public:
     explicit Instruction(Function * _func, IRInstOperator op, Type * _type);
 
     /// @brief 析构函数
-    virtual ~Instruction() = default;
+     ~Instruction() override = default;
 
     /// @brief 获取指令操作码
     /// @return 指令操作码
@@ -132,37 +132,30 @@ public:
     /// @return true 是内存型变量
     /// @return false 不是内存型变量
     ///
-    bool getMemoryAddr(int32_t * _regId = nullptr, int64_t * _offset = nullptr) override
-    {
-        // 内存寻址时，必须要指定基址寄存器
-
-        // 没有指定基址寄存器则返回false
-        if (this->baseRegNo == -1) {
-            return false;
-        }
-
-        // 设置基址寄存器
-        if (_regId) {
-            *_regId = this->baseRegNo;
-        }
-
-        // 设置偏移
-        if (_offset) {
-            *_offset = this->offset;
-        }
-
-        return true;
-    }
+    bool getMemoryAddr(int32_t * _regId = nullptr, int64_t * _offset = nullptr) override {
+		minic_log(LOG_DEBUG, "Instruction (Ptr: %p, IRName: %s): getMemoryAddr() called. Internal baseRegNo: %d, offset: %lld.",
+				  (void*)this, this->getIRName().c_str(), this->baseRegNo, (long long)this->offset); // (long long) for %lld
+		if (this->baseRegNo == -1) {
+			return false;
+		}
+		if (_regId) { *_regId = this->baseRegNo; }
+		if (_offset) { *_offset = this->offset; }
+		return true;
+	}
 
     ///
     /// @brief 设置内存寻址的基址寄存器和偏移
     /// @param _regId 基址寄存器编号
     /// @param _offset 偏移
     ///
-    void setMemoryAddr(int32_t _regId, int64_t _offset)
-    {
-        baseRegNo = _regId;
-        offset = _offset;
+    void setMemoryAddr(int32_t _regId, int64_t _offset_param){ // changed _offset to _offset_param to avoid confusion
+		this->baseRegNo = _regId;
+		this->offset = _offset_param;
+		minic_log(LOG_DEBUG, "Instruction (Ptr: %p, IRName: %s): setMemoryAddr called. baseRegNo set to %d, offset_param was %lld, member offset set to %lld.",
+				  (void*)this, this->getIRName().c_str(), this->baseRegNo, (long long)_offset_param, (long long)this->offset);
+		// 新增日志
+		minic_log(LOG_DEBUG, "Instruction (Ptr: %p, IRName: %s): AFTER SETTING, this->baseRegNo = %d, this->offset = %lld",
+			(void*)this, this->getIRName().c_str(), this->baseRegNo, (long long)this->offset);
     }
 
     ///

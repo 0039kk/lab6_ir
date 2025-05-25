@@ -34,6 +34,7 @@ class ScopeStack;
 class Module {
 
 public:
+	ScopeStack * getScopeStack();
     ///
     /// @brief 构造函数
     /// @param name  模块名
@@ -137,15 +138,9 @@ public:
     void renameIR();
 	ConstInt* newConstInt(int32_t val, Type* type = nullptr); 
 	Value* newTemporary(Type* type, const std::string& prefix = "t"); // 创建临时变量
-    
 
-protected:
-    /// @brief 根据整数值获取当前符号
-    /// \param name 变量名
-    /// \return 变量对应的值
-    ConstInt * findConstInt(int32_t val);
 
-    ///
+	 ///
     /// @brief 新建全局变量，要求name必须有效，并且加入到全局符号表中。
     /// @param type 类型
     /// @param name 名字
@@ -157,6 +152,14 @@ protected:
     /// \param name 变量名
     /// \return 变量对应的值
     GlobalVariable * findGlobalVariable(std::string name);
+    
+protected:
+    /// @brief 根据整数值获取当前符号
+    /// \param name 变量名
+    /// \return 变量对应的值
+    ConstInt * findConstInt(int32_t val);
+
+   
 
     /// @brief 直接插入函数到符号表中，不考虑现有的表中是否存在
     /// @param func 函数对象
@@ -169,6 +172,8 @@ protected:
     /// @brief ConstInt插入到符号表中
     /// @param val Value信息
     void insertConstIntDirectly(ConstInt * val);
+
+    
 
 private:
     ///

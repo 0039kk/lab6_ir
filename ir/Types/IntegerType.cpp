@@ -20,6 +20,7 @@
 #include <map>
 #include <string> // std::to_string 需要
 
+#include "Common.h"
 // 静态成员定义
 IntegerType * IntegerType::oneInstanceBool = nullptr; // 初始化为 nullptr
 IntegerType * IntegerType::oneInstanceInt = nullptr;  // 初始化为 nullptr
@@ -58,4 +59,17 @@ IntegerType * IntegerType::getTypeInt() {
         oneInstanceInt = new IntegerType(32); // 内部调用构造函数，设置 bit_width_ = 32
     }
     return oneInstanceInt;
+}
+int32_t IntegerType::getSize() const {
+    // 假设你有 isInt32Type() 和 isInt1Byte() 的实现
+    if (this->isInt32Type()) { // 例如 bit_width_ == 32
+        return 4;
+    }
+    if (this->isInt1Byte()) { // 例如 bit_width_ == 1 或 8
+        return 1; // 或者按需返回 4 (为了对齐)
+    }
+    // 对于其他未明确处理的位宽，可以记录日志
+    minic_log(LOG_WARNING, "IntegerType::getSize(): Unknown or unhandled integer bit width for type %s (bit_width: %u). Returning default -1.", 
+              toString().c_str(), this->bit_width_); // 假设有 bit_width_
+    return -1;
 }

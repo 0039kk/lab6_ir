@@ -210,40 +210,63 @@ VarDecl : VarDeclExpr T_SEMICOLON {
 	}
 	;
 
-// 变量声明表达式，可支持逗号分隔定义多个
+// MiniC.y, line 214 附近
 VarDeclExpr: BasicType VarDef {
+        // ... 动作代码，为单个 BasicType VarDef 创建声明节点 ...
+        // 例如，创建一个 AST_OP_VAR_DECL 节点，然后包装在一个临时的 AST_OP_DECL_STMT 中
+        // （如果你的 create_var_decl_stmt_node 是这样工作的）
+        // 或者 VarDeclExpr 只产生一个 AST_OP_VAR_DECL 节点，
+        // 然后 VarDecl: VarDeclExpr T_SEMICOLON; 会将单个 VarDecl 包装成 DECL_STMT
+        // 而 VarDecl : VarDeclExprList T_SEMICOLON; (VarDeclExprList -> VarDeclExpr | VarDeclExprList ',' VarDeclExpr)
+        // 会处理多个。
 
-		// 创建类型节点
-		ast_node * type_node = create_type_node($1);
+        // 假设我们保持你原有的 VarDeclExpr 结构，它能处理逗号分隔
+        // 那么第一个产生式是基础情况：
+        ast_node * type_node = create_type_node($1);
+        ast_node * single_var_decl_node = create_contain_node(ast_operator_type::AST_OP_VAR_DECL, type_node, $2 /*VarDef node*/);
+        single_var_decl_node->type = type_node->type;
 
-		// 创建变量定义节点
-		ast_node * decl_node = create_contain_node(ast_operator_type::AST_OP_VAR_DECL, type_node, $2);
-		decl_node->type = type_node->type;
+        // create_var_decl_stmt_node 期望一个或多个 VAR_DECL 节点作为其子节点。
+        // 对于第一个 VarDef，我们创建一个只包含一个 VAR_DECL 的 DECL_STMT。
+        $$ = create_var_decl_stmt_node(single_var_decl_node);
+    }
+    | VarDeclExpr T_COMMA VarDef { // <--- 这里之前可能是 VarDefList，应为 VarDef
+        // $1 是前一个 VarDeclExpr (它是一个 AST_OP_DECL_STMT 节点)
+        // $3 是新的 VarDef 节点
 
-		// 创建变量声明语句，并加入第一个变量
-		$$ = create_var_decl_stmt_node(decl_node);
-	}
-	| VarDeclExpr T_COMMA VarDef {
+        // 需要从 $1 (AST_OP_DECL_STMT) 中获取类型信息
+        // 假设 $1 的第一个子节点 (AST_OP_VAR_DECL) 的第一个子节点是类型节点
+        if (!$1 || $1->sons.empty() || !$1->sons[0] || $1->sons[0]->sons.empty() || !$1->sons[0]->sons[0]->type) {
+            yyerror("Internal error: Cannot extract type from previous VarDeclExpr");
+            YYABORT;
+        }
+        ast_node * type_node_for_new_var = ast_node::New($1->sons[0]->sons[0]->type);
 
-		// 创建类型节点，这里从VarDeclExpr获取类型，前面已经设置
-		ast_node * type_node = ast_node::New($1->type);
 
-		// 创建变量定义节点
-		ast_node * decl_node = create_contain_node(ast_operator_type::AST_OP_VAR_DECL, type_node, $3);
+        ast_node * new_single_var_decl_node = create_contain_node(ast_operator_type::AST_OP_VAR_DECL, type_node_for_new_var, $3);
+        new_single_var_decl_node->type = type_node_for_new_var->type;
 
-		// 插入到变量声明语句
-		$$ = $1->insert_son_node(decl_node);
-	}
-	;
+        // 将新的 single_var_decl_node 添加到 $1 (AST_OP_DECL_STMT) 的子节点列表中
+        $$ = $1->insert_son_node(new_single_var_decl_node);
+    }
+    ;
 
-// 变量定义包含变量名，实际上还有初值，这里没有实现。
+
+// VarDef 现在支持初始化
 VarDef : T_ID {
-		// 变量ID
-
-		$$ = ast_node::New(var_id_attr{$1.id, $1.lineno});
-
-		// 对于字符型字面量的字符串空间需要释放，因词法用到了strdup进行了字符串复制
+		// 变量ID，无初始化
+        // 使用现有的 ast_node::New(var_id_attr) 创建叶子节点
+		$$ = ast_node::New($1); 
 		free($1.id);
+	}
+	| T_ID T_ASSIGN Expr { // 变量ID，带初始化
+        // $1 是 T_ID (var_id_attr)
+        // $3 是 Expr (ast_node*)
+        ast_node* id_node = ast_node::New($1); // 创建代表变量名的叶子节点
+        free($1.id); // 释放词法分析器分配的id字符串
+
+        // 创建一个 AST_OP_INIT 节点，其子节点是 id_node 和 $3 (初始化表达式)
+        $$ = create_contain_node(ast_operator_type::AST_OP_INIT, id_node, $3, nullptr);
 	}
 	;
 

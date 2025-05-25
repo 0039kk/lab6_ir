@@ -17,7 +17,8 @@
 
 #include <list>
 #include <string>
-
+#include <set> // <--- 添加这个
+#include <vector> // 确保包含 (如果 ArmInst.h 或其他地方需要)
 #include "Module.h"
 
 #define Instanceof(res, type, var) auto res = dynamic_cast<type>(var)
@@ -89,10 +90,6 @@ class ILocArm32 {
     /// @brief 符号表
     Module * module;
 
-    /// @brief 加载立即数 ldr r0,=#100
-    /// @param rs_reg_no 结果寄存器号
-    /// @param num 立即数
-    void load_imm(int rs_reg_no, int num);
 
     /// @brief 加载符号值 ldr r0,=g; ldr r0,[r0]
     /// @param rsReg 结果寄存器号
@@ -214,4 +211,19 @@ public:
 
     /// @brief 删除无用的Label指令
     void deleteUnusedLabel();
+
+    void conditional_jump(std::string cond_op, std::string label);
+
+    
+    /// @brief 加载立即数 ldr r0,=#100
+    /// @param rs_reg_no 结果寄存器号
+    /// @param num 立即数
+    void load_imm(int rs_reg_no, int num);
+    
+private: // 或者 protected，取决于你的设计
+    // --- 新增成员：用于跟踪被引用的标签 ---
+    std::set<std::string> referencedLabelNames;
+
+    // --- 结束新增 ---
+    
 };

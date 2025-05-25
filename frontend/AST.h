@@ -142,6 +142,7 @@ enum class ast_operator_type : int {
     /// @brief 逻辑非运算符 ! (孩子: 表达式)
     AST_OP_LNOT,
 
+	AST_OP_INIT, 
     /// @brief 空语句 (可选，如果选择用特定节点表示)
     // AST_OP_EMPTY_STMT,
     // --- 结束新增 ---

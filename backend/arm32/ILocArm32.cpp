@@ -15,12 +15,18 @@
 ///
 #include <cstdio>
 #include <string>
+#include <typeinfo>
 
 #include "ILocArm32.h"
 #include "Common.h"
 #include "Function.h"
 #include "PlatformArm32.h"
 #include "Module.h"
+#include "ConstInt.h"   // 因为用到了 ConstInt
+#include "GlobalVariable.h" // 因为用到了 GlobalVariable
+#include "LocalVariable.h"  // 因为用到了 LocalVariable
+#include "TempVariable.h"   // <--- 新增这个
+#include "Instruction.h"       // 因为用到了 Instruction
 
 ArmInst::ArmInst(std::string _opcode,
                  std::string _result,
@@ -132,32 +138,38 @@ ILocArm32::~ILocArm32()
 }
 
 /// @brief 删除无用的Label指令
-void ILocArm32::deleteUnusedLabel()
-{
-    std::list<ArmInst *> labelInsts;
-    for (ArmInst * arm: code) {
-        if ((!arm->dead) && (arm->opcode[0] == '.') && (arm->result == ":")) {
-            labelInsts.push_back(arm);
-        }
+// backend/arm32/ILocArm32.cpp
+
+void ILocArm32::deleteUnusedLabel() {
+    if (code.empty()) {
+        return;
     }
 
-    // 检测Label指令是否在被使用，也就是是否有跳转到该Label的指令
-    // 如果没有使用，则设置为dead
-    for (ArmInst * labelArm: labelInsts) {
-        bool labelUsed = false;
+    minic_log(LOG_DEBUG, "ILocArm32::deleteUnusedLabel: Starting. %zu referenced labels found.", referencedLabelNames.size());
+    // for(const auto& ref_label : referencedLabelNames) { // 可选：打印所有引用的标签
+    //     minic_log(LOG_DEBUG, "ILocArm32: Referenced Label: '%s'", ref_label.c_str());
+    // }
 
-        for (ArmInst * arm: code) {
-            // TODO 转移语句的指令标识符根据定义修改判断
-            if ((!arm->dead) && (arm->opcode[0] == 'b') && (arm->result == labelArm->opcode)) {
-                labelUsed = true;
-                break;
+    // 遍历所有指令，找到标签定义并检查是否被引用
+    for (ArmInst * inst : code) {
+        if (inst->dead) {
+            continue;
+        }
+
+        // 假设：标签定义的 ArmInst 中，opcode 存储标签名 (如 ".L4")，result 存储 ":"
+        if (!inst->opcode.empty() && inst->opcode[0] == '.' && inst->result == ":") {
+            const std::string& definedLabelName = inst->opcode;
+            // 检查这个定义的标签是否在被引用的集合中
+            if (referencedLabelNames.find(definedLabelName) == referencedLabelNames.end()) {
+                // 未找到，说明这个标签没有被任何跳转指令引用
+                minic_log(LOG_INFO, "ILocArm32::deleteUnusedLabel: Deleting unused label: '%s'", definedLabelName.c_str());
+                inst->setDead(); // 标记为 dead
+            } else {
+                minic_log(LOG_DEBUG, "ILocArm32::deleteUnusedLabel: Keeping used label: '%s'", definedLabelName.c_str());
             }
         }
-
-        if (!labelUsed) {
-            labelArm->setDead();
-        }
     }
+     minic_log(LOG_DEBUG, "ILocArm32::deleteUnusedLabel: Finished.");
 }
 
 /// @brief 输出汇编
@@ -259,11 +271,11 @@ void ILocArm32::load_imm(int rs_reg_no, int constant)
     // movt:把 16 位立即数放到寄存器的高16位，低 16位不影响
     if (0 == ((constant >> 16) & 0xFFFF)) {
         // 如果高16位本来就为0，直接movw
-        emit("movw", PlatformArm32::regName[rs_reg_no], "#:lower16:" + std::to_string(constant));
+        emit("movw", PlatformArm32::getRegNameSafe(rs_reg_no), "#:lower16:" + std::to_string(constant));
     } else {
         // 如果高16位不为0，先movw，然后movt
-        emit("movw", PlatformArm32::regName[rs_reg_no], "#:lower16:" + std::to_string(constant));
-        emit("movt", PlatformArm32::regName[rs_reg_no], "#:upper16:" + std::to_string(constant));
+        emit("movw", PlatformArm32::getRegNameSafe(rs_reg_no), "#:lower16:" + std::to_string(constant));
+        emit("movt", PlatformArm32::getRegNameSafe(rs_reg_no), "#:upper16:" + std::to_string(constant));
     }
 }
 
@@ -274,8 +286,8 @@ void ILocArm32::load_symbol(int rs_reg_no, std::string name)
 {
     // movw r10, #:lower16:a
     // movt r10, #:upper16:a
-    emit("movw", PlatformArm32::regName[rs_reg_no], "#:lower16:" + name);
-    emit("movt", PlatformArm32::regName[rs_reg_no], "#:upper16:" + name);
+    emit("movw", PlatformArm32::getRegNameSafe(rs_reg_no), "#:lower16:" + name);
+	emit("movt", PlatformArm32::getRegNameSafe(rs_reg_no), "#:upper16:" + name);
 }
 
 /// @brief 基址寻址 ldr r0,[fp,#100]
@@ -284,8 +296,8 @@ void ILocArm32::load_symbol(int rs_reg_no, std::string name)
 /// @param offset 偏移
 void ILocArm32::load_base(int rs_reg_no, int base_reg_no, int offset)
 {
-    std::string rsReg = PlatformArm32::regName[rs_reg_no];
-    std::string base = PlatformArm32::regName[base_reg_no];
+    std::string rsReg = PlatformArm32::getRegNameSafe(rs_reg_no);
+	std::string base = PlatformArm32::getRegNameSafe(base_reg_no);
 
     if (PlatformArm32::isDisp(offset)) {
         // 有效的偏移常量
@@ -317,8 +329,7 @@ void ILocArm32::load_base(int rs_reg_no, int base_reg_no, int offset)
 /// @param tmp_reg_no 可能需要临时寄存器编号
 void ILocArm32::store_base(int src_reg_no, int base_reg_no, int disp, int tmp_reg_no)
 {
-    std::string base = PlatformArm32::regName[base_reg_no];
-
+    std::string base = PlatformArm32::getRegNameSafe(base_reg_no);
     if (PlatformArm32::isDisp(disp)) {
         // 有效的偏移常量
 
@@ -334,7 +345,7 @@ void ILocArm32::store_base(int src_reg_no, int base_reg_no, int disp, int tmp_re
         load_imm(tmp_reg_no, disp);
 
         // fp,r9
-        base += "," + PlatformArm32::regName[tmp_reg_no];
+        base += "," + PlatformArm32::getRegNameSafe(tmp_reg_no);
     }
 
     // 内存间接寻址
@@ -342,7 +353,7 @@ void ILocArm32::store_base(int src_reg_no, int base_reg_no, int disp, int tmp_re
 
     // str r8,[fp,#-16]
     // str r8,[fp,r9]
-    emit("str", PlatformArm32::regName[src_reg_no], base);
+    emit("str", PlatformArm32::getRegNameSafe(src_reg_no), base);
 }
 
 /// @brief 寄存器Mov操作
@@ -350,63 +361,102 @@ void ILocArm32::store_base(int src_reg_no, int base_reg_no, int disp, int tmp_re
 /// @param src_reg_no 源寄存器
 void ILocArm32::mov_reg(int rs_reg_no, int src_reg_no)
 {
-    emit("mov", PlatformArm32::regName[rs_reg_no], PlatformArm32::regName[src_reg_no]);
+    emit("mov", PlatformArm32::getRegNameSafe(rs_reg_no), PlatformArm32::getRegNameSafe(src_reg_no));
 }
 
 /// @brief 加载变量到寄存器，保证将变量放到reg中
 /// @param rs_reg_no 结果寄存器
 /// @param src_var 源操作数
+// backend/arm32/ILocArm32.cpp
+
 void ILocArm32::load_var(int rs_reg_no, Value * src_var)
 {
+    if (src_var == nullptr) {
+        minic_log(LOG_ERROR, "ILocLoadVar: src_var is nullptr! Cannot load into reg %s.", 
+                  PlatformArm32::getRegNameSafe(rs_reg_no).c_str());
+        // 可能需要 emit 一个错误标记或者直接返回
+        emit("@ ERROR: load_var called with null src_var for reg " + PlatformArm32::getRegNameSafe(rs_reg_no));
+        return;
+    }
 
     if (Instanceof(constVal, ConstInt *, src_var)) {
         // 整型常量
-
-        // TODO 目前只考虑整数类型 100
-        // ldr r8,#100
+        minic_log(LOG_DEBUG, "ILocLoadVar: Loading ConstInt %s (value %d) into reg %s",
+                  src_var->getIRName().c_str(), constVal->getVal(), PlatformArm32::getRegNameSafe(rs_reg_no).c_str());
         load_imm(rs_reg_no, constVal->getVal());
-    } else if (src_var->getRegId() != -1) {
-
+    } else if (src_var->getRegId() != -1 && src_var->getRegId() < PlatformArm32::maxUsableRegNum ) { // 检查 regId 的有效性
         // 源操作数为寄存器变量
         int32_t src_regId = src_var->getRegId();
-
+        minic_log(LOG_DEBUG, "ILocLoadVar: Src %s is already in reg %s. Target reg is %s.",
+                  src_var->getIRName().c_str(), PlatformArm32::getRegNameSafe(src_regId).c_str(), PlatformArm32::getRegNameSafe(rs_reg_no).c_str());
         if (src_regId != rs_reg_no) {
-
-            // mov r8,r2 | 这里有优化空间——消除r8
-            emit("mov", PlatformArm32::regName[rs_reg_no], PlatformArm32::regName[src_regId]);
+            emit("mov", PlatformArm32::getRegNameSafe(rs_reg_no), PlatformArm32::getRegNameSafe(src_regId));
         }
     } else if (Instanceof(globalVar, GlobalVariable *, src_var)) {
         // 全局变量
-
-        // 读取全局变量的地址
-        // movw r8, #:lower16:a
-        // movt r8, #:lower16:a
+        minic_log(LOG_DEBUG, "ILocLoadVar: Loading GlobalVariable %s into reg %s",
+                  globalVar->getName().c_str(), PlatformArm32::getRegNameSafe(rs_reg_no).c_str());
         load_symbol(rs_reg_no, globalVar->getName());
+        std::string reg_str_for_ldr = PlatformArm32::getRegNameSafe(rs_reg_no);
+        emit("ldr", reg_str_for_ldr, "[" + reg_str_for_ldr + "]");
+    } else { 
+        // 尝试从栈加载
+        // 通用日志，打印基本信息
+        minic_log(LOG_DEBUG, "ILocLoadVar: Attempting stack load for Value (IRName: '%s', OrigName: '%s', DynType: %s, Ptr: %p, current regId: %d) into reg %s",
+                  src_var->getIRName().c_str(),
+                  src_var->getName().c_str(), // 原始名称
+                  typeid(*src_var).name(),    // 动态类型
+                  (void*)src_var,             // 指针地址
+                  src_var->getRegId(),        // 当前（通用）regId
+                  PlatformArm32::getRegNameSafe(rs_reg_no).c_str());
 
-        // ldr r8, [r8]
-        emit("ldr", PlatformArm32::regName[rs_reg_no], "[" + PlatformArm32::regName[rs_reg_no] + "]");
-
-    } else {
-
-        // 栈+偏移的寻址方式
-
-        // 栈帧偏移
-        int32_t var_baseRegId = -1;
-        int64_t var_offset = -1;
-
-        bool result = src_var->getMemoryAddr(&var_baseRegId, &var_offset);
-        if (!result) {
-            minic_log(LOG_ERROR, "BUG");
+        // ---- A2: 针对 LocalVariable 的详细日志 ----
+        if (LocalVariable* lv = dynamic_cast<LocalVariable*>(src_var)) {
+            minic_log(LOG_DEBUG, "ILocLoadVar: src_var IS LocalVariable. Ptr: %p, IRName: '%s'. Internal state BEFORE getMemoryAddr: baseRegNo=%d, offset=%d.",
+                      (void*)lv, 
+                      lv->getIRName().c_str(), 
+                      lv->getBaseRegNoForDebug(), // 调用调试 getter
+                      lv->getOffsetForDebug());   // 调用调试 getter
+        } 
+        // ---- 结束 A2 LocalVariable 日志 ----
+        // (可以为 TempVariable 和 Instruction 添加类似的 "IS XxxVariable" 日志，但不打印 baseRegNo/offset，因为它们没有)
+        else if (dynamic_cast<TempVariable*>(src_var)) {
+            minic_log(LOG_DEBUG, "ILocLoadVar: src_var IS TempVariable. Ptr: %p, IRName: '%s'.", (void*)src_var, src_var->getIRName().c_str());
+        } else if (dynamic_cast<Instruction*>(src_var) && src_var != nullptr) { // 确保不是 Value 本身，而是 Instruction
+            minic_log(LOG_DEBUG, "ILocLoadVar: src_var IS Instruction result. Ptr: %p, IRName: '%s'.", (void*)src_var, src_var->getIRName().c_str());
         }
 
-        // 对于栈内分配的局部数组，可直接在栈指针上进行移动与运算
-        // 但对于形参，其保存的是调用函数栈的数组的地址，需要读取出来
 
-        // ldr r8,[sp,#16]
-        load_base(rs_reg_no, var_baseRegId, var_offset);
+        int32_t var_baseRegId = -1;
+        int64_t var_offset = 0; 
+    
+        bool has_mem_addr = src_var->getMemoryAddr(&var_baseRegId, &var_offset); 
+
+        // 在调用 getMemoryAddr 之后，再次检查 LocalVariable 的内部状态 (如果它是 LocalVariable)
+        if (LocalVariable* lv_after = dynamic_cast<LocalVariable*>(src_var)) {
+            minic_log(LOG_DEBUG, "ILocLoadVar: LocalVariable (Ptr: %p, IRName: '%s') AFTER getMemoryAddr. Return: %s. Effective baseRegId: %d, offset: %lld. Internal base: %d, internal offset: %d.",
+                      (void*)lv_after, lv_after->getIRName().c_str(),
+                      has_mem_addr ? "true" : "false", var_baseRegId, (long long)var_offset,
+                      lv_after->getBaseRegNoForDebug(), lv_after->getOffsetForDebug());
+        } else {
+            minic_log(LOG_DEBUG, "ILocLoadVar: Value (IRName: '%s', Ptr: %p, DynType: %s) AFTER getMemoryAddr. Return: %s. Effective baseRegId: %d, offset: %lld.",
+                      src_var->getIRName().c_str(), (void*)src_var, typeid(*src_var).name(),
+                      has_mem_addr ? "true" : "false", var_baseRegId, (long long)var_offset);
+        }
+
+
+        if (has_mem_addr && var_baseRegId != -1 && var_baseRegId < PlatformArm32::maxRegNum) {
+            minic_log(LOG_DEBUG, "ILocLoadVar: Proceeding to load_base for %s from [%s, #%lld] into %s",
+                src_var->getIRName().c_str(), PlatformArm32::getRegNameSafe(var_baseRegId).c_str(), (long long)var_offset, PlatformArm32::getRegNameSafe(rs_reg_no).c_str());
+            load_base(rs_reg_no, var_baseRegId, var_offset);
+        } else {
+             minic_log(LOG_ERROR, "ILocLoadVar: FINAL DECISION - Value %s (DynType: %s, Ptr: %p) -> getMemoryAddr FAILED or returned invalid baseId. Actual has_mem_addr: %s, actual var_baseRegId: %d. Cannot LDR into %s.",
+                       src_var->getIRName().c_str(), typeid(*src_var).name(), (void*)src_var,
+                       has_mem_addr ? "true":"false", var_baseRegId, PlatformArm32::getRegNameSafe(rs_reg_no).c_str());
+             emit("ldr", PlatformArm32::getRegNameSafe(rs_reg_no), "[NO_VALID_MEM_ADDR_FOR_" + src_var->getIRName() + "]");
+        }
     }
 }
-
 /// @brief 加载变量地址到寄存器
 /// @param rs_reg_no
 /// @param var
@@ -434,51 +484,126 @@ void ILocArm32::lea_var(int rs_reg_no, Value * var)
 /// @param src_reg_no 源寄存器
 /// @param dest_var  变量
 /// @param tmp_reg_no 第三方寄存器
+// backend/arm32/ILocArm32.cpp
+
+/// @brief 保存寄存器到变量，保证将计算结果（例如 r8）保存到变量
+/// @param src_reg_no 源寄存器
+/// @param dest_var  目标变量
+/// @param tmp_reg_no 用于加载全局变量地址等的临时寄存器 (例如 r10)
+// backend/arm32/ILocArm32.cpp
+
 void ILocArm32::store_var(int src_reg_no, Value * dest_var, int tmp_reg_no)
 {
-    // 被保存目标变量肯定不是常量
+    // 检查 dest_var 是否为空
+    if (dest_var == nullptr) {
+        minic_log(LOG_ERROR, "ILocStoreVar: dest_var is nullptr! Cannot store from reg %s.",
+                  PlatformArm32::getRegNameSafe(src_reg_no).c_str());
+        emit("@ ERROR: store_var called with null dest_var from reg " + PlatformArm32::getRegNameSafe(src_reg_no));
+        return;
+    }
 
-    if (dest_var->getRegId() != -1) {
+    // 检查源寄存器是否有效
+    std::string src_reg_name = PlatformArm32::getRegNameSafe(src_reg_no);
+    if (src_reg_no == -1 || src_reg_name.rfind("REG_ID(", 0) == 0 || src_reg_name.rfind("EMPTY_REG_NAME", 0) == 0) {
+        minic_log(LOG_ERROR, "ILocStoreVar: Invalid source register ID %d (Name: %s) for storing to %s.",
+                  src_reg_no, src_reg_name.c_str(), dest_var->getIRName().c_str());
+        emit("@ ERROR: STORE from invalid source register " + src_reg_name + " to " + dest_var->getIRName());
+        return;
+    }
 
-        // 寄存器变量
+    // 检查是否尝试写入常量
+    if (dest_var->isConstant()) {
+        minic_log(LOG_ERROR, "ILocStoreVar: Attempting to store into a constant value %s from reg %s. This should not happen.",
+                  dest_var->getIRName().c_str(), src_reg_name.c_str());
+        emit("@ ERROR: STORE into constant " + dest_var->getIRName() + " from " + src_reg_name);
+        return;
+    }
 
-        // -1表示非寄存器，其他表示寄存器的索引值
+    // --- 开始实际的存储逻辑 ---
+
+    if (dest_var->getRegId() != -1 && dest_var->getRegId() < PlatformArm32::maxUsableRegNum) {
+        // 目标是寄存器变量
         int dest_reg_id = dest_var->getRegId();
+        std::string dest_reg_name = PlatformArm32::getRegNameSafe(dest_reg_id);
 
-        // 寄存器不一样才需要mov操作
-        if (src_reg_no != dest_reg_id) {
-
-            // mov r2,r8 | 这里有优化空间——消除r8
-            emit("mov", PlatformArm32::regName[dest_reg_id], PlatformArm32::regName[src_reg_no]);
+        // 再次检查目标寄存器名是否有效 (以防万一 getRegId 返回了有效范围内的错误ID)
+        if (dest_reg_name.rfind("REG_ID(", 0) == 0 || dest_reg_name.rfind("EMPTY_REG_NAME", 0) == 0) {
+             minic_log(LOG_ERROR, "ILocStoreVar: Target register variable %s (IRName: %s) has invalid register ID %d (Name: %s). Cannot store from %s.",
+                       dest_var->getName().c_str(), dest_var->getIRName().c_str(), dest_reg_id, dest_reg_name.c_str(), src_reg_name.c_str());
+             emit("@ ERROR: STORE to invalid target register variable " + dest_var->getIRName() + " (" + dest_reg_name + ") from " + src_reg_name);
+             return;
         }
+        
+        minic_log(LOG_DEBUG, "ILocStoreVar: Dest %s (IRName: %s) is in reg %s. Source reg is %s.",
+                  dest_var->getName().c_str(), dest_var->getIRName().c_str(), dest_reg_name.c_str(), src_reg_name.c_str());
+
+        if (src_reg_no != dest_reg_id) {
+            emit("mov", dest_reg_name, src_reg_name);
+        }
+        // 如果源和目标是同一个寄存器，则不需要操作
 
     } else if (Instanceof(globalVar, GlobalVariable *, dest_var)) {
-        // 全局变量
-
-        // 读取符号的地址到寄存器r10
+        // 目标是全局变量
+        minic_log(LOG_DEBUG, "ILocStoreVar: Storing from %s to global variable %s (IRName: %s) (using tmp_reg: %s)",
+                  src_reg_name.c_str(), globalVar->getName().c_str(), globalVar->getIRName().c_str(), PlatformArm32::getRegNameSafe(tmp_reg_no).c_str());
         load_symbol(tmp_reg_no, globalVar->getName());
-
-        // str r8, [r10]
-        emit("str", PlatformArm32::regName[src_reg_no], "[" + PlatformArm32::regName[tmp_reg_no] + "]");
+        std::string tmp_reg_name_for_addr = PlatformArm32::getRegNameSafe(tmp_reg_no);
+        emit("str", src_reg_name, "[" + tmp_reg_name_for_addr + "]");
 
     } else {
+        // 目标是栈上变量 (局部变量或溢出的临时变量)
+        minic_log(LOG_DEBUG, "ILocStoreVar: Attempting stack store for Value (IRName: '%s', OrigName: '%s', DynType: %s, Ptr: %p, current regId: %d) from reg %s",
+                  dest_var->getIRName().c_str(),
+                  dest_var->getName().c_str(),
+                  typeid(*dest_var).name(),
+                  (void*)dest_var,
+                  dest_var->getRegId(), // 这个 getRegId() 应该是 dest_var 的通用寄存器ID
+                  src_reg_name.c_str());
 
-        // 对于局部变量，则直接从栈基址+偏移寻址
-
-        // TODO 目前只考虑局部变量
-
-        // 栈帧偏移
-        int32_t dest_baseRegId = -1;
-        int64_t dest_offset = -1;
-
-        bool result = dest_var->getMemoryAddr(&dest_baseRegId, &dest_offset);
-        if (!result) {
-            minic_log(LOG_ERROR, "BUG");
+        // ---- A2: 针对 LocalVariable 的详细日志 ----
+        LocalVariable* lv_debug = dynamic_cast<LocalVariable*>(dest_var); // 用于日志的临时指针
+        if (lv_debug) {
+            minic_log(LOG_DEBUG, "ILocStoreVar: dest_var IS LocalVariable. Ptr: %p, IRName: '%s'. Internal state BEFORE getMemoryAddr: baseRegNo=%d, offset=%d.",
+                      (void*)lv_debug, 
+                      lv_debug->getIRName().c_str(), 
+                      lv_debug->getBaseRegNoForDebug(),
+                      lv_debug->getOffsetForDebug());
+        } 
+        // ---- 结束 A2 LocalVariable 日志 ----
+        else if (dynamic_cast<TempVariable*>(dest_var)) {
+            minic_log(LOG_DEBUG, "ILocStoreVar: dest_var IS TempVariable. Ptr: %p, IRName: '%s'.", (void*)dest_var, dest_var->getIRName().c_str());
+        } else if (dynamic_cast<Instruction*>(dest_var)) { 
+             minic_log(LOG_DEBUG, "ILocStoreVar: dest_var IS Instruction result. Ptr: %p, IRName: '%s'.", (void*)dest_var, dest_var->getIRName().c_str());
         }
 
-        // str r8,[r9]
-        // str r8, [fp, # - 16]
-        store_base(src_reg_no, dest_baseRegId, dest_offset, tmp_reg_no);
+
+        int32_t dest_baseRegId = -1;
+        int64_t dest_offset = 0; 
+        bool has_mem_addr = dest_var->getMemoryAddr(&dest_baseRegId, &dest_offset);
+
+        // 在调用 getMemoryAddr 之后，再次检查 LocalVariable 的内部状态
+        if (lv_debug) { // 使用之前 dynamic_cast 的结果
+            minic_log(LOG_DEBUG, "ILocStoreVar: LocalVariable (Ptr: %p, IRName: '%s') AFTER getMemoryAddr. Return: %s. Effective baseRegId: %d, offset: %lld. Internal state AFTER: baseRegNo=%d, internal offset=%d.",
+                      (void*)lv_debug, lv_debug->getIRName().c_str(),
+                      has_mem_addr ? "true" : "false", dest_baseRegId, (long long)dest_offset,
+                      lv_debug->getBaseRegNoForDebug(), lv_debug->getOffsetForDebug());
+        } else {
+             minic_log(LOG_DEBUG, "ILocStoreVar: Value (IRName: '%s', Ptr: %p, DynType: %s) AFTER getMemoryAddr. Return: %s. Effective baseRegId: %d, offset: %lld.",
+                      dest_var->getIRName().c_str(), (void*)dest_var, typeid(*dest_var).name(),
+                      has_mem_addr ? "true" : "false", dest_baseRegId, (long long)dest_offset);
+        }
+
+        if (has_mem_addr && dest_baseRegId != -1 && dest_baseRegId < PlatformArm32::maxRegNum) {
+            minic_log(LOG_DEBUG, "ILocStoreVar: Proceeding to store_base for %s into [%s, #%lld] from %s",
+                dest_var->getIRName().c_str(), PlatformArm32::getRegNameSafe(dest_baseRegId).c_str(), (long long)dest_offset, src_reg_name.c_str());
+            store_base(src_reg_no, dest_baseRegId, dest_offset, tmp_reg_no);
+        } else {
+            minic_log(LOG_ERROR, "ILocStoreVar: FINAL DECISION - Value %s (DynType: %s, Ptr: %p) -> getMemoryAddr FAILED or returned invalid baseId. Actual has_mem_addr: %s, actual dest_baseRegId: %d. Cannot STR from %s.",
+                       dest_var->getIRName().c_str(), typeid(*dest_var).name(), (void*)dest_var,
+                       has_mem_addr ? "true":"false", dest_baseRegId, src_reg_name.c_str());
+            // 生成错误标记的汇编指令
+            emit("str", src_reg_name, "[NO_VALID_MEM_ADDR_FOR_" + dest_var->getIRName() + "]");
+        }
     }
 }
 
@@ -488,8 +613,8 @@ void ILocArm32::store_var(int src_reg_no, Value * dest_var, int tmp_reg_no)
 /// @param off 偏移
 void ILocArm32::leaStack(int rs_reg_no, int base_reg_no, int off)
 {
-    std::string rs_reg_name = PlatformArm32::regName[rs_reg_no];
-    std::string base_reg_name = PlatformArm32::regName[base_reg_no];
+    std::string rs_reg_name = PlatformArm32::getRegNameSafe(rs_reg_no);
+	std::string base_reg_name = PlatformArm32::getRegNameSafe(base_reg_no);
 
     if (PlatformArm32::constExpr(off))
         // add r8,fp,#-16
@@ -527,7 +652,7 @@ void ILocArm32::allocStack(Function * func, int tmp_reg_no)
         load_imm(tmp_reg_no, off);
 
         // sub sp,sp,r8
-        emit("sub", "sp", "sp", PlatformArm32::regName[tmp_reg_no]);
+        emit("sub", "sp", "sp", PlatformArm32::getRegNameSafe(tmp_reg_no));
     }
 }
 
@@ -550,7 +675,23 @@ void ILocArm32::nop()
 /// @brief 无条件跳转指令
 /// @param label 目标Label名称
 ///
-void ILocArm32::jump(std::string label)
-{
+// backend/arm32/ILocArm32.cpp
+void ILocArm32::jump(std::string label) {
+    if (!label.empty()) { // 确保标签名非空
+        referencedLabelNames.insert(label); // <--- 记录使用的标签
+    } else {
+        minic_log(LOG_WARNING, "ILocArm32::jump called with empty label.");
+    }
     emit("b", label);
+}
+
+void ILocArm32::conditional_jump(std::string cond_op, std::string label) {
+    if (!label.empty()) {
+        referencedLabelNames.insert(label);
+        minic_log(LOG_DEBUG, "ILocArm32::conditional_jump: Referenced label '%s' from op '%s'", label.c_str(), cond_op.c_str());
+    } else {
+        minic_log(LOG_WARNING, "ILocArm32::conditional_jump called with empty label for op %s.", cond_op.c_str());
+    }
+    // 假设 emit(op, target) 是正确的 ArmInst 构造方式
+    emit(cond_op, label); 
 }

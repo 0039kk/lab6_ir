@@ -187,6 +187,7 @@ set(IR_SRCS
 	ir/Values/ConstInt.h
 	ir/Values/ConstInt.cpp
 	ir/Values/FormalParam.h
+	ir/Values/GlobalVariable.cpp
 	ir/Values/GlobalVariable.h
 	ir/Values/LocalVariable.h
 	ir/Values/MemVariable.h
@@ -202,6 +203,7 @@ set(IR_SRCS
 	ir/Instruction.cpp
 	ir/Instruction.h
 	ir/IRConstant.h
+	ir/Type.cpp
 	ir/Type.h
 	ir/Use.cpp
 	ir/Use.h

@@ -136,7 +136,7 @@ void CodeGeneratorArm32::genCodeSection(Function * func)
     instSelector.run();
 
     // 删除无用的Label指令
-    iloc.deleteUnusedLabel();
+    //iloc.deleteUnusedLabel();
 
     // ILOC代码输出为汇编代码
     fprintf(fp, ".align %d\n", func->getAlignment());
@@ -356,91 +356,126 @@ void CodeGeneratorArm32::adjustFuncCallInsts(Function * func)
 /// @param func 要处理的函数
 void CodeGeneratorArm32::stackAlloc(Function * func)
 {
-    // 栈内分配的空间除了寄存器保护所分配的空间之外，还需要管理如下的空间
-    // (1) 没有指派寄存器的局部变量、形参或临时变量的栈内分配
-    // (2) 函数调用时需要栈内传递的实参
-    // (3) 函数内定义的数组变量需要在栈内分配
-    // (4) 函数内定义的静态变量空间分配按静态分配处理
+    int32_t s32_temp; 
+    int64_t s64_temp; 
 
-    // 遍历函数内的所有指令，查找没有寄存器分配的变量，然后进行栈内空间分配
+    // ... (前面的注释和局部变量分配日志保持你之前的版本，那部分看起来OK) ...
+    std::cout << "--- Stack Allocation for Function: " << func->getName() << " ---" << std::endl;
 
-    // 栈帧空间
-    // --------------------- sp
-    // 实参栈传递的空间（排除寄存器传递的实参空间）
-    // ---------------------
-    // 需要保存在栈中的局部变量或临时变量或形参对应变量空间
-    // --------------------- fp
-    // 保护寄存器的空间
-    // ---------------------
+    int32_t current_fp_negative_offset_size = func->getCurrentFuncFrameSizeNegative(); // 你需要实现这个函数
+                    
+    int32_t sp_esp = current_fp_negative_offset_size; // 初始化 sp_esp
+    std::cout << "Initial sp_esp based on LocalVariables: " << sp_esp << std::endl;
 
-    // 这里对临时变量和局部变量都在栈上进行分配，采用FP+偏移的寻址方式，偏移为负数
+    // --- 1. 为局部变量 (func->getVarValues()) 分配栈空间 ---
+    std::cout << "--- Processing Local Variables (getVarValues) ---" << std::endl;
+    for (auto var : func->getVarValues()) {
+        // --- 你之前的局部变量日志逻辑 ---
+        std::string has_mem_addr_str = "No";
+        int32_t current_base_reg = -1;
+        int64_t current_offset = 0;
+        if (var->getMemoryAddr(&current_base_reg, &current_offset)) {
+            has_mem_addr_str = "Yes (Base: ";
+            if (current_base_reg != -1 && current_base_reg < PlatformArm32::maxUsableRegNum) { // 假设 PlatformArm32 有 maxUsableRegNum
+                 has_mem_addr_str += PlatformArm32::regName[current_base_reg];
+            } else {
+                 has_mem_addr_str += std::to_string(current_base_reg);
+            }
+            has_mem_addr_str += ", Offset: " + std::to_string(current_offset) + ")";
+        }
 
-    int32_t sp_esp = 0;
+        std::cout << "Var: " << var->getName() 
+                  << " (IR: " << var->getIRName() << ")"
+                  << ", Type: " << var->getType()->toString()
+                  << ", RegId: " << var->getRegId()
+                  << ", HasMemAddr: " << has_mem_addr_str
+                  << ", Ptr: " << static_cast<void*>(var) // 打印指针地址
+                  << std::endl;
+        // --- 结束你之前的局部变量日志逻辑 ---
 
-    // 遍历函数变量列表
-    for (auto var: func->getVarValues()) {
-
-        // 对于简单类型的寄存器分配策略，假定临时变量和局部变量都保存在栈中，属于内存
-        // 而对于图着色等，临时变量一般是寄存器，局部变量也可能修改为寄存器
-        // TODO 考虑如何进行分配使得临时变量尽量保存在寄存器中，作为优化点考虑
-
-        // regId不为-1，则说明该变量分配为寄存器
-        // baseRegNo不等于-1，则说明该变量肯定在栈上，属于内存变量，之前肯定已经分配过
-        if ((var->getRegId() == -1) && (!var->getMemoryAddr())) {
-
-            // 该变量没有分配寄存器
-
+        if ((var->getRegId() == -1) && (!var->getMemoryAddr(&s32_temp, &s64_temp))) {
             int32_t size = var->getType()->getSize();
-
-            // 32位ARM平台按照4字节的大小整数倍分配局部变量
-            size = (size + 3) & ~3;
-
-            // 累计当前作用域大小
+            size = (size + 3) & ~3; 
             sp_esp += size;
 
-            // 这里要注意检查变量栈的偏移范围。一般采用机制寄存器+立即数方式间接寻址
-            // 若立即数满足要求，可采用基址寄存器+立即数变量的方式访问变量
-            // 否则，需要先把偏移量放到寄存器中，然后机制寄存器+偏移寄存器来寻址
-            // 之后需要对所有使用到该Value的指令在寄存器分配前要变换。
-
-            // 局部变量偏移设置
+            std::cout << "  ALLOCATING for Local Var: " << var->getName()
+                      << " (IR: " << var->getIRName() << ")"
+                      << ", Size: " << size
+                      << ", CumulativeOffsetAbs: " << sp_esp
+                      << ", AssignedOffset: " << -sp_esp
+                      << std::endl;
             var->setMemoryAddr(ARM32_FP_REG_NO, -sp_esp);
+            // --- 在这里为 LocalVariable 添加即时验证 (可选，但推荐) ---
+            bool check_addr_lv = var->getMemoryAddr(&s32_temp, &s64_temp);
+            std::cout << "    stackAlloc: AFTER setMemoryAddr for LocalVar " << var->getIRName() 
+                      << ", getMemoryAddr returns: " << (check_addr_lv ? "true" : "false")
+                      << ", base=" << s32_temp << ", offset=" << s64_temp << std::endl;
+            // --- 结束即时验证 ---
+            
+        } else {
+            std::cout << "  SKIPPING Local Var (already has reg or mem): " << var->getName() << std::endl;
         }
     }
 
-    // 遍历包含有值的指令，也就是临时变量
-    for (auto inst: func->getInterCode().getInsts()) {
+    // --- 2. 为临时变量 (指令结果) 分配栈空间 ---
+    std::cout << "--- Processing Temporary Variables (Instruction Results) ---" << std::endl;
+    for (auto inst : func->getInterCode().getInsts()) {
+        if (inst->hasResultValue()) {
+            // --- 详细打印指令结果 Value 的当前状态 ---
+            std::string inst_mem_addr_str = "No";
+            int32_t inst_current_base_reg = -1;
+            int64_t inst_current_offset = 0;
+            bool inst_already_has_addr = inst->getMemoryAddr(&inst_current_base_reg, &inst_current_offset);
+            if (inst_already_has_addr) {
+                inst_mem_addr_str = "Yes (Base: ";
+                 if (inst_current_base_reg != -1 && inst_current_base_reg < PlatformArm32::maxUsableRegNum) {
+                     inst_mem_addr_str += PlatformArm32::regName[inst_current_base_reg];
+                 } else {
+                     inst_mem_addr_str += std::to_string(inst_current_base_reg);
+                 }
+                inst_mem_addr_str += ", Offset: " + std::to_string(inst_current_offset) + ")";
+            }
+            std::cout << "Processing Inst with Result: " << inst->toString()
+                      << " (Value Ptr: " << static_cast<void*>(inst) << ", IRName: " << inst->getIRName() << ")"
+                      << ", Type: " << inst->getType()->toString()
+                      << ", RegId: " << inst->getRegId()
+                      << ", HasMemAddr: " << inst_mem_addr_str
+                      << std::endl;
+            // --- 结束详细打印 ---
+            
+            // 条件判断使用 inst_already_has_addr 变量，避免重复调用 getMemoryAddr
+            if ((inst->getRegId() == -1) && (!inst_already_has_addr)) {
+                int32_t size = inst->getType()->getSize();
+                size = (size + 3) & ~3; 
+                sp_esp += size;
 
-        if (inst->hasResultValue() && (inst->getRegId() == -1)) {
-            // 有值，并且没有分配寄存器
+                std::cout << "  ALLOCATING for Temp (Inst Result of: " << inst->toString() << ")"
+                          << ", Size: " << size
+                          << ", CumulativeOffsetAbs: " << sp_esp
+                          << ", AssignedOffset: " << -sp_esp
+                          << std::endl;
+                
+                // **关键：调用 setMemoryAddr**
+                inst->setMemoryAddr(ARM32_FP_REG_NO, -sp_esp);
 
-            int32_t size = inst->getType()->getSize();
+                // **关键：紧随其后的验证日志**
+                bool check_addr_inst = inst->getMemoryAddr(&s32_temp, &s64_temp); // 使用局部 s32_temp, s64_temp
+                std::cout << "    stackAlloc: AFTER setMemoryAddr for Temp " << inst->getIRName() 
+                          << " (Value Ptr: " << static_cast<void*>(inst) << ")"
+                          << ", getMemoryAddr returns: " << (check_addr_inst ? "true" : "false")
+                          << ", base=" << s32_temp << ", offset=" << s64_temp << std::endl;
 
-            // 32位ARM平台按照4字节的大小整数倍分配局部变量
-            size = (size + 3) & ~3;
-
-            // 累计当前作用域大小
-            sp_esp += size;
-
-            // 这里要注意检查变量栈的偏移范围。一般采用机制寄存器+立即数方式间接寻址
-            // 若立即数满足要求，可采用基址寄存器+立即数变量的方式访问变量
-            // 否则，需要先把偏移量放到寄存器中，然后机制寄存器+偏移寄存器来寻址
-            // 之后需要对所有使用到该Value的指令在寄存器分配前要变换。
-
-            // 局部变量偏移设置
-            inst->setMemoryAddr(ARM32_FP_REG_NO, -sp_esp);
+            } else {
+                 std::cout << "  SKIPPING Temp (Inst Result of: " << inst->toString() << ") (already has reg or mem)" << std::endl;
+            }
         }
     }
 
-    // 通过栈传递的实参，ARM32的前四个通过寄存器传递
+    // ... (处理 maxFuncCallArgCnt 和 setMaxDep 的逻辑保持不变) ...
     int maxFuncCallArgCnt = func->getMaxFuncCallArgCnt();
     if (maxFuncCallArgCnt > 4) {
         sp_esp += (maxFuncCallArgCnt - 4) * 4;
     }
-
-    // 只有int类型时可以4字节对齐，支持浮点或者向量运算时要16字节对齐
-    // sp_esp = (sp_esp + 15) & ~15;
-
-    // 设置函数的最大栈帧深度，没有考虑寄存器保护的空间大小
     func->setMaxDep(sp_esp);
+    std::cout << "--- Function: " << func->getName() << ", Final Stack Depth (FP- including call args): " << sp_esp << " ---" << std::endl;
 }

@@ -18,7 +18,6 @@
 #pragma once
 
 #include <string>
-
 #define Instanceof(res, type, var) auto res = dynamic_cast<type>(var)
 
 class Type {
@@ -51,7 +50,7 @@ public:
     ///
     /// @brief 缺省的析构函数
     ///
-    virtual ~Type() = default;
+    virtual ~Type();
 
     ///
     /// @brief 下列操作不被允许，只能通过指针传递
@@ -164,11 +163,7 @@ public:
     /// @brief 获得类型所占内存空间大小
     /// @return int32_t
     ///
-    [[nodiscard]] virtual int32_t getSize() const
-    {
-        return -1;
-    }
-
+    [[nodiscard]] virtual int32_t getSize() const;
     /// @brief 转换字符串
     /// @return 字符串
     [[nodiscard]] virtual std::string toString() const = 0;

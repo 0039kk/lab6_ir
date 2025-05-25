@@ -24,7 +24,7 @@
 #include "LocalVariable.h"
 #include "MemVariable.h"
 #include "IRCode.h"
-
+#include <cstdint> // For int32_t
 ///
 /// @brief 描述函数信息的类，是全局静态存储，其Value的类型为FunctionType
 ///
@@ -41,7 +41,7 @@ public:
     /// @brief 析构函数
     /// @brief 释放函数占用的内存和IR指令代码
     /// @brief 注意：IR指令代码并未释放，需要手动释放
-    ~Function();
+    ~Function() override;
 
     /// @brief 获取函数返回类型
     /// @return 返回类型
@@ -141,6 +141,9 @@ public:
     /// @param existInit 缺省为true。若真，则已存在需要进行初始化，否则什么都不做
     LocalVariable * newLocalVarValue(Type * type, std::string name = "", int32_t scope_level = 1);
 
+    // --- 新增的公有方法 ---
+    [[nodiscard]] int32_t getCurrentFuncFrameSizeNegative() const;
+
     /// @brief 新建一个内存型的Value，并加入到符号表，用于后续释放空间
     /// \param type 变量类型
     /// \return 临时变量Value
@@ -173,8 +176,8 @@ public:
     void addVar(Value * val);
 
     void addTempVar(Value* val); // <--- 函数名是 addTempVar
-    const std::vector<Value*>& getTempVars() const;
-	
+    [[nodiscard]] const std::vector<Value*>& getTempVars() const;
+	std::string newTempName();
 
 private:
     ///
@@ -256,7 +259,13 @@ private:
     /// @brief 累计的实参个数，用于ARG指令的统计
     ///
     int32_t realArgCount = 0;
+
+	// --- 新增成员变量，用于跟踪局部变量分配的栈大小 ---
+	int32_t currentNegativeStackOffsetSize_ = 0; // 存储从FP负向分配的局部变量的总大小 (绝对值)
+	// --- 结束新增 ---
+    std::vector<Value *> tempVars;
+
+    int32_t currentStackOffset;
+    int tempNameCounter_ = 0; // 或者其他合适的初始值
     
-    
-	std::vector<Value*> tempVars;
 };

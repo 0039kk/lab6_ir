@@ -192,5 +192,5 @@ private:
     void addInstructionToNode(ast_node* node, Instruction* inst); // 将指令添加到 node->blockInsts
     void appendInstructionsToNode(ast_node* node, InterCode& instructions); // 将指令列表追加到 node->blockInsts
 
-    
+    bool ir_variable_declare_single(ast_node * var_decl_node, ast_node * parent_decl_stmt_node); 
 };

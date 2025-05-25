@@ -38,7 +38,7 @@
 
 #include "MoveInstruction.h"
 #include "GotoInstruction.h"
-
+#include "ScopeStack.h"
 /// @brief 构造函数
 /// @param _root AST的根
 /// @param _module 符号表
@@ -72,7 +72,7 @@ IRGenerator::IRGenerator(ast_node * _root, Module * _module) : root(_root), modu
 
     /* 变量定义语句 */
     ast2ir_handlers[ast_operator_type::AST_OP_DECL_STMT] = &IRGenerator::ir_declare_statment;
-    ast2ir_handlers[ast_operator_type::AST_OP_VAR_DECL] = &IRGenerator::ir_variable_declare;
+    
 
     /* 语句块 */
     ast2ir_handlers[ast_operator_type::AST_OP_BLOCK] = &IRGenerator::ir_block;
@@ -292,79 +292,89 @@ bool IRGenerator::ir_function_formal_params(ast_node * node)
 /// @brief 函数调用AST节点翻译成线性中间IR
 /// @param node AST节点
 /// @return 翻译是否成功，true：成功，false：失败
+// ir/Generator/IRGenerator.cpp
+// ...
+// ir/Generator/IRGenerator.cpp
+
 bool IRGenerator::ir_function_call(ast_node * node)
 {
     std::vector<Value *> realParams;
-
-    // 获取当前正在处理的函数
     Function * currentFunc = module->getCurrentFunction();
 
-    // 函数调用的节点包含两个节点：
-    // 第一个节点：函数名节点
-    // 第二个节点：实参列表节点
-
-    std::string funcName = node->sons[0]->name;
-    int64_t lineno = node->sons[0]->line_no;
-
+    ast_node * funcNameNode = node->sons[0];
+    std::string ast_func_name_str = funcNameNode->name; 
+    minic_log(LOG_DEBUG, "IRGenerator::ir_function_call: Function name extracted from AST (node->sons[0]->name) is: ---->'%s'<----", ast_func_name_str.c_str());
+    
     ast_node * paramsNode = node->sons[1];
+    int64_t lineno = funcNameNode->line_no;
+    Function * calledFuncObject = module->findFunction(ast_func_name_str);
 
-    // 根据函数名查找函数，看是否存在。若不存在则出错
-    // 这里约定函数必须先定义后使用
-    auto calledFunction = module->findFunction(funcName);
-    if (nullptr == calledFunction) {
-        minic_log(LOG_ERROR, "函数(%s)未定义或声明", funcName.c_str());
+    if (!ast_func_name_str.empty() && calledFuncObject == nullptr) {
+        minic_log(LOG_WARNING, "IRGenerator: Function '%s' called at line %lld but not found in current module. Assuming external/library function.", 
+                  ast_func_name_str.c_str(), (long long)lineno);
+    } else if (ast_func_name_str.empty()) { // 仅检查 ast_func_name_str 是否为空就足够了
+         minic_log(LOG_ERROR, "IRGenerator: Function call at line %lld has an EMPTY name extracted from AST.", (long long)lineno);
+         return false; // 如果从AST提取的名字就是空的，这是个严重问题
+    }
+
+    if (currentFunc) { 
+        currentFunc->setExistFuncCall(true);
+    } else {
+        minic_log(LOG_ERROR, "IRGenerator: ir_function_call called with currentFunc being null!");
         return false;
     }
 
-    // 当前函数存在函数调用
-    currentFunc->setExistFuncCall(true);
-
-    // 如果没有孩子，也认为是没有参数
-    if (!paramsNode->sons.empty()) {
-
-        int32_t argsCount = (int32_t) paramsNode->sons.size();
-
-        // 当前函数中调用函数实参个数最大值统计，实际上是统计实参传参需在栈中分配的大小
-        // 因为目前的语言支持的int和float都是四字节的，只统计个数即可
-        if (argsCount > currentFunc->getMaxFuncCallArgCnt()) {
-            currentFunc->setMaxFuncCallArgCnt(argsCount);
-        }
-
-        // 遍历参数列表，孩子是表达式
-        // 这里自左往右计算表达式
+    if (paramsNode && !paramsNode->sons.empty()) { // 检查 paramsNode 是否为 null
         for (auto son: paramsNode->sons) {
-
-            // 遍历Block的每个语句，进行显示或者运算
             ast_node * temp = ir_visit_ast_node(son);
-            if (!temp) {
+            if (!temp || !temp->val) { 
+                 minic_log(LOG_ERROR, "IRGenerator: Failed to evaluate argument for function call '%s'", ast_func_name_str.c_str());
                 return false;
             }
-
             realParams.push_back(temp->val);
             node->blockInsts.addInst(temp->blockInsts);
         }
     }
 
-    // TODO 这里请追加函数调用的语义错误检查，这里只进行了函数参数的个数检查等，其它请自行追加。
-    if (realParams.size() != calledFunction->getParams().size()) {
-        // 函数参数的个数不一致，语义错误
-        minic_log(LOG_ERROR, "第%lld行的被调用函数(%s)未定义或声明", (long long) lineno, funcName.c_str());
+    if (calledFuncObject && realParams.size() != calledFuncObject->getParams().size()) {
+        minic_log(LOG_ERROR, "Line %lld: Incorrect number of arguments for function call to '%s'. Expected %zu, got %zu.",
+                  (long long) lineno, ast_func_name_str.c_str(), 
+                  calledFuncObject->getParams().size(), realParams.size());
         return false;
     }
-
-    // 返回调用有返回值，则需要分配临时变量，用于保存函数调用的返回值
-    Type * return_type = calledFunction->getReturnType();
-
-    FuncCallInstruction * funcCallInst = new FuncCallInstruction(currentFunc, calledFunction, realParams, return_type);
-
-    // 创建函数调用指令
-    node->blockInsts.addInst(funcCallInst);
     
-	if (return_type && !return_type->isVoidType()) {
-        currentFunc->addTempVar(funcCallInst); // <--- 确保这行被执行
+    Type * return_type = nullptr;
+    if (calledFuncObject) {
+        return_type = calledFuncObject->getReturnType();
+    } else {
+        minic_log(LOG_WARNING, "IRGenerator: Assuming int return type for unknown/external function '%s'", ast_func_name_str.c_str());
+        return_type = IntegerType::getTypeInt(); 
     }
-    // 函数调用结果Value保存到node中，可能为空，上层节点可利用这个值
-    node->val = funcCallInst;
+    if (!return_type) return_type = VoidType::getType(); 
+
+
+    // --- 修正 FuncCallInstruction 构造函数的参数传递顺序 ---
+    FuncCallInstruction * funcCallInst = new FuncCallInstruction(
+        currentFunc,            // 1. parentFuncScope (Function*)
+        ast_func_name_str,      // 2. func_name_to_call (const std::string&) <--- 现在传递的是从AST提取的字符串名称
+        realParams,             // 3. args (const std::vector<Value*>&)
+        return_type,            // 4. result_type_if_any (Type*)
+        calledFuncObject        // 5. target_func_object (Function*, 可以是 nullptr)
+    );
+    // --- 结束修正 ---
+
+    if (return_type && !return_type->isVoidType()) {
+        std::string temp_name = currentFunc->newTempName(); 
+        funcCallInst->setIRName(temp_name); 
+        currentFunc->addTempVar(funcCallInst); 
+        minic_log(LOG_DEBUG, "IRGenerator: FuncCall '%s' will store result in '%s'", 
+                  ast_func_name_str.c_str(), temp_name.c_str());
+    } else {
+        funcCallInst->setIRName(""); 
+    }
+
+    node->blockInsts.addInst(funcCallInst);
+    node->val = funcCallInst; 
 
     return true;
 }
@@ -857,39 +867,200 @@ bool IRGenerator::ir_leaf_node_uint(ast_node * node)
     return true;
 }
 
+// IRGenerator.cpp
+
+// ... (其他 include 和函数保持不变) ...
+
 /// @brief 变量声明语句节点翻译成线性中间IR
-/// @param node AST节点
+/// @param decl_stmt_node AST节点 (类型为 AST_OP_DECL_STMT)
 /// @return 翻译是否成功，true：成功，false：失败
-bool IRGenerator::ir_declare_statment(ast_node * node)
-{
-    bool result = false;
+bool IRGenerator::ir_declare_statment(ast_node * decl_stmt_node) {
+    minic_log(LOG_DEBUG, "IRGenerator: Visiting AST_OP_DECL_STMT (Ptr: %p).", (void*)decl_stmt_node);
+    if (!decl_stmt_node) {
+        minic_log(LOG_ERROR, "IRGenerator: ir_declare_statment called with null node.");
+        return false;
+    }
 
-    for (auto & child: node->sons) {
+    // AST_OP_DECL_STMT 节点的 blockInsts 将收集所有由其子声明（包括初始化）产生的指令
+    decl_stmt_node->blockInsts.clear(); // 清空，确保从头开始收集
 
-        // 遍历每个变量声明
-        result = ir_variable_declare(child);
-        if (!result) {
+    bool all_children_processed_successfully = true;
+    for (ast_node* single_var_decl_node : decl_stmt_node->sons) {
+        if (single_var_decl_node && single_var_decl_node->node_type == ast_operator_type::AST_OP_VAR_DECL) {
+            // 将 decl_stmt_node 传递下去，以便初始化产生的指令可以附加到它上面
+            if (!ir_variable_declare_single(single_var_decl_node, decl_stmt_node)) { // 调用新的辅助函数
+                minic_log(LOG_ERROR, "IRGenerator: Failed to process a VAR_DECL child (Name: %s) of DECL_STMT.",
+                          single_var_decl_node->sons[1]->node_type == ast_operator_type::AST_OP_LEAF_VAR_ID ? single_var_decl_node->sons[1]->name.c_str() : single_var_decl_node->sons[1]->sons[0]->name.c_str() );
+                all_children_processed_successfully = false;
+                break; // 如果一个声明失败，通常整个声明语句都失败
+            }
+        } else {
+            minic_log(LOG_ERROR, "IRGenerator: Expected AST_OP_VAR_DECL as child of AST_OP_DECL_STMT, but got type %d.",
+                      single_var_decl_node ? (int)single_var_decl_node->node_type : -1);
+            all_children_processed_successfully = false;
             break;
         }
     }
-
-    return result;
+    
+    // AST_OP_DECL_STMT 本身不产生一个可运行的 Value，它的效果是声明变量和执行初始化（指令已收集）
+    decl_stmt_node->val = nullptr; 
+    return all_children_processed_successfully;
 }
 
-/// @brief 变量定声明节点翻译成线性中间IR
-/// @param node AST节点
+/// @brief 单个变量声明节点翻译成线性中间IR (处理单个变量声明，可能带初始化)
+///        这个函数现在是 ir_declare_statment 的辅助函数。
+/// @param var_decl_node AST节点 (类型为 AST_OP_VAR_DECL)
+/// @param parent_decl_stmt_node 父节点 (类型为 AST_OP_DECL_STMT)，用于附加生成的指令
 /// @return 翻译是否成功，true：成功，false：失败
-bool IRGenerator::ir_variable_declare(ast_node * node)
-{
-    // 共有两个孩子，第一个类型，第二个变量名
+bool IRGenerator::ir_variable_declare_single(ast_node * var_decl_node, ast_node * parent_decl_stmt_node) {
+    minic_log(LOG_DEBUG, "IRGenerator: Visiting single AST_OP_VAR_DECL (Ptr: %p).", (void*)var_decl_node);
+    if (!var_decl_node || var_decl_node->sons.size() < 2 || !parent_decl_stmt_node) {
+        minic_log(LOG_ERROR, "IRGenerator (single): AST_OP_VAR_DECL node is null, has insufficient children, or parent_decl_stmt_node is null.");
+        return false;
+    }
 
-    // TODO 这里可强化类型等检查
+    ast_node* type_ast_node = var_decl_node->sons[0];      // 类型节点 (AST_OP_LEAF_TYPE)
+    ast_node* var_def_node = var_decl_node->sons[1];    // VarDef 节点 (AST_OP_LEAF_VAR_ID 或 AST_OP_INIT)
 
-    node->val = module->newVarValue(node->sons[0]->type, node->sons[1]->name);
+    if (!type_ast_node || !type_ast_node->type) {
+         minic_log(LOG_ERROR, "IRGenerator (single): AST_OP_VAR_DECL has null type_node or type_node->type is null.");
+         return false;
+    }
+    if (!var_def_node) {
+        minic_log(LOG_ERROR, "IRGenerator (single): AST_OP_VAR_DECL has null var_def_node.");
+        return false;
+    }
 
+    Type* declared_type = type_ast_node->type;
+    Function* current_func = module->getCurrentFunction(); // 用于区分全局/局部
+
+    Value* created_variable = nullptr; // 将会是 LocalVariable* 或 GlobalVariable*
+    std::string variable_name;
+    ast_node* expr_init_node = nullptr; // 初始化表达式节点 (如果存在)
+
+    // 1. 提取变量名并确定是否有初始化表达式
+    if (var_def_node->node_type == ast_operator_type::AST_OP_LEAF_VAR_ID) {
+        variable_name = var_def_node->name;
+        var_decl_node->val = created_variable; // 让 VAR_DECL 指向其 VarDef (ID)
+    } else if (var_def_node->node_type == ast_operator_type::AST_OP_INIT) {
+        if (var_def_node->sons.size() < 2 || !var_def_node->sons[0] || var_def_node->sons[0]->node_type != ast_operator_type::AST_OP_LEAF_VAR_ID) {
+            minic_log(LOG_ERROR, "IRGenerator (single): AST_OP_INIT node has invalid structure.");
+            return false;
+        }
+        variable_name = var_def_node->sons[0]->name;
+        expr_init_node = var_def_node->sons[1];
+        var_decl_node->val = created_variable; // 让 VAR_DECL 指向其 VarDef (INIT)
+    } else {
+        minic_log(LOG_ERROR, "IRGenerator (single): Unexpected node type '%d' for VarDef under AST_OP_VAR_DECL.", (int)var_def_node->node_type);
+        return false;
+    }
+
+    if (variable_name.empty()) {
+        minic_log(LOG_ERROR, "IRGenerator (single): Variable name is empty for declaration.");
+        return false;
+    }
+    minic_log(LOG_DEBUG, "  IRGenerator (single): Processing declaration for '%s' (type: %s).", 
+              variable_name.c_str(), declared_type->toString().c_str());
+
+    // 2. 检查重定义并创建变量对象 (Local or Global)
+    if (current_func) {
+        // 局部变量
+        if (module->getScopeStack()->findCurrentScope(variable_name)) {
+            minic_log(LOG_ERROR, "    IRGenerator (single): Local variable '%s' redefinition in function '%s'.", variable_name.c_str(), current_func->getName().c_str());
+            return false;
+        }
+        created_variable = current_func->newLocalVarValue(declared_type, variable_name);
+        if (!created_variable) {
+            minic_log(LOG_ERROR, "    IRGenerator (single): Failed to create LocalVariable '%s' for function '%s'.", variable_name.c_str(), current_func->getName().c_str());
+            return false;
+        }
+        minic_log(LOG_DEBUG, "    IRGenerator (single): Created LocalVariable '%s' (IR: '%s').", created_variable->getName().c_str(), created_variable->getIRName().c_str());
+    } else {
+        // 全局变量
+        if (module->findGlobalVariable(variable_name) || module->getScopeStack()->findCurrentScope(variable_name) /* 假设当前是全局作用域 */) {
+            minic_log(LOG_ERROR, "    IRGenerator (single): Global variable '%s' redefinition.", variable_name.c_str());
+            return false;
+        }
+        created_variable = module->newGlobalVariable(declared_type, variable_name); // newGlobalVariable 应该将其加入 Module 的全局列表
+        if (!created_variable) {
+            minic_log(LOG_ERROR, "    IRGenerator (single): Failed to create GlobalVariable '%s'.", variable_name.c_str());
+            return false;
+        }
+        minic_log(LOG_DEBUG, "    IRGenerator (single): Created GlobalVariable '%s' (IR: '%s').", created_variable->getName().c_str(), created_variable->getIRName().c_str());
+    }
+    
+    // 将创建的 Value 对象设置回 AST 相关节点，方便调试或后续步骤
+    if (var_def_node->node_type == ast_operator_type::AST_OP_LEAF_VAR_ID) {
+        var_def_node->val = created_variable;
+    } else { // AST_OP_INIT
+        var_def_node->sons[0]->val = created_variable; // ID 节点
+        var_def_node->val = created_variable;          // INIT 节点本身也指向，可选
+    }
+    // var_decl_node->val 之前在上面已设置指向 VarDef 节点，这里不再覆盖为 Value*
+    // 或者你也可以选择让 var_decl_node->val 直接指向 created_variable
+
+    // 3. 将变量添加到 ScopeStack
+    if (module && module->getScopeStack()) {
+        // findCurrentScope 已经在上面用于重定义检查，这里直接插入
+        module->getScopeStack()->insertValue(created_variable); // 假设 insertValue(Value*) 总是插入到当前作用域
+        minic_log(LOG_DEBUG, "    IRGenerator (single): Added '%s' (IR: '%s') to ScopeStack level %d.",
+                  variable_name.c_str(), created_variable->getIRName().c_str(), module->getScopeStack()->getCurrentScopeLevel());
+    } else {
+        minic_log(LOG_ERROR, "    IRGenerator (single): Module or ScopeStack is null, cannot add variable '%s'.", variable_name.c_str());
+        return false;
+    }
+
+    // 4. 处理初始化 (如果存在)
+    if (expr_init_node) {
+        minic_log(LOG_DEBUG, "    IRGenerator (single): Visiting RHS expression (AST Ptr: %p) for INIT of '%s'.",
+                  (void*)expr_init_node, variable_name.c_str());
+        
+        ast_node* visited_expr_node = ir_visit_ast_node(expr_init_node); 
+        
+        if (!visited_expr_node || !visited_expr_node->val) { 
+            minic_log(LOG_ERROR, "    IRGenerator (single): Failed to visit or get value from RHS expression for '%s'.", variable_name.c_str());
+            return false; 
+        }
+        
+        // 将初始化表达式产生的指令附加到父 DECL_STMT 节点的 blockInsts
+        if (!visited_expr_node->blockInsts.getInsts().empty()) {
+            parent_decl_stmt_node->blockInsts.addInst(visited_expr_node->blockInsts);
+        }
+        
+        Value* rhs_init_value = visited_expr_node->val;
+
+        if (current_func) {
+            // 局部变量初始化: 生成 Move 指令
+            minic_log(LOG_DEBUG, "    IRGenerator (single): Creating MoveInstruction for local INIT: %s = %s",
+                      created_variable->getIRName().c_str(), rhs_init_value->getIRName().c_str());
+            MoveInstruction* movInst = new MoveInstruction(current_func, created_variable, rhs_init_value);
+            parent_decl_stmt_node->blockInsts.addInst(movInst);
+        } else {
+            // 全局变量初始化
+            GlobalVariable* gv = static_cast<GlobalVariable*>(created_variable);
+            Constant* const_init_val = dynamic_cast<Constant*>(rhs_init_value);
+            if (const_init_val) {
+                // 检查类型是否匹配，或者是否可以安全转换
+                // 例如，如果全局变量是 i32，初始值也应该是 i32 常量
+                if (gv->getType()->isIntegerType() && const_init_val->getType()->isIntegerType() &&
+                    static_cast<IntegerType*>(gv->getType())->getBitWidth() == static_cast<IntegerType*>(const_init_val->getType())->getBitWidth() ) {
+                    gv->setInitializer(const_init_val);
+                    minic_log(LOG_DEBUG, "    IRGenerator (single): Set constant initializer for global var '%s' to '%s'.",
+                              variable_name.c_str(), const_init_val->getIRName().c_str());
+                } else {
+                    minic_log(LOG_ERROR, "    IRGenerator (single): Type mismatch for global variable '%s' initializer. Expected %s, got %s.",
+                              variable_name.c_str(), gv->getType()->toString().c_str(), const_init_val->getType()->toString().c_str());
+                    return false;
+                }
+            } else {
+                minic_log(LOG_ERROR, "    IRGenerator (single): Global variable '%s' initializer ('%s') is not a recognized compile-time constant.",
+                          variable_name.c_str(), rhs_init_value->getIRName().c_str());
+                return false;
+            }
+        }
+    }
     return true;
 }
-// IRGenerator.cpp
 
 // 辅助函数：创建新的唯一标签
 LabelInstruction* IRGenerator::newLabel() {

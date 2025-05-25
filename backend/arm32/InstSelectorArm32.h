@@ -92,6 +92,13 @@ protected:
     /// @param inst IR指令
     void translate_neg_int32(Instruction * inst);
 
+    /// @brief Cmp指令 (例如 a < b) 翻译成ARM32汇编
+    /// @param inst IR指令 (应该是 CmpInstruction*)
+    void translate_cmp(Instruction * inst);
+
+    /// @brief 条件跳转指令 (bc) 翻译成ARM32汇编
+    /// @param inst IR指令 (应该是 BranchConditionalInstruction*)
+    void translate_branch_cond(Instruction * inst);
     
     /// @brief 二元操作指令翻译成ARM32汇编
     /// @param inst IR指令

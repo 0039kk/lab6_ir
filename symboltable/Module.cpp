@@ -32,6 +32,7 @@ Module::Module(std::string _name) : name(_name)
     // 加入内置函数putint
     (void) newFunction("putint", VoidType::getType(), {new FormalParam{IntegerType::getTypeInt(), ""}}, true);
     (void) newFunction("getint", IntegerType::getTypeInt(), {}, true);
+    (void) newFunction("putch", VoidType::getType(), {new FormalParam{IntegerType::getTypeInt(), ""}}, true);
 }
 
 /// @brief 进入作用域，如进入函数体块、语句块等
@@ -364,4 +365,8 @@ Constant* Module::getOrCreateIntegerConstant(Type* type, int32_t value) {
     integer_constant_cache_[cache_key] = new_const;
     // 你可能还需要将 new_const 添加到总的 values 列表或其他管理结构中
     return new_const;
+}
+ScopeStack * Module::getScopeStack()
+{
+	return scopeStack;
 }

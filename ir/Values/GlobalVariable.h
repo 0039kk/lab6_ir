@@ -18,7 +18,7 @@
 
 #include "GlobalValue.h"
 #include "IRConstant.h"
-
+#include "Constant.h"
 ///
 /// @brief 全局变量，寻址时通过符号名或变量名来寻址
 ///
@@ -59,7 +59,7 @@ public:
     /// @brief 取得变量所在的作用域层级
     /// @return int32_t 层级
     ///
-    int32_t getScopeLevel() const override
+    [[nodiscard]] int32_t getScopeLevel() const override
     {
         return 0;
     }
@@ -89,7 +89,8 @@ public:
     void toDeclareString(std::string & str) const { // <--- 建议也改为 const，并返回 std::string
 		str = "declare " + getType()->toString() + " " + getIRName(); // <--- 使用 getIRName()
 	}
-
+    void setInitializer(Constant * initVal);
+    [[nodiscard]] Constant * getInitializer() const;
 private:
     ///
     /// @brief 变量加载到寄存器中时对应的寄存器编号
@@ -100,4 +101,5 @@ private:
     /// @brief 默认全局变量在BSS段，没有初始化，或者即使初始化过，但都值都为0
     ///
     bool inBSSSection = true;
+    Constant *initializer = nullptr;
 };

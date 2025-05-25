@@ -16,6 +16,7 @@
 #pragma once
 
 #include <string>
+#include "PlatformArm32.h"
 
 /// @brief 整数变字符串
 /// @param num 无符号数

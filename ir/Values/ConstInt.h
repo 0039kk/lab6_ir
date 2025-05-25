@@ -51,6 +51,7 @@ class ConstInt : public Constant {
     // 静态方法用于获取/创建特定类型的整数常量，并由 Module 管理缓存 (推荐)
     static ConstInt* get(Type* type, int32_t value, Module& module);
 
+    
 private:
     ///
     /// @brief 整数值

@@ -53,6 +53,18 @@ void Value::setName(std::string _name)
 /// @return 变量名
 std::string Value::getIRName() const
 {
+    if (IRName.empty()) { // 如果 IRName 还没有被显式设置（通过 setIRName）
+        // 对于未命名的Value (比如指令结果在被 renameIR 处理前)，
+        // 或者某些确实没有源码名的Value，生成一个唯一的临时占位符。
+        // 你的实现是 "UNNAMED_VALUE(...)" 或 "name_NO_IRNAME"，
+        // 这在 renameIR 之前是可接受的。
+        // renameIR 之后，所有应该有规范名称的 Value 都应该有非空的 IRName。
+        if (!name.empty()) { // 仅当 name 非空时才使用它作为后缀的基础
+            return name + "_IR_UNSET"; // 或者其他明确表示“尚未最终命名”的后缀
+        }
+        // 对于完全无名的（如大多数指令结果在最终命名之前）
+        return "TEMP_VAL_ADDR_" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    }
     return IRName;
 }
 
@@ -102,14 +114,10 @@ int32_t Value::getScopeLevel() const
     return -1;
 }
 
-///
+/*
 /// @brief 获得分配的寄存器编号或ID
 /// @return int32_t 寄存器编号 -1代表无效的寄存器编号
 ///
-int32_t Value::getRegId()
-{
-    return -1;
-}
 
 ///
 /// @brief @brief 如是内存变量型Value，则获取基址寄存器和偏移
@@ -117,28 +125,10 @@ int32_t Value::getRegId()
 /// @param offset 相对偏移
 /// @return true 是内存型变量
 /// @return false 不是内存型变量
-///
+///*/
 bool Value::getMemoryAddr(int32_t * regId, int64_t * offset)
 {
     (void) regId;
     (void) offset;
     return false;
-}
-
-///
-/// @brief 对该Value进行Load用的寄存器编号
-/// @return int32_t 寄存器编号
-///
-int32_t Value::getLoadRegId()
-{
-    return -1;
-}
-
-///
-/// @brief 对该Value进行Load用的寄存器编号
-/// @return int32_t 寄存器编号
-///
-void Value::setLoadRegId(int32_t regId)
-{
-    (void) regId;
 }

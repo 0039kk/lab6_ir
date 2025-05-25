@@ -13,98 +13,113 @@
 /// <tr><td>2024-09-29 <td>1.0     <td>zenglj  <td>新建
 /// </table>
 ///
-#include "FuncCallInstruction.h"
-#include "Function.h"
-#include "Common.h"
-#include "Type.h"
-#include "VoidType.h"
+// ir/Instructions/FuncCallInstruction.cpp
+#include "Instructions/FuncCallInstruction.h" 
+#include "Function.h"      
+#include "Common.h" 
+#include "Type.h"          
+#include "Types/VoidType.h"  
+#include "Value.h"         
 
-/// @brief 含有参数的函数调用
-/// @param srcVal 函数的实参Value
-/// @param result 保存返回值的Value
-FuncCallInstruction::FuncCallInstruction(Function* current_func_scope,Function* target_func,std::vector<Value*>& args,Type* result_type_if_any)
-	: Instruction(current_func_scope,
-	IRInstOperator::IRINST_OP_FUNC_CALL,
-	result_type_if_any ? result_type_if_any : VoidType::getType()), // <--- 修改这里
-	calledFunction(target_func) {
-	for (Value* arg_val : args) {
-	if (arg_val) {
-	addOperand(arg_val);
-	} else {
-	minic_log(LOG_WARNING, "Null argument value passed to FuncCallInstruction for function @%s", target_func ? target_func->getName().c_str() : "<unknown_func>");
-	}
-	}
+// 构造函数定义与 .h 中的声明匹配
+FuncCallInstruction::FuncCallInstruction(
+    Function* parentFuncScope,             // 这个对应 Instruction 构造函数的 _func
+    const std::string& func_name_to_call,
+    const std::vector<Value*>& args,
+    Type* result_type_if_any,            // 这个对应 Instruction 构造函数的 _type
+    Function* target_func_object 
+) 
+// --- 修正对 Instruction 基类构造函数的调用 ---
+: Instruction(
+      parentFuncScope,                                                 // 1. Function* _func
+      IRInstOperator::IRINST_OP_FUNC_CALL,                             // 2. IRInstOperator op
+      (result_type_if_any ? result_type_if_any : VoidType::getType())  // 3. Type* _type
+  ),
+// --- 结束修正 ---
+    calledFunctionName_(func_name_to_call),
+    calledFunction_(target_func_object) // 假设 .h 中成员名为 calledFunction_
+{
+    for (Value* arg_val : args) {
+        if (arg_val) {
+            addOperand(arg_val); 
+        } else {
+            minic_log(LOG_WARNING, "FuncCallInstruction CTOR for call to '%s': Null argument value passed.", 
+                      calledFunctionName_.c_str());
+        }
+    }
+
+    minic_log(LOG_DEBUG, "FuncCallInstruction CREATED: Call to FuncName='%s'. TargetFuncPtr=%p. ResultType='%s'. NumArgs=%d. ParentFunc='%s'. ThisPtr=%p",
+              calledFunctionName_.c_str(),
+              (void*)calledFunction_, 
+              (this->getType() ? this->getType()->toString().c_str() : "null_type"),
+              getOperandsNum(), 
+              parentFuncScope ? parentFuncScope->getName().c_str() : "null_parent",
+              (void*)this);
+    
+    if (calledFunctionName_.empty()) {
+        minic_log(LOG_ERROR, "FuncCallInstruction CTOR: Created a call instruction with an EMPTY function name! Instruction IRName: %s",
+                  this->getIRName().c_str()); 
+    }
 }
 
-/// @brief 转换成字符串显示
-/// @param str 转换后的字符串
-// FuncCallInstruction.h
-// 确保声明是：
-// class FuncCallInstruction : public Instruction {
-// private:
-//     Function* called_function_ = nullptr; // 被调用的函数
-//     // 参数通过 User 基类的 operands 存储
-// public:
-//     // 构造函数示例，接收当前函数作用域、目标函数、参数列表、调用结果的类型
-//     FuncCallInstruction(Function* current_func_scope, Function* target_func,
-//                         const std::vector<Value*>& args, Type* result_type_if_any);
-//
-//     [[nodiscard]] std::string toString() const override;
-//     [[nodiscard]] Function* getCalledFunction() const { return called_function_; } // Getter
-// };
-// toString() 实现
+
+// getName() 定义与 .h 中的声明匹配
+[[nodiscard]] std::string FuncCallInstruction::getName() const {
+    minic_log(LOG_DEBUG, "FuncCallInstruction (Ptr: %p, IRName: %s)::getName() returning stored name '%s'",
+              (void*)this, this->getIRName().c_str(), calledFunctionName_.c_str());
+              
+    // 优先返回存储的字符串名称，因为它可能来自外部函数调用，此时 calledFunction_ 为 nullptr
+    if (!calledFunctionName_.empty()) {
+        return calledFunctionName_;
+    }
+    // 如果存储的名称为空，但有关联的 Function 对象，则尝试从对象获取
+    if (calledFunction_ && !calledFunction_->getName().empty()) {
+        minic_log(LOG_WARNING, "FuncCallInstruction (Ptr: %p, IRName: %s)::getName(): calledFunctionName_ is empty, using name from targetFunction_ object: '%s'",
+                  (void*)this, this->getIRName().c_str(), calledFunction_->getName().c_str());
+        return calledFunction_->getName();
+    }
+    minic_log(LOG_ERROR, "FuncCallInstruction (Ptr: %p, IRName: %s)::getName(): Both calledFunctionName_ and targetFunction_ name are empty!",
+              (void*)this, this->getIRName().c_str());
+    return "<UNKNOWN_OR_EMPTY_FUNCTION_NAME>";
+}
+
 std::string FuncCallInstruction::toString() const {
     std::string result_str_build;
+    std::string func_to_print = getName(); // 使用修改后的 getName()
 
-    if (!calledFunction) {
-        minic_log(LOG_ERROR, "FuncCallInstruction::toString(): calledFunction is null.");
-        return "; <Error: FuncCallInstruction has no target function specified>";
+    if (func_to_print.empty() || func_to_print == "<UNKNOWN_OR_EMPTY_FUNCTION_NAME>") {
+        // 如果 getName() 仍然返回空或错误标记，toString 中也反映出来
+        minic_log(LOG_ERROR, "FuncCallInstruction::toString() (for IRName: %s): getName() returned empty or error string! Using placeholder.", this->getIRName().c_str());
+        func_to_print = "<ERROR_EMPTY_FUNC_NAME_IN_TOSTRING>";
     }
 
-    // 1. 构建函数调用头部 (call <return_type> @func_name 或 <result_var> = call <return_type> @func_name)
-    // this->getType() 是这条 call 指令的结果类型 (例如 i32, void)
-    // this->getIRName() 是存储结果的临时变量名 (例如 %t0), 如果调用有返回值
-    Type* instruction_result_type = this->getType(); // 类型由构造函数设置
+    Type* instruction_result_type = this->getType(); 
 
     if (instruction_result_type && !instruction_result_type->isVoidType()) {
-        // 有返回值
-        // calledFunction->getReturnType() 应该是和 instruction_result_type 一致的
-        result_str_build = this->getIRName() + " = call " + calledFunction->getReturnType()->toString() +
-                           " @" + calledFunction->getName(); // DragonIR 函数名以 @ 开头
+        result_str_build = this->getIRName() + " = call " + 
+                           instruction_result_type->toString() + 
+                           " @" + func_to_print;
     } else {
-        // 无返回值
-        result_str_build = "call void @" + calledFunction->getName(); // DragonIR 函数名以 @ 开头
+        result_str_build = "call void @" + func_to_print;
     }
 
-    // 2. 构建参数列表
     result_str_build += "(";
-    int32_t num_actual_params = getOperandsNum(); // 参数从 User 基类的操作数列表获取
-
+    int32_t num_actual_params = getOperandsNum(); 
     for (int32_t k = 0; k < num_actual_params; ++k) {
-        Value* operand = getOperand(k); // 确保 getOperand, getType, getIRName 都是 const
-        if (operand && operand->getType()) {
+        Value* operand = getOperand(k); 
+        if (operand && operand->getType()) { 
             result_str_build += operand->getType()->toString() + " " + operand->getIRName();
         } else {
-            minic_log(LOG_ERROR, "FuncCallInstruction::toString(): Operand or its type is null for call to @%s, param index %d.",
-                      calledFunction->getName().c_str(), k);
+            std::string operand_ir_name = operand ? operand->getIRName() : "null_operand";
+            std::string operand_type_str = (operand && operand->getType()) ? operand->getType()->toString() : "null_type";
+            minic_log(LOG_ERROR, "FuncCallInstruction::toString(): For call to @%s, param index %d (Operand IRName: %s, Type: %s) is invalid.",
+                      func_to_print.c_str(), k, operand_ir_name.c_str(), operand_type_str.c_str());
             result_str_build += "<error_param>";
         }
-
         if (k < (num_actual_params - 1)) {
             result_str_build += ", ";
         }
     }
     result_str_build += ")";
-
-    // --------------------------------------------------------------------
-    // 之前讨论的 func->realArgCountReset() 和 func->getRealArgcount()
-    // 不应出现在这里。参数计数和重置应由 IRGenerator 管理。
-    // --------------------------------------------------------------------
-
     return result_str_build;
 }
-
-///
-/// @brief 获取被调用函数的名字
-/// @return std::string 被调用函数名字
-///

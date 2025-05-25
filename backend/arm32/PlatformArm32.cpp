@@ -16,7 +16,8 @@
 #include "PlatformArm32.h"
 
 #include "IntegerType.h"
-
+#include <cstdint> // For uint32_t
+#include "Common.h" 
 const std::string PlatformArm32::regName[PlatformArm32::maxRegNum] = {
     "r0",  // 用于传参或返回值等，不需要栈保护
     "r1",  // 用于传参或返回值（64位结果时后32位）等，不需要栈保护
@@ -55,6 +56,23 @@ RegVariable * PlatformArm32::intRegVal[PlatformArm32::maxRegNum] = {
     new RegVariable(IntegerType::getTypeInt(), PlatformArm32::regName[14], 14),
     new RegVariable(IntegerType::getTypeInt(), PlatformArm32::regName[15], 15),
 };
+
+// 实现 getRegNameSafe
+std::string PlatformArm32::getRegNameSafe(int reg_id) {
+    if (reg_id >= 0 && reg_id < PlatformArm32::maxRegNum) {
+        // 检查一下初始化是否正确，防止 regName[reg_id] 是空字符串
+        if (PlatformArm32::regName[reg_id].empty()) {
+             minic_log(LOG_ERROR, "PlatformArm32::getRegNameSafe: Register name for valid ID %d is unexpectedly empty!", reg_id);
+             return "EMPTY_REG_NAME(" + std::to_string(reg_id) + ")"; // 返回一个不同的错误标记
+        }
+        return PlatformArm32::regName[reg_id];
+    }
+    // 对于无效ID，记录日志并返回一个易于识别的错误标记
+    // 可以考虑根据编译器配置决定是 WARN 还是 ERROR
+    minic_log(LOG_WARNING, "PlatformArm32::getRegNameSafe: Attempting to get name for invalid register ID: %d", reg_id);
+    return "REG_ID(" + std::to_string(reg_id) + "_ERR)";
+}
+
 
 /// @brief 循环左移两位
 /// @param num
@@ -112,4 +130,26 @@ bool PlatformArm32::isReg(std::string name)
     return name == "r0" || name == "r1" || name == "r2" || name == "r3" || name == "r4" || name == "r5" ||
            name == "r6" || name == "r7" || name == "r8" || name == "r9" || name == "r10" || name == "fp" ||
            name == "ip" || name == "sp" || name == "lr" || name == "pc";
+}
+
+bool PlatformArm32::isValidCmpImmediate(int32_t imm_val) {
+    // ARM CMP Rd, #imm. 立即数可以是8位值，经过偶数位的循环右移得到。
+    // MOV Rd, #imm 的立即数规则类似。
+    uint32_t val = static_cast<uint32_t>(imm_val);
+
+    // 尝试所有偶数位循环右移 (0, 2, ..., 30)
+    for (int rot = 0; rot < 32; rot += 2) {
+        uint32_t rotated_val = (val >> rot) | (val << (32 - rot));
+        // 检查旋转后的值的高24位是否为0 (即是否能用8位表示)
+        if ((rotated_val & 0xFFFFFF00) == 0) {
+            return true;
+        }
+    }
+    // 对于负数，有时可以表示为正数的逻辑非，然后检查。
+    // 例如 CMP r0, #-1  等价于 CMN r0, #1 (CMP r0, NEG #1)
+    // ARMv7 Thumb-2 有一些特殊的立即数编码。
+    // 对于简单的编译器，上述检查可能足够，或者你可以更严格地只允许0-255。
+    // if (imm_val >= 0 && imm_val <= 255) return true; // 一个更简单的（但限制性更强）版本
+
+    return false; // 如果所有旋转都不匹配
 }
